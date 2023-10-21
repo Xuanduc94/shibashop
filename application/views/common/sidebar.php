@@ -10,6 +10,9 @@
         <?php if (in_array(3, $user['group_permission'])) : ?>
             <li id="product"><a href="product"><i class="fa fa-product-hunt"></i><b>Sản phẩm</b></a></li>
         <?php endif; ?>
+        <?php if (in_array(3, $user['group_permission'])) : ?>
+            <li id="unit"><a href="unit"><i class="fa fa-coffee"></i><b>Đơn vị tính</b></a></li>
+        <?php endif; ?>
         <?php if (in_array(4, $user['group_permission'])) : ?>
             <li id="customer"><a href="customer"><i class="fa fa-users"></i><b>Khách hàng</b></a></li>
         <?php endif; ?>

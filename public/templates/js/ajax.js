@@ -15,6 +15,10 @@ $(document).ready(function () {
         cms_paging_product(1);
     }
 
+    if (window.location.pathname.indexOf('units')) {
+        cms_paging_unit(1);
+    }
+
     if (window.location.pathname.indexOf('orders') !== -1) {
         $('.input-daterange').datepicker({
             format: "yyyy-mm-dd",
@@ -1504,11 +1508,52 @@ function cms_delete_Group($id, $page) {
         cms_adapter_ajax($param);
     }
 }
-
-function cms_add_product_units() {
-    'use strict'
+var arr_product_units = [];
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }
 
+function cms_delete_product_unit(id) {
+    arr_product_units = arr_product_units.filter(s => s.id != id)
+    $(`#unit-${id}`).remove();
+}
+function cms_add_product_units() {
+    'use strict'
+    let html = "";
+    arr_product_units.push({
+        id: getRandomInt(100),
+        unit: null,
+        retail: 0,
+        whole: 0
+    })
+    arr_product_units.forEach(item => {
+        $(`#unit-${item.id}`).remove();
+    })
+    arr_product_units.forEach((item, index) => {
+        $('#body_unit').append(`<tr id="unit-${item.id}">
+                                <td>
+                               ${index + 1}
+                                </td>
+                                <td>
+                                 <select class="form-control">
+                                <option></option>
+                                </select>
+                                </td>
+                                <td>
+                                <input type="number" class="form-control"/>
+                                </td>
+                                <td><input type="number" class="form-control"/></td>
+                                <td>
+                                <label class="checkbox"><input type="checkbox" class="checkbox">
+                                        <span></span> sử dụng</label>
+                                </td>
+                                <td>
+                                <i onclick="cms_delete_product_unit(${item.id})" class="fa fa-trash"></i>
+                                </td>
+                            </tr>`)
+    })
+}
+// function add product
 function cms_add_product(type) {
     'use strict';
     var $store_id = $('#store-id').val();
@@ -3063,4 +3108,110 @@ function cms_del_icon_click(obs, attach) {
     $('body').on('click', obs, function () {
         $(this).html('').parent().find(attach).val('').removeAttr('data-id').prop('readonly', false);
     })
+}
+
+/**
+ * UNIT
+ * **/
+
+function cms_paging_unit($page) {
+    $keyword = $('#unit-search').val();
+    $data = { 'data': { 'keyword': $keyword } };
+    var $param = {
+        'type': 'POST',
+        'url': 'unit/cms_paging_unit/' + $page,
+        'data': $data,
+        'callback': function (data) {
+            $('.unit-main-body').html(data);
+        }
+    };
+    cms_adapter_ajax($param);
+}
+
+function cms_vcrunit() {
+    $('#modalunit').modal('show')
+}
+
+function cms_edit_unit(id) {
+    var $param = {
+        'type': 'POST',
+        'url': 'unit/cms_info_unit/' + id,
+        'callback': function (data) {
+            data = JSON.parse(data)
+            $('#unit_id').val(data.Id);
+            $('#unit_name').val(data.name);
+            cms_vcrunit();
+        }
+    };
+    cms_adapter_ajax($param);
+}
+
+function showNotice(message, status = "success") {
+    $(`.ajax-${status}-ct`).html(message).parent().fadeIn().delay(1000).fadeOut('slow');
+}
+
+function enter_search_unit(e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+        cms_paging_unit(1)
+    }
+}
+
+function cms_delete_unit(id, page) {
+    'use strict'
+    if (confirm("Bạn có muốn xoá đơn vị này không")) {
+        var $param = {
+            'type': 'POST',
+            'url': 'unit/cms_delete_unit/' + id,
+            'callback': function (data) {
+                if (data == 1) {
+                    showNotice("Đã xoá đơn vị thành công")
+                    cms_paging_unit(page)
+                }
+            }
+        };
+        cms_adapter_ajax($param);
+    }
+}
+
+function cms_add_unit() {
+    'use strict';
+    var $name = $.trim($('#unit_name').val());
+    var $id = $.trim($('#unit_id').val());
+    if ($name.length == 0) {
+        $('.ajax-error-ct').html('Vui lòng nhập tên đơn vị.').parent().fadeIn().delay(1000).fadeOut('slow');
+    } else {
+        var $data = {
+            'data': {
+                'name': $name,
+            }
+        };
+        if ($id != null) {
+            $data.data.Id = $id;
+        }
+        var $param = {
+            'type': 'POST',
+            'url': 'unit/cms_add_unit',
+            'data': $data,
+            'callback': function (data) {
+                if (data == '1') {
+                    if ($id == null) {
+                        $('.ajax-success-ct').html('Tạo đơn vị ' + $name + ' thành công.').parent().fadeIn().delay(1000).fadeOut('slow');
+                        setTimeout(function () {
+                            $('.btn-back').trigger('click');
+                        }, 2000);
+                    } else {
+                        $('.ajax-success-ct').html('Sửa đơn vị ' + $name + ' thành công.').parent().fadeIn().delay(1000).fadeOut('slow');
+                        $('.products').find('input:text').val('');
+                        $('.products').find('input:checkbox').prop('checked', false);
+                    }
+                    cms_paging_unit(1);
+                    $('#modalunit').modal('toggle')
+                    $('#unit_id').val(null)
+                } else {
+                    $('.ajax-error-ct').html(data).parent().fadeIn().delay(1000).fadeOut('slow');
+                }
+            }
+        };
+        cms_adapter_ajax($param);
+    }
 }

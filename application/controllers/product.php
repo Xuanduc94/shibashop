@@ -22,7 +22,7 @@ class Product extends CI_Controller
         $data['data']['user'] = $this->auth;
         $store = $this->db->from('stores')->get()->result_array();
         $data['data']['store'] = $store;
-        $store_id = $this->db->select('store_id')->from('users')->where('id',$this->auth['id'])->limit(1)->get()->row_array();
+        $store_id = $this->db->select('store_id')->from('users')->where('id', $this->auth['id'])->limit(1)->get()->row_array();
         $data['data']['store_id'] = $store_id['store_id'];
         $data['template'] = 'products/index';
         $this->load->view('layout/index', isset($data) ? $data : null);
@@ -37,6 +37,17 @@ class Product extends CI_Controller
         $data['data']['_prd_manufacture'] = $sls_manufacture;
         $this->load->view('products/add_prd', isset($data) ? $data : null);
     }
+
+    #region Unit
+    public function cms_get_product_unit()
+    {
+        $data = $this->db->from('cms_units')->get()->row_array();
+        echo $this->messages =  json_encode($data);
+    }
+
+    #endregion
+
+
 
     public function cms_clone_product($id)
     {
@@ -54,6 +65,8 @@ class Product extends CI_Controller
             $this->load->view('products/add_prd', isset($data) ? $data : null);
         }
     }
+
+
 
     public function cms_edit_product($id)
     {
@@ -99,11 +112,11 @@ class Product extends CI_Controller
         $config['per_page'] = 10;
         $this->pagination->initialize($config);
         $data['_pagination_link'] = $this->pagination->create_links();
-        $data ['_list_prd_manuf'] = $this->db->from('products_manufacture')->limit($config['per_page'], ($page - 1) * $config['per_page'])->order_by('created', 'desc')->get()->result_array();
+        $data['_list_prd_manuf'] = $this->db->from('products_manufacture')->limit($config['per_page'], ($page - 1) * $config['per_page'])->order_by('created', 'desc')->get()->result_array();
         if ($page > 1 && ($total_prdmanuf - 1) / ($page - 1) == 10)
             $page = $page - 1;
 
-        $data ['page'] = $page;
+        $data['page'] = $page;
         $this->load->view('ajax/product/list_prd_manufacture', isset($data) ? $data : null);
     }
 
@@ -172,11 +185,10 @@ class Product extends CI_Controller
         echo '<optgroup label="Chọn danh mục">';
         if ($sls_group)
             foreach ($sls_group as $key => $val) :
-                ?>
-                <option
-                    value="<?php echo $val['id']; ?>"><?php echo $val['prd_group_name']; ?>
-                </option>
-            <?php
+?>
+            <option value="<?php echo $val['id']; ?>"><?php echo $val['prd_group_name']; ?>
+            </option>
+        <?php
             endforeach;
 
         echo '</optgroup>';
@@ -199,11 +211,10 @@ class Product extends CI_Controller
         echo '<optgroup label="Chọn danh mục">';
         if ($sls_group)
             foreach ($sls_group as $key => $val) :
-                ?>
-                <option
-                    value="<?php echo $val['id']; ?>"><?php echo $val['prd_group_name']; ?>
-                </option>
-            <?php
+        ?>
+            <option value="<?php echo $val['id']; ?>"><?php echo $val['prd_group_name']; ?>
+            </option>
+        <?php
             endforeach;
         echo '</optgroup>';
         $html = ob_get_contents();
@@ -219,11 +230,10 @@ class Product extends CI_Controller
         echo '<option value="-1" selected="selected">--Nhà sản xuất--</option>';
         echo '<optgroup label="Chọn nhà sản xuất">';
         foreach ($data as $key => $item) :
-            ?>
-            <option
-                value="<?php echo $item['ID']; ?>"><?php echo $item['prd_manuf_name']; ?>
+        ?>
+            <option value="<?php echo $item['ID']; ?>"><?php echo $item['prd_manuf_name']; ?>
             </option>
-        <?php
+<?php
         endforeach;
         echo '</optgroup>';
         echo '<optgroup label="------------------------">
@@ -244,11 +254,11 @@ class Product extends CI_Controller
         $config['per_page'] = 10;
         $this->pagination->initialize($config);
         $data['_pagination_link'] = $this->pagination->create_links();
-        $data ['_list_prd_group'] = $this->cms_nestedset->data('products_group', NULL, ['per_page' => $config['per_page'], 'page' => $page]);
+        $data['_list_prd_group'] = $this->cms_nestedset->data('products_group', NULL, ['per_page' => $config['per_page'], 'page' => $page]);
         if ($page > 1 && ($total_prdGroup - 1) / ($page - 1) == 10)
             $page = $page - 1;
 
-        $data ['page'] = $page;
+        $data['page'] = $page;
         $this->load->view('ajax/product/list_prd_group', isset($data) ? $data : null);
     }
 
@@ -328,10 +338,10 @@ class Product extends CI_Controller
             $this->db->insert('products', $data);
             $product_id = $this->db->insert_id();
             $user_init = $data['user_init'];
-            $inventory = ['store_id'=>$store_id,'product_id'=>$product_id,'quantity'=>$quantity,'user_init'=>$user_init];
+            $inventory = ['store_id' => $store_id, 'product_id' => $product_id, 'quantity' => $quantity, 'user_init' => $user_init];
             $this->db->insert('inventory', $inventory);
 
-            $report= array();
+            $report = array();
             $report['transaction_code'] = $data['prd_code'];
             $report['notes'] = 'Khai báo hàng hóa';
             $report['user_init'] = $data['user_init'];
@@ -343,13 +353,10 @@ class Product extends CI_Controller
 
             $this->db->insert('report', $report);
 
-            if ($this->db->trans_status() === FALSE)
-            {
+            if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 echo $this->messages = "0";
-            }
-            else
-            {
+            } else {
                 $this->db->trans_commit();
                 echo $this->messages = "1";
             }
@@ -409,7 +416,7 @@ class Product extends CI_Controller
                     $total_prd = $this->db
                         ->from('products')
                         ->where(['prd_status' => 1, 'deleted' => 0])
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
@@ -418,7 +425,7 @@ class Product extends CI_Controller
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('created', 'desc')
                         ->where(['prd_status' => 1, 'deleted' => 0])
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->get()
                         ->result_array();
@@ -426,7 +433,7 @@ class Product extends CI_Controller
                     $total_prd = $this->db
                         ->from('products')
                         ->where(['prd_status' => 1, 'deleted' => 0, 'prd_manufacture_id' => $option['option3']])
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
@@ -435,7 +442,7 @@ class Product extends CI_Controller
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('created', 'desc')
                         ->where(['prd_status' => 1, 'deleted' => 0, 'prd_manufacture_id' => $option['option3']])
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->get()
                         ->result_array();
@@ -481,7 +488,7 @@ class Product extends CI_Controller
                     $total_prd = $this->db
                         ->from('products')
                         ->where(['prd_status' => 0, 'deleted' => 0])
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
@@ -490,7 +497,7 @@ class Product extends CI_Controller
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('created', 'desc')
                         ->where(['prd_status' => 0, 'deleted' => 0])
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->get()
                         ->result_array();
@@ -498,7 +505,7 @@ class Product extends CI_Controller
                     $total_prd = $this->db
                         ->from('products')
                         ->where(['prd_status' => 0, 'deleted' => 0, 'prd_manufacture_id' => $option['option3']])
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
@@ -507,7 +514,7 @@ class Product extends CI_Controller
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('created', 'desc')
                         ->where(['prd_status' => 0, 'deleted' => 0, 'prd_manufacture_id' => $option['option3']])
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->get()
                         ->result_array();
@@ -553,7 +560,7 @@ class Product extends CI_Controller
                     $total_prd = $this->db
                         ->from('products')
                         ->where('deleted', 1)
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
@@ -562,7 +569,7 @@ class Product extends CI_Controller
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('created', 'desc')
                         ->where('deleted', 1)
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->get()
                         ->result_array();
@@ -570,7 +577,7 @@ class Product extends CI_Controller
                     $total_prd = $this->db
                         ->from('products')
                         ->where(['deleted' => 1, 'prd_manufacture_id' => $option['option3']])
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
@@ -579,7 +586,7 @@ class Product extends CI_Controller
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('created', 'desc')
                         ->where(['deleted' => 1, 'prd_manufacture_id' => $option['option3']])
-                        ->where_in('prd_group_id',$temp)
+                        ->where_in('prd_group_id', $temp)
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->get()
                         ->result_array();
@@ -602,12 +609,13 @@ class Product extends CI_Controller
         $this->load->view('ajax/product/list_products', isset($data) ? $data : null);
     }
 
-    function getCategoriesByParentId($category_id) {
+    function getCategoriesByParentId($category_id)
+    {
         $category_data = array();
 
         $category_query = $this->db
             ->from('products_group')
-            ->where('parentid',$category_id)
+            ->where('parentid', $category_id)
             ->get();
 
         foreach ($category_query->result() as $category) {

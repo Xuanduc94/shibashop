@@ -96,7 +96,7 @@ class CI_Output
         $this->_zlib_oc = @ini_get('zlib.output_compression');
 
         // Get mime types for later
-        if (defined('ENVIRONMENT') AND file_exists(APPPATH . 'config/' . ENVIRONMENT . '/mimes.php')) {
+        if (defined('ENVIRONMENT') and file_exists(APPPATH . 'config/' . ENVIRONMENT . '/mimes.php')) {
             include APPPATH . 'config/' . ENVIRONMENT . '/mimes.php';
         } else {
             include APPPATH . 'config/mimes.php';
@@ -210,7 +210,7 @@ class CI_Output
 
             // Is this extension supported?
             if (isset($this->mime_types[$extension])) {
-                $mime_type =& $this->mime_types[$extension];
+                $mime_type = &$this->mime_types[$extension];
 
                 if (is_array($mime_type)) {
                     $mime_type = current($mime_type);
@@ -380,14 +380,14 @@ class CI_Output
 
         // Grab the super object if we can.
         if (class_exists('CI_Controller')) {
-            $CI =& get_instance();
+            $CI = &get_instance();
         }
 
         // --------------------------------------------------------------------
 
         // Set the output data
         if ($output == '') {
-            $output =& $this->final_output;
+            $output = &$this->final_output;
         }
 
         // --------------------------------------------------------------------
@@ -408,9 +408,10 @@ class CI_Output
 
         if ($this->parse_exec_vars === TRUE) {
             $memory = (!function_exists('memory_get_usage')) ? '0' : round(memory_get_usage() / 1024 / 1024, 2) . 'MB';
+            $output = str_replace(array('{elapsed_time}', '{memory_usage}'), array($elapsed, $memory), (string) $output);
 
-            $output = str_replace('{elapsed_time}', $elapsed, $output);
-            $output = str_replace('{memory_usage}', $memory, $output);
+            // $output = str_replace('{elapsed_time}', $elapsed, $output);
+            // $output = str_replace('{memory_usage}', $memory, $output);
         }
 
         // --------------------------------------------------------------------
@@ -418,7 +419,7 @@ class CI_Output
         // Is compression requested?
         if ($CFG->item('compress_output') === TRUE && $this->_zlib_oc == FALSE) {
             if (extension_loaded('zlib')) {
-                if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE) {
+                if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) and strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE) {
                     ob_start('ob_gzhandler');
                 }
             }
@@ -492,12 +493,12 @@ class CI_Output
      */
     function _write_cache($output)
     {
-        $CI =& get_instance();
+        $CI = &get_instance();
         $path = $CI->config->item('cache_path');
 
         $cache_path = ($path == '') ? APPPATH . 'cache/' : $path;
 
-        if (!is_dir($cache_path) OR !is_really_writable($cache_path)) {
+        if (!is_dir($cache_path) or !is_really_writable($cache_path)) {
             log_message('error', "Unable to write cache file: " . $cache_path);
             return;
         }
@@ -527,8 +528,6 @@ class CI_Output
 
         log_message('debug', "Cache file written: " . $cache_path);
     }
-
-
 }
 // END Output Class
 

@@ -134,29 +134,31 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <table class="table table-light">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>STT</th>
-                                <th>Đơn vị</th>
-                                <th>Giá bán lẻ</th>
-                                <th>Giá bán sỉ</th>
-                                <th>Đơn vị chính</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td colspan="5" class="text-center hover">Thêm đơn vị</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="col-md-4">
+                        <h4>Thông tin giá bán</h4>
+                        <small>Nhập thông tin giá bán của sản phẩm</small>
+                    </div>
+
+                    <div class="col-md-8 padd-0">
+                        <table class="table table-light">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Đơn vị</th>
+                                    <th>Giá bán lẻ</th>
+                                    <th>Giá bán sỉ</th>
+                                    <th>Sử dụng</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="body_unit">
+
+                                <tr>
+                                    <td onclick="cms_add_product_units()" colspan="5" class="text-center hover">Thêm đơn vị</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
