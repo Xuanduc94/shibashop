@@ -30,7 +30,7 @@
                         (<?php echo $item['ID']; ?>)" style="color: #2a6496; cursor: pointer;"><?php echo $item['prd_name']; ?></td>
                     <td class="text-center"><?php echo $item['prd_code']; ?></td>
                     <td class="text-center"><?php echo $item['prd_sls']; ?></td>
-                    <td class="text-right" style="font-weight: bold;"></td>
+                    <td class="text-right" style="font-weight: bold;"><?php echo $item['price']; ?></td>
                     <td><?php echo cms_getNamegroupbyID($item['prd_group_id']); ?></td>
                     <td><?php echo cms_getNamemanufacturebyID($item['prd_manufacture_id']); ?></td>
                     <!--                <td class="text-center"-->

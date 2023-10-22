@@ -1,5 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-
+require_once APPPATH . 'utils/string_helper.php';
 class Product extends CI_Controller
 {
     public $auth;
@@ -311,71 +311,77 @@ class Product extends CI_Controller
 
     public function cms_add_product($store_id)
     {
-        $data = $this->input->post('data');
-        $data = $this->cms_common_string->allow_post($data, ['prd_code', 'prd_name', 'prd_sls', 'prd_inventory', 'prd_allownegative', 'prd_origin_price', 'prd_group_id', 'prd_manufacture_id', 'prd_vat', 'display_website', 'prd_new', 'prd_hot', 'prd_highlight']);
-        $check_code = $this->db->select('ID')->from('products')->where('prd_code', $data['prd_code'])->get()->row_array();
-        if (!empty($check_code) && count($check_code)) {
-            echo $this->messages = 'Mã sản phẩm ' . $data['prd_code'] . ' đã tồn tại trong hệ thống. Vui lòng chọn mã khác.';
-        } else {
-            $this->db->trans_begin();
-            $data['user_init'] = $this->auth['id'];
-
-            if ($data['prd_code'] == '') {
-                $this->db->select_max('prd_code')->like('prd_code', 'SP');
-                $max_product_code = $this->db->get('products')->row();
-                $max_code = (int)(str_replace('SP', '', $max_product_code->prd_code)) + 1;
-                if ($max_code < 10)
-                    $data['prd_code'] = 'SP0000' . ($max_code);
-                else if ($max_code < 100)
-                    $data['prd_code'] = 'SP000' . ($max_code);
-                else if ($max_code < 1000)
-                    $data['prd_code'] = 'SP00' . ($max_code);
-                else if ($max_code < 10000)
-                    $data['prd_code'] = 'SP0' . ($max_code);
-                else if ($max_code < 100000)
-                    $data['prd_code'] = 'SP' . ($max_code);
-            }
-
-            $quantity = $data['prd_sls'];
-            $this->db->insert('products', $data);
-            $product_id = $this->db->insert_id();
-            $user_init = $data['user_init'];
-            $inventory = ['store_id' => $store_id, 'product_id' => $product_id, 'quantity' => $quantity, 'user_init' => $user_init];
-            $this->db->insert('inventory', $inventory);
-
-            $report = array();
-            $report['transaction_code'] = $data['prd_code'];
-            $report['notes'] = 'Khai báo hàng hóa';
-            $report['user_init'] = $data['user_init'];
-            $report['type'] = 1;
-            $report['store_id'] = $store_id;
-            $report['product_id'] = $product_id;
-            $report['input'] = $quantity;
-            $report['stock'] = $quantity;
-
-            $this->db->insert('report', $report);
-
-            # unit
-
-            $units = $data['units'];
-
-            foreach ($units as $unit) {
-                $cms_products_units = array();
-                $cms_products_units['prd_id'] = $product_id;
-                $cms_products_units['active'] = $unit['active'];
-                $cms_products_units['unit'] = $unit['unit'];
-                $cms_products_units['prd_retail_price'] = $unit['retail'];
-                $cms_products_units['prd_whole_price'] = $unit['whole'];
-                $this->db->insert("products_units", $cms_products_units);
-            }
-
-            if ($this->db->trans_status() === FALSE) {
-                $this->db->trans_rollback();
-                echo $this->messages = "0";
+        $this->db->trans_begin();
+        try {
+            $data = $this->input->post('data');
+            $units = $this->input->post('units');
+            $data = $this->cms_common_string->allow_post($data, ['prd_code', 'prd_name', 'prd_sls', 'prd_inventory', 'prd_allownegative', 'prd_origin_price', 'prd_group_id', 'prd_manufacture_id', 'prd_vat', 'display_website', 'prd_new', 'prd_hot', 'prd_highlight']);
+            $check_code = $this->db->select('ID')->from('products')->where('prd_code', $data['prd_code'])->get()->row_array();
+            $data['prd_name'] = strtoupper(vn_str_filter($data[['prd_name']]));
+            if (!empty($check_code) && count($check_code)) {
+                echo $this->messages = 'Mã sản phẩm ' . $data['prd_code'] . ' đã tồn tại trong hệ thống. Vui lòng chọn mã khác.';
             } else {
-                $this->db->trans_commit();
-                echo $this->messages = "1";
+                $data['user_init'] = $this->auth['id'];
+
+                if ($data['prd_code'] == '') {
+                    $this->db->select_max('prd_code')->like('prd_code', 'SP');
+                    $max_product_code = $this->db->get('products')->row();
+                    $max_code = (int)(str_replace('SP', '', $max_product_code->prd_code)) + 1;
+                    if ($max_code < 10)
+                        $data['prd_code'] = 'SP0000' . ($max_code);
+                    else if ($max_code < 100)
+                        $data['prd_code'] = 'SP000' . ($max_code);
+                    else if ($max_code < 1000)
+                        $data['prd_code'] = 'SP00' . ($max_code);
+                    else if ($max_code < 10000)
+                        $data['prd_code'] = 'SP0' . ($max_code);
+                    else if ($max_code < 100000)
+                        $data['prd_code'] = 'SP' . ($max_code);
+                }
+
+                $quantity = $data['prd_sls'];
+                $this->db->insert('products', $data);
+                $product_id = $this->db->insert_id();
+                $user_init = $data['user_init'];
+                $inventory = ['store_id' => $store_id, 'product_id' => $product_id, 'quantity' => $quantity, 'user_init' => $user_init];
+                $this->db->insert('inventory', $inventory);
+
+                $report = array();
+                $report['transaction_code'] = $data['prd_code'];
+                $report['notes'] = 'Khai báo hàng hóa';
+                $report['user_init'] = $data['user_init'];
+                $report['type'] = 1;
+                $report['store_id'] = $store_id;
+                $report['product_id'] = $product_id;
+                $report['input'] = $quantity;
+                $report['stock'] = $quantity;
+                $report['price'] = 0;
+
+                $this->db->insert('report', $report);
+
+                # unit
+
+                foreach ($units as $unit) {
+                    $cms_products_units = array();
+                    $cms_products_units['prd_id'] = $product_id;
+                    $cms_products_units['active'] = $unit['active'];
+                    $cms_products_units['unit'] = $unit['unit'];
+                    $cms_products_units['prd_retail_price'] = $unit['retail'];
+                    $cms_products_units['prd_whole_price'] = $unit['whole'];
+                    $this->db->insert("products_units", $cms_products_units);
+                }
+
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                    echo $this->messages = "0";
+                } else {
+                    $this->db->trans_commit();
+                    echo $this->messages = "1";
+                }
             }
+        } catch (\Throwable $th) {
+            $this->db->trans_rollback();
+            echo $this->messages = "0";
         }
     }
 
@@ -609,7 +615,14 @@ class Product extends CI_Controller
                 }
             }
         }
-
+        $temp = $data['data']['_list_product'];
+        $listProduct = array();
+        foreach ($temp as $value) {
+            $price = $this->db->from('products_units')->where(['active' => 1, 'prd_id' => $value['ID']])->get()->row_array();
+            $value['price'] = number_format($price['prd_retail_price']) . "/" . number_format($price['prd_whole_price']);
+            array_push($listProduct, $value);
+        }
+        $data['data']['_list_product'] = $listProduct;
         $config['base_url'] = 'cms_paging_product';
         $config['total_rows'] = $total_prd;
         $this->pagination->initialize($config);
