@@ -720,8 +720,10 @@ class Product extends CI_Controller
     {
         $id = (int)$id;
         $product = $this->db->from('products')->where('ID', $id)->get()->row_array();
+        $price = $this->db->from("products_units")->where("prd_id", $id)->get()->result_array();
         if (!empty($product) && count($product)) {
             $data['_detail_product'] = $product;
+            $data['_units'] = $price;
             $this->load->view('ajax/product/detail_product', isset($data) ? $data : null);
         }
     }

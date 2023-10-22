@@ -10,7 +10,7 @@ foreach ($data['arr_product_units'] as $key => $item) :
         <td>
             <select onchange="cms_select_unit(<?php echo $item['id'] ?>, this.value)" class="form-control">
                 <?php foreach ($unit as $unitItem) : ?>
-                    <option <?php if ($unitItem['Id'] === $item['unit']) echo "selected" ?> value="<?php echo $unitItem['Id'] ?>"><?php echo $unitItem['name'] ?></option>
+                    <option <?php if ($unitItem['name'] === $item['unit']) echo "selected" ?> value="<?php echo $unitItem['name'] ?>"><?php echo $unitItem['name'] ?></option>
                 <?php endforeach; ?>
             </select>
         </td>
