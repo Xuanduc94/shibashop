@@ -29,7 +29,7 @@ class Dashboard extends CI_Controller
                 $soluongsp[$id] = 0;
             }
         }
-        $data['lamgiaban'] = $this->db->from('products')->where(['prd_status' => 1, 'deleted' => 0, 'prd_sell_price' => 0])->count_all_results();
+        $data['lamgiaban'] = $this->db->from('products')->where(['prd_status' => 1, 'deleted' => 0])->count_all_results();
         $data['lamgiamua'] = $this->db->from('products')->where(['prd_status' => 1, 'deleted' => 0, 'prd_origin_price' => 0])->count_all_results();
         $total_prd = $this->db->from('products')->where(['prd_status' => 1, 'deleted' => 0])->count_all_results();
         $data['data']['_sl_product'] = $total_prd;

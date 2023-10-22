@@ -112,6 +112,7 @@ class Product extends CI_Controller
         $config['per_page'] = 10;
         $this->pagination->initialize($config);
         $data['_pagination_link'] = $this->pagination->create_links();
+        $page = (int) $page;
         $data['_list_prd_manuf'] = $this->db->from('products_manufacture')->limit($config['per_page'], ($page - 1) * $config['per_page'])->order_by('created', 'desc')->get()->result_array();
         if ($page > 1 && ($total_prdmanuf - 1) / ($page - 1) == 10)
             $page = $page - 1;
@@ -254,6 +255,7 @@ class Product extends CI_Controller
         $config['per_page'] = 10;
         $this->pagination->initialize($config);
         $data['_pagination_link'] = $this->pagination->create_links();
+        $page = (int) $page;
         $data['_list_prd_group'] = $this->cms_nestedset->data('products_group', NULL, ['per_page' => $config['per_page'], 'page' => $page]);
         if ($page > 1 && ($total_prdGroup - 1) / ($page - 1) == 10)
             $page = $page - 1;
@@ -310,7 +312,7 @@ class Product extends CI_Controller
     public function cms_add_product($store_id)
     {
         $data = $this->input->post('data');
-        $data = $this->cms_common_string->allow_post($data, ['prd_code', 'prd_name', 'prd_sls', 'prd_inventory', 'prd_allownegative', 'prd_origin_price', 'prd_sell_price', 'prd_group_id', 'prd_manufacture_id', 'prd_vat', 'prd_image_url', 'prd_descriptions', 'display_website', 'prd_new', 'prd_hot', 'prd_highlight']);
+        $data = $this->cms_common_string->allow_post($data, ['prd_code', 'prd_name', 'prd_sls', 'prd_inventory', 'prd_allownegative', 'prd_origin_price', 'prd_group_id', 'prd_manufacture_id', 'prd_vat', 'display_website', 'prd_new', 'prd_hot', 'prd_highlight']);
         $check_code = $this->db->select('ID')->from('products')->where('prd_code', $data['prd_code'])->get()->row_array();
         if (!empty($check_code) && count($check_code)) {
             echo $this->messages = 'Mã sản phẩm ' . $data['prd_code'] . ' đã tồn tại trong hệ thống. Vui lòng chọn mã khác.';
@@ -353,6 +355,20 @@ class Product extends CI_Controller
 
             $this->db->insert('report', $report);
 
+            # unit
+
+            $units = $data['units'];
+
+            foreach ($units as $unit) {
+                $cms_products_units = array();
+                $cms_products_units['prd_id'] = $product_id;
+                $cms_products_units['active'] = $unit['active'];
+                $cms_products_units['unit'] = $unit['unit'];
+                $cms_products_units['prd_retail_price'] = $unit['retail'];
+                $cms_products_units['prd_whole_price'] = $unit['whole'];
+                $this->db->insert("products_units", $cms_products_units);
+            }
+
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 echo $this->messages = "0";
@@ -386,7 +402,7 @@ class Product extends CI_Controller
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('ID,prd_code,prd_name,prd_sls,prd_sell_price,prd_group_id,prd_manufacture_id,prd_image_url,prd_status')
+                        ->select('ID,prd_code,prd_name,prd_sls,prd_group_id,prd_manufacture_id,prd_status')
                         ->from('products')
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('created', 'desc')
@@ -401,7 +417,7 @@ class Product extends CI_Controller
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('ID,prd_code,prd_name,prd_sls,prd_sell_price,prd_group_id,prd_manufacture_id,prd_image_url,prd_status')
+                        ->select('ID,prd_code,prd_name,prd_sls,prd_group_id,prd_manufacture_id,prd_status')
                         ->from('products')
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('created', 'desc')
@@ -628,6 +644,15 @@ class Product extends CI_Controller
         }
 
         return $category_data;
+    }
+
+    public function cms_add_row_list_unit()
+    {
+        $data = $this->input->post('data');
+        $unit = $this->db->from('units')->get()->result_array();
+        $list['data'] = $data;
+        $list['unit'] = $unit;
+        $this->load->view('ajax/product/list_unit_product', isset($list) ? $list : null);
     }
 
     public function cms_delete_product($id)

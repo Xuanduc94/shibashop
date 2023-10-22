@@ -1517,41 +1517,56 @@ function cms_delete_product_unit(id) {
     arr_product_units = arr_product_units.filter(s => s.id != id)
     $(`#unit-${id}`).remove();
 }
+function cms_input_retail_price(id, price) {
+    let index = arr_product_units.findIndex(s => s.id == id)
+    arr_product_units[index].retail = price
+}
+function cms_input_whole_price(id, price) {
+    let index = arr_product_units.findIndex(s => s.id == id)
+    arr_product_units[index].whole = price
+}
+
+function active_product_unit(id, check) {
+    $('.checkbox').prop('checked', false)
+    $('#chk_' + id).prop('checked', true)
+    for (let index = 0; index < arr_product_units.length; index++) {
+        if (arr_product_units[index].id != id) {
+            arr_product_units[index].active = 0;
+        } else {
+            arr_product_units[index].active = 1;
+        }
+    }
+}
+
+function cms_select_unit(id, unit) {
+    let index = arr_product_units.findIndex(s => s.id == id)
+    arr_product_units[index].unit = unit
+}
+
 function cms_add_product_units() {
     'use strict'
-    let html = "";
+    // let html = "";
     arr_product_units.push({
         id: getRandomInt(100),
         unit: null,
         retail: 0,
-        whole: 0
+        whole: 0,
+        active: 0
     })
-    arr_product_units.forEach(item => {
-        $(`#unit-${item.id}`).remove();
-    })
-    arr_product_units.forEach((item, index) => {
-        $('#body_unit').append(`<tr id="unit-${item.id}">
-                                <td>
-                               ${index + 1}
-                                </td>
-                                <td>
-                                 <select class="form-control">
-                                <option></option>
-                                </select>
-                                </td>
-                                <td>
-                                <input type="number" class="form-control"/>
-                                </td>
-                                <td><input type="number" class="form-control"/></td>
-                                <td>
-                                <label class="checkbox"><input type="checkbox" class="checkbox">
-                                        <span></span> sử dụng</label>
-                                </td>
-                                <td>
-                                <i onclick="cms_delete_product_unit(${item.id})" class="fa fa-trash"></i>
-                                </td>
-                            </tr>`)
-    })
+    let $data = {
+        data: {
+            arr_product_units
+        }
+    };
+    var $param = {
+        'type': 'POST',
+        'url': 'product/cms_add_row_list_unit',
+        'data': $data,
+        'callback': function (res) {
+            $('#body_unit').html(res)
+        }
+    };
+    cms_adapter_ajax($param);
 }
 // function add product
 function cms_add_product(type) {
@@ -1563,15 +1578,9 @@ function cms_add_product(type) {
     var $inventory = cms_get_valCheckbox('prd_inventory', 'id');
     var $allownegative = cms_get_valCheckbox('prd_allownegative', 'id');
     var $origin_price = cms_decode_currency_format($('#prd_origin_price').val());
-    var $sell_price = cms_decode_currency_format($('#prd_sell_price').val());
     var $group_id = $('#prd_group_id').val();
     var $manufacture_id = $('#prd_manufacture_id').val();
     var $vat = $('#prd_vat').val();
-    var $img_url;
-    var $img_afurl = $('#prd_image_urls').attr('src');
-    $img_url = (typeof $img_afurl == 'undefined') ? '' : $img_afurl;
-    var $description = CKEDITOR.instances['ckeditor'].getData();
-    var $display_wb = cms_get_valCheckbox('display_website', 'id');
     var $new = cms_get_valCheckbox('prd_new', 'id');
     var $hot = cms_get_valCheckbox('prd_hot', 'id');
     var $highlight = cms_get_valCheckbox('prd_highlight', 'id');
@@ -1586,16 +1595,13 @@ function cms_add_product(type) {
                 'prd_inventory': $inventory,
                 'prd_allownegative': $allownegative,
                 'prd_origin_price': $origin_price,
-                'prd_sell_price': $sell_price,
                 'prd_group_id': $group_id,
                 'prd_manufacture_id': $manufacture_id,
                 'prd_vat': $vat,
-                'prd_image_url': $img_url,
-                'prd_descriptions': $description,
-                'display_website': $display_wb,
                 'prd_new': $new,
                 'prd_hot': $hot,
-                'prd_highlight': $highlight
+                'prd_highlight': $highlight,
+                'units': arr_product_units
             }
         };
         var $param = {

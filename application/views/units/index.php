@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button data-dismiss="modal" class="btn btn-scondary btn-sm">Đóng</button>
+                <button data-dismiss="modal" class="btn btn-scondary btn-sm"><i class="fa fa-undo"></i> Đóng</button>
                 <button onclick="cms_add_unit()" class="btn btn-primary btn-sm"> <i class="fa fa-check"></i> Lưu</button>
             </div>
         </div>

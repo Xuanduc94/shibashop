@@ -37,12 +37,12 @@
                         <div class="row">
                             <div class="form-group clearfix">
                                 <div class="col-md-6 padd-left-0">
-                                    <label>Tên sản phẩm</label>
-                                    <input type="text" id="prd_name" value="<?php if (isset($data['_detail_product'])) echo $data['_detail_product']['prd_name'] . ' - copy' ?>" class="form-control" placeholder="Nhập tên sản phẩm" />
-                                </div>
-                                <div class="col-md-6 padd-right-0">
                                     <label>Mã sản phẩm</label>
                                     <input type="text" id="prd_code" class="form-control " placeholder="Nếu không nhập, hệ thống sẽ tự sinh." />
+                                </div>
+                                <div class=" padd-right-0 col-md-6 ">
+                                    <label>Tên sản phẩm</label>
+                                    <input type="text" id="prd_name" value="<?php if (isset($data['_detail_product'])) echo $data['_detail_product']['prd_name'] . ' - copy' ?>" class="form-control" placeholder="Nhập tên sản phẩm" />
                                 </div>
                             </div>
                             <div class="form-group clearfix">
@@ -60,17 +60,15 @@
                             <div class="form-group clearfix">
                                 <div class="col-md-6 padd-left-0">
                                     <label>Giá vốn</label>
-                                    <input type="text" id="prd_origin_price" value="<?php if (isset($data['_detail_product'])) echo $data['_detail_product']['prd_origin_price'] ?>" class="form-control text-right txtMoney" placeholder="Nhập giá vốn" />
+                                    <input type="text" id="prd_origin_price" value="0" class="form-control text-right txtMoney" placeholder="Nhập giá vốn" />
                                 </div>
                                 <div class="col-md-6 padd-right-0">
-                                    <label>Giá bán</label>
-                                    <input type="text" id="prd_sell_price" value="<?php echo isset($data['_detail_product']) ?  $data['_detail_product']['prd_sell_price'] : 0  ?>" class="form-control txtMoney text-right" placeholder="0" />
+
                                 </div>
                             </div>
                             <div class="form-group clearfix">
                                 <div class="col-md-6 padd-left-0">
                                     <label>Danh mục</label>
-
                                     <div class="col-md-11 padd-0">
                                         <select class="form-control" id="prd_group_id">
                                             <optgroup label="Chọn danh mục">

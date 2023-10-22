@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th6 14, 2019 lúc 06:38 PM
--- Phiên bản máy phục vụ: 10.1.36-MariaDB
--- Phiên bản PHP: 7.2.11
+-- Host: localhost:3306
+-- Generation Time: Oct 22, 2023 at 03:38 AM
+-- Server version: 8.0.30
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,17 +18,17 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `qlbanhang`
+-- Database: `qlbanhang`
 --
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_customers`
+-- Table structure for table `cms_customers`
 --
 
 CREATE TABLE `cms_customers` (
-  `ID` int(10) UNSIGNED NOT NULL,
+  `ID` int UNSIGNED NOT NULL,
   `customer_name` varchar(255) NOT NULL,
   `customer_code` varchar(10) NOT NULL,
   `customer_phone` varchar(20) NOT NULL,
@@ -40,12 +39,12 @@ CREATE TABLE `cms_customers` (
   `customer_gender` tinyint(1) NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  `user_init` int(11) NOT NULL,
-  `user_upd` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `user_init` int NOT NULL,
+  `user_upd` int NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_customers`
+-- Dumping data for table `cms_customers`
 --
 
 INSERT INTO `cms_customers` (`ID`, `customer_name`, `customer_code`, `customer_phone`, `customer_email`, `customer_addr`, `notes`, `customer_birthday`, `customer_gender`, `created`, `updated`, `user_init`, `user_upd`) VALUES
@@ -57,34 +56,34 @@ INSERT INTO `cms_customers` (`ID`, `customer_name`, `customer_code`, `customer_p
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_input`
+-- Table structure for table `cms_input`
 --
 
 CREATE TABLE `cms_input` (
-  `ID` int(10) UNSIGNED NOT NULL,
+  `ID` int UNSIGNED NOT NULL,
   `input_code` varchar(9) NOT NULL,
-  `supplier_id` int(11) NOT NULL,
-  `store_id` int(11) NOT NULL,
+  `supplier_id` int NOT NULL,
+  `store_id` int NOT NULL,
   `input_date` datetime NOT NULL,
   `notes` varchar(255) NOT NULL,
-  `payment_method` tinyint(4) NOT NULL,
-  `total_price` int(13) NOT NULL,
-  `total_quantity` int(9) NOT NULL,
-  `discount` int(11) NOT NULL,
-  `total_money` int(13) NOT NULL,
-  `payed` int(11) NOT NULL,
-  `lack` int(13) NOT NULL,
+  `payment_method` tinyint NOT NULL,
+  `total_price` int NOT NULL,
+  `total_quantity` int NOT NULL,
+  `discount` int NOT NULL,
+  `total_money` int NOT NULL,
+  `payed` int NOT NULL,
+  `lack` int NOT NULL,
   `detail_input` text NOT NULL,
   `input_status` tinyint(1) NOT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `user_init` int(11) NOT NULL,
-  `user_upd` int(11) NOT NULL,
+  `user_init` int NOT NULL,
+  `user_upd` int NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_input`
+-- Dumping data for table `cms_input`
 --
 
 INSERT INTO `cms_input` (`ID`, `input_code`, `supplier_id`, `store_id`, `input_date`, `notes`, `payment_method`, `total_price`, `total_quantity`, `discount`, `total_money`, `payed`, `lack`, `detail_input`, `input_status`, `created`, `updated`, `user_init`, `user_upd`, `deleted`) VALUES
@@ -116,21 +115,21 @@ INSERT INTO `cms_input` (`ID`, `input_code`, `supplier_id`, `store_id`, `input_d
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_inventory`
+-- Table structure for table `cms_inventory`
 --
 
 CREATE TABLE `cms_inventory` (
-  `store_id` int(5) NOT NULL,
-  `product_id` int(10) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `user_init` int(11) NOT NULL,
-  `user_upd` int(11) DEFAULT NULL,
+  `store_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `quantity` int NOT NULL,
+  `user_init` int NOT NULL,
+  `user_upd` int DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_inventory`
+-- Dumping data for table `cms_inventory`
 --
 
 INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, `user_upd`, `created`, `updated`) VALUES
@@ -196,36 +195,36 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_orders`
+-- Table structure for table `cms_orders`
 --
 
 CREATE TABLE `cms_orders` (
-  `ID` int(10) UNSIGNED NOT NULL,
+  `ID` int UNSIGNED NOT NULL,
   `output_code` varchar(9) NOT NULL,
-  `customer_id` int(11) NOT NULL,
-  `store_id` int(11) NOT NULL,
+  `customer_id` int NOT NULL,
+  `store_id` int NOT NULL,
   `sell_date` datetime NOT NULL,
   `notes` varchar(255) NOT NULL,
-  `payment_method` tinyint(4) NOT NULL,
-  `total_price` int(13) NOT NULL,
-  `total_origin_price` int(11) NOT NULL,
-  `coupon` int(11) NOT NULL,
-  `customer_pay` int(11) NOT NULL,
-  `total_money` int(13) NOT NULL,
-  `total_quantity` int(9) NOT NULL,
-  `lack` int(13) NOT NULL,
+  `payment_method` tinyint NOT NULL,
+  `total_price` int NOT NULL,
+  `total_origin_price` int NOT NULL,
+  `coupon` int NOT NULL,
+  `customer_pay` int NOT NULL,
+  `total_money` int NOT NULL,
+  `total_quantity` int NOT NULL,
+  `lack` int NOT NULL,
   `detail_order` text NOT NULL,
   `order_status` tinyint(1) NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `user_init` int(11) NOT NULL,
-  `user_upd` int(11) NOT NULL,
-  `sale_id` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `user_init` int NOT NULL,
+  `user_upd` int NOT NULL,
+  `sale_id` int NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_orders`
+-- Dumping data for table `cms_orders`
 --
 
 INSERT INTO `cms_orders` (`ID`, `output_code`, `customer_id`, `store_id`, `sell_date`, `notes`, `payment_method`, `total_price`, `total_origin_price`, `coupon`, `customer_pay`, `total_money`, `total_quantity`, `lack`, `detail_order`, `order_status`, `deleted`, `created`, `updated`, `user_init`, `user_upd`, `sale_id`) VALUES
@@ -238,17 +237,17 @@ INSERT INTO `cms_orders` (`ID`, `output_code`, `customer_id`, `store_id`, `sell_
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_permissions`
+-- Table structure for table `cms_permissions`
 --
 
 CREATE TABLE `cms_permissions` (
-  `id` int(10) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `permission_url` varchar(255) NOT NULL,
   `permission_name` varchar(150) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_permissions`
+-- Dumping data for table `cms_permissions`
 --
 
 INSERT INTO `cms_permissions` (`id`, `permission_url`, `permission_name`) VALUES
@@ -262,199 +261,87 @@ INSERT INTO `cms_permissions` (`id`, `permission_url`, `permission_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_products`
+-- Table structure for table `cms_products`
 --
 
 CREATE TABLE `cms_products` (
-  `ID` int(10) UNSIGNED NOT NULL,
+  `ID` int UNSIGNED NOT NULL,
   `prd_code` varchar(15) NOT NULL,
   `prd_name` varchar(255) NOT NULL,
-  `prd_sls` int(11) NOT NULL,
-  `prd_origin_price` int(11) NOT NULL,
-  `prd_sell_price` int(11) NOT NULL,
-  `prd_vat` tinyint(4) NOT NULL,
+  `prd_sls` int NOT NULL,
+  `prd_origin_price` int NOT NULL,
+  `prd_vat` tinyint NOT NULL,
   `prd_status` tinyint(1) NOT NULL DEFAULT '1',
   `prd_inventory` tinyint(1) NOT NULL,
   `prd_allownegative` tinyint(1) NOT NULL,
-  `prd_manufacture_id` int(11) NOT NULL,
-  `prd_group_id` int(11) NOT NULL,
-  `prd_image_url` int(11) NOT NULL,
+  `prd_manufacture_id` int NOT NULL,
+  `prd_group_id` int NOT NULL,
+  `prd_image_url` int DEFAULT NULL,
   `prd_descriptions` text NOT NULL,
-  `prd_manuf_id` int(11) NOT NULL,
+  `prd_manuf_id` int NOT NULL,
   `prd_hot` tinyint(1) NOT NULL,
   `prd_new` tinyint(1) NOT NULL,
   `prd_highlight` tinyint(1) NOT NULL,
   `display_website` tinyint(1) NOT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `user_init` int(11) NOT NULL,
-  `user_upd` int(11) NOT NULL,
+  `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_init` int NOT NULL,
+  `user_upd` int NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Đang đổ dữ liệu cho bảng `cms_products`
---
-
-INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin_price`, `prd_sell_price`, `prd_vat`, `prd_status`, `prd_inventory`, `prd_allownegative`, `prd_manufacture_id`, `prd_group_id`, `prd_image_url`, `prd_descriptions`, `prd_manuf_id`, `prd_hot`, `prd_new`, `prd_highlight`, `display_website`, `created`, `updated`, `user_init`, `user_upd`, `deleted`) VALUES
-(119, 'SP000006', 'Đồng hồ thể thao nữ Sport watch samda', 1997, 150000, 300000, 0, 1, 1, 0, 45, 129, 0, '', 0, 0, 0, 0, 0, '2019-06-14 23:24:03', '2019-06-14 23:27:05', 2, 0, 0),
-(118, 'SP000005', 'Laptop Xiaomi Mi Notebook Pro 15.6inch i5 8G (Xám) computer', 29, 20000000, 22000000, 0, 1, 1, 0, 21, 44, 0, '', 0, 0, 0, 0, 0, '2019-06-14 23:21:55', '2019-06-14 23:27:05', 2, 0, 0),
-(117, 'SP000004', 'Smart Tivi Samsung 50 inch 4K UHD - Model UA50NU7090KXXV', 53, 14000000, 16900000, 0, 1, 1, 0, 12, 62, 0, '', 0, 0, 0, 0, 0, '2019-06-14 23:20:07', '2019-06-14 23:26:20', 2, 0, 0),
-(116, 'SP000003', 'BỘ NỒI INOX 3 ĐÁY SUNHOUSE SH892 (16, 20, 24 cm)', 275, 450000, 590000, 0, 1, 1, 0, 39, 101, 0, '', 0, 0, 0, 0, 0, '2019-06-14 23:18:33', '2019-06-14 23:25:47', 2, 0, 0),
-(115, 'SP000002', 'Giày Sneaker Nam Biti\'s Hunter X Marvel - Tribute G.O.A.T', 349, 850000, 1300000, 0, 1, 1, 0, 38, 122, 0, '', 0, 0, 0, 0, 0, '2019-06-14 23:15:00', '2019-06-14 23:24:59', 2, 0, 0),
-(114, 'SP000001', 'Quần Tây ( Âu ) Nam Hàn Quốc Dáng Ôm Body Màu Đen', 1200, 80000, 150000, 0, 1, 1, 0, 37, 120, 0, '', 0, 0, 0, 0, 0, '2019-06-14 23:13:05', '2019-06-14 23:32:33', 2, 0, 0),
-(113, 'SP00001', 'Sản phẩm Test', 197, 150000, 300000, 0, 1, 1, 0, 8, 14, 0, '', 0, 0, 0, 0, 0, '2019-06-14 17:29:09', '2019-06-14 22:44:48', 2, 0, 1);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_products_group`
+-- Table structure for table `cms_products_group`
 --
 
 CREATE TABLE `cms_products_group` (
-  `ID` int(10) UNSIGNED NOT NULL,
+  `ID` int UNSIGNED NOT NULL,
   `prd_group_name` varchar(255) NOT NULL,
-  `parentid` int(11) NOT NULL,
-  `level` tinyint(4) NOT NULL,
-  `lft` int(11) NOT NULL,
-  `rgt` int(11) NOT NULL,
+  `parentid` int NOT NULL,
+  `level` tinyint NOT NULL,
+  `lft` int NOT NULL DEFAULT '-1',
+  `rgt` int NOT NULL DEFAULT '-1',
   `created` datetime NOT NULL,
-  `updated` datetime NOT NULL,
-  `user_init` tinyint(4) NOT NULL,
-  `user_upd` tinyint(4) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_init` tinyint DEFAULT NULL,
+  `user_upd` tinyint DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_products_group`
+-- Dumping data for table `cms_products_group`
 --
 
 INSERT INTO `cms_products_group` (`ID`, `prd_group_name`, `parentid`, `level`, `lft`, `rgt`, `created`, `updated`, `user_init`, `user_upd`) VALUES
-(36, 'Hàng Gia dụng & Đời sống', -1, 0, 0, 0, '2019-06-14 22:50:39', '0000-00-00 00:00:00', 2, 0),
-(35, 'Siêu Thị Tạp Hóa', -1, 0, 0, 0, '2019-06-14 22:50:29', '0000-00-00 00:00:00', 2, 0),
-(34, 'Hàng Mẹ, Bé & Đồ Chơi', -1, 0, 0, 0, '2019-06-14 22:50:22', '0000-00-00 00:00:00', 2, 0),
-(33, 'Sức Khỏe & Làm Đẹp', -1, 0, 0, 0, '2019-06-14 22:50:13', '0000-00-00 00:00:00', 2, 0),
-(32, 'TV & Thiết Bị Điện Gia Dụng', -1, 0, 0, 0, '2019-06-14 22:50:05', '0000-00-00 00:00:00', 2, 0),
-(31, 'Phụ Kiện Điện Tử', -1, 0, 0, 0, '2019-06-14 22:49:44', '0000-00-00 00:00:00', 2, 0),
-(30, 'Thiết Bị Điện Tử', -1, 0, 0, 0, '2019-06-14 22:49:30', '0000-00-00 00:00:00', 2, 0),
-(37, 'Thời Trang Nữ', -1, 0, 0, 0, '2019-06-14 22:50:47', '0000-00-00 00:00:00', 2, 0),
-(38, 'Thời Trang Nam', -1, 0, 0, 0, '2019-06-14 22:50:55', '0000-00-00 00:00:00', 2, 0),
-(39, 'Phụ Kiện Thời Trang', -1, 0, 0, 0, '2019-06-14 22:51:01', '0000-00-00 00:00:00', 2, 0),
-(40, 'Thể Thao & Du Lịch', -1, 0, 0, 0, '2019-06-14 22:51:13', '0000-00-00 00:00:00', 2, 0),
-(41, 'Ôtô, Xe Máy & Thiết Bị Định Vị', -1, 0, 0, 0, '2019-06-14 22:51:22', '0000-00-00 00:00:00', 2, 0),
-(42, 'Điện thoại di động', 30, 1, 0, 0, '2019-06-14 22:52:13', '0000-00-00 00:00:00', 2, 0),
-(43, 'Máy tính bảng', 30, 1, 0, 0, '2019-06-14 22:52:21', '0000-00-00 00:00:00', 2, 0),
-(44, 'Laptop', 30, 1, 0, 0, '2019-06-14 22:52:29', '0000-00-00 00:00:00', 2, 0),
-(45, 'Máy tính để bàn', 30, 1, 0, 0, '2019-06-14 22:52:35', '0000-00-00 00:00:00', 2, 0),
-(46, 'Âm thanh', 30, 1, 0, 0, '2019-06-14 22:52:41', '0000-00-00 00:00:00', 2, 0),
-(47, 'Máy chơi game', 30, 1, 0, 0, '2019-06-14 22:52:48', '0000-00-00 00:00:00', 2, 0),
-(48, 'Camera hành động/Máy quay', 30, 1, 0, 0, '2019-06-14 22:52:56', '0000-00-00 00:00:00', 2, 0),
-(49, 'Camera giám sát', 30, 1, 0, 0, '2019-06-14 22:53:02', '0000-00-00 00:00:00', 2, 0),
-(50, 'Camera kỹ thuật số', 30, 1, 0, 0, '2019-06-14 22:53:09', '0000-00-00 00:00:00', 2, 0),
-(51, 'Thiết bị số', 30, 1, 0, 0, '2019-06-14 22:53:15', '0000-00-00 00:00:00', 2, 0),
-(52, 'Phụ kiện di động', 31, 1, 0, 0, '2019-06-14 22:53:44', '0000-00-00 00:00:00', 2, 0),
-(53, 'Phụ kiện Máy tính', 31, 1, 0, 0, '2019-06-14 22:53:50', '0000-00-00 00:00:00', 2, 0),
-(54, 'Thiết bị mạng', 31, 1, 0, 0, '2019-06-14 22:53:55', '0000-00-00 00:00:00', 2, 0),
-(55, 'Linh kiện máy tính', 31, 1, 0, 0, '2019-06-14 22:54:02', '0000-00-00 00:00:00', 2, 0),
-(56, 'Phụ kiện', 31, 1, 0, 0, '2019-06-14 22:54:08', '0000-00-00 00:00:00', 2, 0),
-(57, 'Thiết bị đeo', 31, 1, 0, 0, '2019-06-14 22:54:14', '0000-00-00 00:00:00', 2, 0),
-(58, 'Thiết bị lưu trữ', 31, 1, 0, 0, '2019-06-14 22:54:22', '0000-00-00 00:00:00', 2, 0),
-(59, 'Phụ kiện máy chơi game', 31, 1, 0, 0, '2019-06-14 22:54:30', '0000-00-00 00:00:00', 2, 0),
-(60, 'Máy in & Máy Scan', 31, 1, 0, 0, '2019-06-14 22:54:37', '0000-00-00 00:00:00', 2, 0),
-(61, 'Phụ kiện máy tính bảng', 31, 1, 0, 0, '2019-06-14 22:54:42', '0000-00-00 00:00:00', 2, 0),
-(62, 'Thiết bị TV & Video', 32, 1, 0, 0, '2019-06-14 22:55:11', '0000-00-00 00:00:00', 2, 0),
-(63, 'Phụ kiện Tivi', 32, 1, 0, 0, '2019-06-14 22:55:17', '0000-00-00 00:00:00', 2, 0),
-(64, 'Dàn Âm Thanh Gia Đình', 32, 1, 0, 0, '2019-06-14 22:55:23', '0000-00-00 00:00:00', 2, 0),
-(65, 'Điện Gia Dụng lớn', 32, 1, 0, 0, '2019-06-14 22:55:29', '0000-00-00 00:00:00', 2, 0),
-(66, 'Điện Gia dụng nhà bếp', 32, 1, 0, 0, '2019-06-14 22:55:39', '0000-00-00 00:00:00', 2, 0),
-(67, 'Điều Hòa & Lọc Không Khí', 32, 1, 0, 0, '2019-06-14 22:55:57', '0000-00-00 00:00:00', 2, 0),
-(68, 'Máy hút bụi & vệ sinh sàn', 32, 1, 0, 0, '2019-06-14 22:56:05', '0000-00-00 00:00:00', 2, 0),
-(69, 'Bàn ủi & Máy may', 32, 1, 0, 0, '2019-06-14 22:56:11', '0000-00-00 00:00:00', 2, 0),
-(70, 'Thiết Bị Chăm Sóc Cá Nhân', 32, 1, 0, 0, '2019-06-14 22:56:17', '0000-00-00 00:00:00', 2, 0),
-(71, 'Bộ phận và Thiết bị', 32, 1, 0, 0, '2019-06-14 22:56:22', '0000-00-00 00:00:00', 2, 0),
-(72, 'Trang Điểm', 33, 1, 0, 0, '2019-06-14 22:56:59', '0000-00-00 00:00:00', 2, 0),
-(73, 'Chăm Sóc Da', 33, 1, 0, 0, '2019-06-14 22:57:03', '0000-00-00 00:00:00', 2, 0),
-(74, 'Chăm Sóc Tóc', 33, 1, 0, 0, '2019-06-14 22:57:07', '0000-00-00 00:00:00', 2, 0),
-(75, 'Dụng Cụ Làm Đẹp', 33, 1, 0, 0, '2019-06-14 22:57:11', '0000-00-00 00:00:00', 2, 0),
-(76, 'Nước Hoa', 33, 1, 0, 0, '2019-06-14 22:57:19', '0000-00-00 00:00:00', 2, 0),
-(77, 'Chăm sóc cho Nam giới', 33, 1, 0, 0, '2019-06-14 22:57:24', '0000-00-00 00:00:00', 2, 0),
-(78, 'Chăm Sóc Cơ Thể', 33, 1, 0, 0, '2019-06-14 22:57:29', '0000-00-00 00:00:00', 2, 0),
-(79, 'Thực Phẩm Chức Năng', 33, 1, 0, 0, '2019-06-14 22:57:36', '0000-00-00 00:00:00', 2, 0),
-(80, 'Thiết Bị Y Tế', 33, 1, 0, 0, '2019-06-14 22:57:42', '0000-00-00 00:00:00', 2, 0),
-(81, 'Chăm sóc cá nhân', 33, 1, 0, 0, '2019-06-14 22:57:48', '0000-00-00 00:00:00', 2, 0),
-(82, 'Chăm sóc trẻ sơ sinh, nhỏ', 34, 1, 0, 0, '2019-06-14 22:58:15', '0000-00-00 00:00:00', 2, 0),
-(83, 'Đồ dùng bú sữa & ăn dặm', 34, 1, 0, 0, '2019-06-14 22:58:20', '0000-00-00 00:00:00', 2, 0),
-(84, 'Quần áo & Phụ kiện', 34, 1, 0, 0, '2019-06-14 22:58:25', '0000-00-00 00:00:00', 2, 0),
-(85, 'Tã & Dụng cụ vệ sinh', 34, 1, 0, 0, '2019-06-14 22:58:30', '0000-00-00 00:00:00', 2, 0),
-(86, 'Tắm & Chăm sóc cơ thể', 34, 1, 0, 0, '2019-06-14 22:58:36', '0000-00-00 00:00:00', 2, 0),
-(87, 'Xe, Ghế, Địu và Nôi', 34, 1, 0, 0, '2019-06-14 22:58:51', '0000-00-00 00:00:00', 2, 0),
-(88, 'Đồ chơi trẻ sơ sinh, nhỏ', 34, 1, 0, 0, '2019-06-14 22:58:56', '0000-00-00 00:00:00', 2, 0),
-(89, 'Nhân vật Đồ chơi', 34, 1, 0, 0, '2019-06-14 22:59:00', '0000-00-00 00:00:00', 2, 0),
-(90, 'Đồ chơi ngoài trời', 34, 1, 0, 0, '2019-06-14 22:59:07', '0000-00-00 00:00:00', 2, 0),
-(91, 'Xe & điều khiển từ xa', 34, 1, 0, 0, '2019-06-14 22:59:12', '0000-00-00 00:00:00', 2, 0),
-(92, 'Đồ ăn sáng', 35, 1, 0, 0, '2019-06-14 22:59:29', '0000-00-00 00:00:00', 2, 0),
-(93, 'Thực Phẩm Khô & Đóng Hộp', 35, 1, 0, 0, '2019-06-14 22:59:34', '0000-00-00 00:00:00', 2, 0),
-(94, 'Đồ uống', 35, 1, 0, 0, '2019-06-14 22:59:40', '0000-00-00 00:00:00', 2, 0),
-(95, 'Đồ uống có cồn', 35, 1, 0, 0, '2019-06-14 22:59:46', '0000-00-00 00:00:00', 2, 0),
-(96, 'Giặt Ủi & Vệ Sinh Nhà Cửa', 35, 1, 0, 0, '2019-06-14 22:59:52', '0000-00-00 00:00:00', 2, 0),
-(97, 'Kẹo & Socola', 35, 1, 0, 0, '2019-06-14 22:59:58', '0000-00-00 00:00:00', 2, 0),
-(98, 'Phụ kiện hút thuốc', 35, 1, 0, 0, '2019-06-14 23:00:03', '0000-00-00 00:00:00', 2, 0),
-(99, 'Snack - Đồ ăn vặt', 35, 1, 0, 0, '2019-06-14 23:00:08', '0000-00-00 00:00:00', 2, 0),
-(100, 'Chăm sóc thú cưng', 35, 1, 0, 0, '2019-06-14 23:00:12', '0000-00-00 00:00:00', 2, 0),
-(101, 'Bếp & Phòng ăn', 36, 1, 0, 0, '2019-06-14 23:00:40', '0000-00-00 00:00:00', 2, 0),
-(102, 'Đèn', 36, 1, 0, 0, '2019-06-14 23:00:48', '0000-00-00 00:00:00', 2, 0),
-(103, 'Đồ dùng phòng ngủ', 36, 1, 0, 0, '2019-06-14 23:00:54', '0000-00-00 00:00:00', 2, 0),
-(104, 'Đồ dùng phòng tắm', 36, 1, 0, 0, '2019-06-14 23:00:59', '0000-00-00 00:00:00', 2, 0),
-(105, 'Đồ nội thất', 36, 1, 0, 0, '2019-06-14 23:01:09', '0000-00-00 00:00:00', 2, 0),
-(106, 'Trang trí nhà cửa', 36, 1, 0, 0, '2019-06-14 23:01:15', '0000-00-00 00:00:00', 2, 0),
-(107, 'Công cụ, DIY & ngoài trời', 36, 1, 0, 0, '2019-06-14 23:01:21', '0000-00-00 00:00:00', 2, 0),
-(108, 'Văn phòng phẩm & thủ công', 36, 1, 0, 0, '2019-06-14 23:01:28', '0000-00-00 00:00:00', 2, 0),
-(109, 'Sách', 36, 1, 0, 0, '2019-06-14 23:01:34', '0000-00-00 00:00:00', 2, 0),
-(110, 'Nhạc cụ', 36, 1, 0, 0, '2019-06-14 23:01:39', '0000-00-00 00:00:00', 2, 0),
-(111, 'Trang Phục Nữ', 37, 1, 0, 0, '2019-06-14 23:02:03', '0000-00-00 00:00:00', 2, 0),
-(112, 'Giày Nữ', 37, 1, 0, 0, '2019-06-14 23:02:16', '0000-00-00 00:00:00', 2, 0),
-(113, 'Túi Xách Nữ', 37, 1, 0, 0, '2019-06-14 23:02:23', '0000-00-00 00:00:00', 2, 0),
-(114, 'Phụ Kiện Nữ', 37, 1, 0, 0, '2019-06-14 23:02:30', '0000-00-00 00:00:00', 2, 0),
-(115, 'Đồ Ngủ & Nội Y', 37, 1, 0, 0, '2019-06-14 23:02:37', '0000-00-00 00:00:00', 2, 0),
-(116, 'Trang Phục Bé Gái', 37, 1, 0, 0, '2019-06-14 23:02:44', '0000-00-00 00:00:00', 2, 0),
-(117, 'Giày Bé Gái', 37, 1, 0, 0, '2019-06-14 23:02:53', '0000-00-00 00:00:00', 2, 0),
-(118, 'Phụ Kiện Bé Gái', 37, 1, 0, 0, '2019-06-14 23:02:59', '0000-00-00 00:00:00', 2, 0),
-(119, 'Túi Trẻ Em', 37, 1, 0, 0, '2019-06-14 23:03:05', '0000-00-00 00:00:00', 2, 0),
-(120, 'Trang Phục Nam', 38, 1, 0, 0, '2019-06-14 23:03:22', '0000-00-00 00:00:00', 2, 0),
-(121, 'Đồ Lót Nam', 38, 1, 0, 0, '2019-06-14 23:03:30', '0000-00-00 00:00:00', 2, 0),
-(122, 'Giày Nam', 38, 1, 0, 0, '2019-06-14 23:03:37', '0000-00-00 00:00:00', 2, 0),
-(123, 'Túi Xách Nam', 38, 1, 0, 0, '2019-06-14 23:03:43', '0000-00-00 00:00:00', 2, 0),
-(124, 'Phụ Kiện Nam', 38, 1, 0, 0, '2019-06-14 23:03:49', '0000-00-00 00:00:00', 2, 0),
-(125, 'Trang Phục Bé Trai', 38, 1, 0, 0, '2019-06-14 23:03:56', '0000-00-00 00:00:00', 2, 0),
-(126, 'Giày Bé Trai', 38, 1, 0, 0, '2019-06-14 23:04:05', '0000-00-00 00:00:00', 2, 0),
-(127, 'Phụ Kiện Bé Trai', 38, 1, 0, 0, '2019-06-14 23:04:15', '0000-00-00 00:00:00', 2, 0),
-(128, 'Túi Trẻ Em', 38, 1, 0, 0, '2019-06-14 23:04:21', '0000-00-00 00:00:00', 2, 0),
-(129, 'Đồng Hồ Nữ', 39, 1, 0, 0, '2019-06-14 23:04:37', '0000-00-00 00:00:00', 2, 0),
-(130, 'Đồng Hồ Nam', 39, 1, 0, 0, '2019-06-14 23:04:43', '0000-00-00 00:00:00', 2, 0),
-(131, 'Đồng Hồ Trẻ Em', 39, 1, 0, 0, '2019-06-14 23:04:50', '0000-00-00 00:00:00', 2, 0),
-(132, 'Kính Mát', 39, 1, 0, 0, '2019-06-14 23:04:56', '0000-00-00 00:00:00', 2, 0),
-(133, 'Kính Thời Trang', 39, 1, 0, 0, '2019-06-14 23:05:02', '0000-00-00 00:00:00', 2, 0),
-(134, 'Kính Áp Tròng', 39, 1, 0, 0, '2019-06-14 23:05:11', '0000-00-00 00:00:00', 2, 0),
-(135, 'Trang Sức Nữ', 39, 1, 0, 0, '2019-06-14 23:05:17', '0000-00-00 00:00:00', 2, 0),
-(136, 'Trang Sức Nam', 39, 1, 0, 0, '2019-06-14 23:05:24', '0000-00-00 00:00:00', 2, 0),
-(137, 'Phụ Kiện', 39, 1, 0, 0, '2019-06-14 23:05:30', '0000-00-00 00:00:00', 2, 0);
+(138, 'Tạp hoá', -1, 0, -1, -1, '2023-10-22 10:34:28', '2023-10-22 10:34:28', 2, NULL),
+(145, 'Bút', 144, 2, -1, -1, '2023-10-22 10:36:48', '2023-10-22 10:36:48', 2, NULL),
+(140, 'Thực phẩm', 138, 1, -1, -1, '2023-10-22 10:35:16', '2023-10-22 10:35:16', 2, NULL),
+(141, 'Bánh kẹo', 138, 1, -1, -1, '2023-10-22 10:35:27', '2023-10-22 10:35:27', 2, NULL),
+(142, 'Bia', 138, 1, -1, -1, '2023-10-22 10:35:47', '2023-10-22 10:35:47', 2, NULL),
+(143, 'Nước ngọt', 138, 1, -1, -1, '2023-10-22 10:35:57', '2023-10-22 10:35:57', 2, NULL),
+(144, 'Dụng cụ học tập', 138, 1, -1, -1, '2023-10-22 10:36:29', '2023-10-22 10:36:29', 2, NULL),
+(146, 'Mực', 144, 2, -1, -1, '2023-10-22 10:37:01', '2023-10-22 10:37:01', 2, NULL),
+(147, 'Vở', 144, 2, -1, -1, '2023-10-22 10:37:07', '2023-10-22 10:37:07', 2, NULL),
+(148, 'Giấy', 144, 2, -1, -1, '2023-10-22 10:37:15', '2023-10-22 10:37:15', 2, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_products_manufacture`
+-- Table structure for table `cms_products_manufacture`
 --
 
 CREATE TABLE `cms_products_manufacture` (
-  `ID` int(10) UNSIGNED NOT NULL,
+  `ID` int UNSIGNED NOT NULL,
   `prd_manuf_name` varchar(255) NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  `user_init` int(11) NOT NULL,
-  `user_upd` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+  `user_init` int NOT NULL,
+  `user_upd` int NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_products_manufacture`
+-- Dumping data for table `cms_products_manufacture`
 --
 
 INSERT INTO `cms_products_manufacture` (`ID`, `prd_manuf_name`, `created`, `updated`, `user_init`, `user_upd`) VALUES
@@ -481,10 +368,6 @@ INSERT INTO `cms_products_manufacture` (`ID`, `prd_manuf_name`, `created`, `upda
 (32, 'T&D', '2019-06-14 23:09:59', '0000-00-00 00:00:00', 2, 0),
 (33, 'BT Fashion', '2019-06-14 23:10:08', '0000-00-00 00:00:00', 2, 0),
 (34, 'TNG', '2019-06-14 23:10:23', '2019-06-14 23:10:33', 2, 2),
-(35, 'Adidass', '2019-06-14 23:10:44', '0000-00-00 00:00:00', 2, 0),
-(36, 'Nike', '2019-06-14 23:10:48', '0000-00-00 00:00:00', 2, 0),
-(37, 'Kingman', '2019-06-14 23:11:11', '0000-00-00 00:00:00', 2, 0),
-(38, 'Biti\'s', '2019-06-14 23:14:51', '0000-00-00 00:00:00', 2, 0),
 (39, 'Sunhouse', '2019-06-14 23:18:18', '0000-00-00 00:00:00', 2, 0),
 (40, 'Dell', '2019-06-14 23:20:33', '0000-00-00 00:00:00', 2, 0),
 (41, 'HP', '2019-06-14 23:20:36', '0000-00-00 00:00:00', 2, 0),
@@ -498,37 +381,52 @@ INSERT INTO `cms_products_manufacture` (`ID`, `prd_manuf_name`, `created`, `upda
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_report`
+-- Table structure for table `cms_products_units`
+--
+
+CREATE TABLE `cms_products_units` (
+  `id` bigint UNSIGNED NOT NULL,
+  `unit` longtext COLLATE utf8mb4_unicode_ci,
+  `prd_retail_price` float DEFAULT '0',
+  `prd_whole_price` float DEFAULT '0',
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `prd_id` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cms_report`
 --
 
 CREATE TABLE `cms_report` (
-  `ID` int(10) UNSIGNED NOT NULL,
+  `ID` int UNSIGNED NOT NULL,
   `transaction_code` varchar(9) NOT NULL,
-  `transaction_id` int(10) NOT NULL,
-  `customer_id` int(11) NOT NULL,
-  `store_id` int(5) NOT NULL,
+  `transaction_id` int NOT NULL,
+  `customer_id` int NOT NULL,
+  `store_id` int NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `notes` varchar(255) NOT NULL,
-  `product_id` int(10) NOT NULL,
-  `discount` int(11) NOT NULL,
-  `total_money` int(13) NOT NULL,
-  `origin_price` int(11) NOT NULL,
-  `input` int(11) NOT NULL,
-  `output` int(9) NOT NULL DEFAULT '0',
-  `price` int(11) NOT NULL,
+  `product_id` int NOT NULL,
+  `discount` int NOT NULL,
+  `total_money` int NOT NULL,
+  `origin_price` int NOT NULL,
+  `input` int NOT NULL,
+  `output` int NOT NULL DEFAULT '0',
+  `price` int NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `user_init` int(11) NOT NULL,
-  `user_upd` int(11) NOT NULL,
-  `sale_id` int(5) NOT NULL,
-  `supplier_id` int(11) NOT NULL,
-  `type` tinyint(4) NOT NULL,
-  `stock` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `user_init` int NOT NULL,
+  `user_upd` int NOT NULL,
+  `sale_id` int NOT NULL,
+  `supplier_id` int NOT NULL,
+  `type` tinyint NOT NULL,
+  `stock` int NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_report`
+-- Dumping data for table `cms_report`
 --
 
 INSERT INTO `cms_report` (`ID`, `transaction_code`, `transaction_id`, `customer_id`, `store_id`, `date`, `notes`, `product_id`, `discount`, `total_money`, `origin_price`, `input`, `output`, `price`, `deleted`, `created`, `updated`, `user_init`, `user_upd`, `sale_id`, `supplier_id`, `type`, `stock`) VALUES
@@ -770,20 +668,20 @@ INSERT INTO `cms_report` (`ID`, `transaction_code`, `transaction_id`, `customer_
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_stores`
+-- Table structure for table `cms_stores`
 --
 
 CREATE TABLE `cms_stores` (
-  `ID` int(5) UNSIGNED NOT NULL,
+  `ID` int UNSIGNED NOT NULL,
   `stock_name` varchar(255) NOT NULL,
-  `user_init` int(11) NOT NULL,
-  `user_upd` int(11) NOT NULL,
+  `user_init` int NOT NULL,
+  `user_upd` int NOT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_stores`
+-- Dumping data for table `cms_stores`
 --
 
 INSERT INTO `cms_stores` (`ID`, `stock_name`, `user_init`, `user_upd`, `created`, `updated`) VALUES
@@ -796,11 +694,11 @@ INSERT INTO `cms_stores` (`ID`, `stock_name`, `user_init`, `user_upd`, `created`
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_suppliers`
+-- Table structure for table `cms_suppliers`
 --
 
 CREATE TABLE `cms_suppliers` (
-  `ID` int(10) UNSIGNED NOT NULL,
+  `ID` int UNSIGNED NOT NULL,
   `supplier_code` varchar(10) NOT NULL,
   `supplier_name` varchar(255) NOT NULL,
   `supplier_phone` varchar(30) NOT NULL,
@@ -810,12 +708,12 @@ CREATE TABLE `cms_suppliers` (
   `notes` text NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  `user_init` int(11) NOT NULL,
-  `user_upd` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `user_init` int NOT NULL,
+  `user_upd` int NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_suppliers`
+-- Dumping data for table `cms_suppliers`
 --
 
 INSERT INTO `cms_suppliers` (`ID`, `supplier_code`, `supplier_name`, `supplier_phone`, `supplier_email`, `supplier_addr`, `tax_code`, `notes`, `created`, `updated`, `user_init`, `user_upd`) VALUES
@@ -829,21 +727,21 @@ INSERT INTO `cms_suppliers` (`ID`, `supplier_code`, `supplier_name`, `supplier_p
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_templates`
+-- Table structure for table `cms_templates`
 --
 
 CREATE TABLE `cms_templates` (
-  `id` int(5) NOT NULL,
-  `type` int(5) NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8 NOT NULL,
-  `content` text CHARACTER SET utf8 NOT NULL,
+  `id` int NOT NULL,
+  `type` int NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `content` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `created` datetime DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
-  `user_upd` int(11) DEFAULT NULL
+  `user_upd` int DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_templates`
+-- Dumping data for table `cms_templates`
 --
 
 INSERT INTO `cms_templates` (`id`, `type`, `name`, `content`, `created`, `updated`, `user_upd`) VALUES
@@ -854,33 +752,55 @@ INSERT INTO `cms_templates` (`id`, `type`, `name`, `content`, `created`, `update
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_users`
+-- Table structure for table `cms_units`
+--
+
+CREATE TABLE `cms_units` (
+  `Id` bigint UNSIGNED NOT NULL,
+  `name` longtext COLLATE utf8mb4_unicode_ci,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cms_units`
+--
+
+INSERT INTO `cms_units` (`Id`, `name`, `created`) VALUES
+(1, 'HOP', '2023-10-21 04:06:20'),
+(2, 'BICH', '2023-10-21 04:10:10'),
+(3, 'THUNG', '2023-10-21 04:12:30'),
+(4, 'BAO', '2023-10-21 04:12:45');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cms_users`
 --
 
 CREATE TABLE `cms_users` (
-  `id` int(10) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
   `salt` varchar(255) NOT NULL,
   `email` varchar(120) NOT NULL,
   `display_name` varchar(120) NOT NULL,
-  `user_status` tinyint(4) NOT NULL,
-  `group_id` int(11) NOT NULL,
-  `store_id` int(11) NOT NULL,
+  `user_status` tinyint NOT NULL,
+  `group_id` int NOT NULL,
+  `store_id` int NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   `logined` datetime(1) NOT NULL,
   `ip_logged` varchar(255) NOT NULL,
   `recode` varchar(255) NOT NULL,
   `code_time_out` varchar(255) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_users`
+-- Dumping data for table `cms_users`
 --
 
 INSERT INTO `cms_users` (`id`, `username`, `password`, `salt`, `email`, `display_name`, `user_status`, `group_id`, `store_id`, `created`, `updated`, `logined`, `ip_logged`, `recode`, `code_time_out`) VALUES
-(2, 'admin', 'acafabfb3b45089f905b5c8c0698f63c', 'GsV3TQXMytmADVjb817hblQmp6rg1ybqulyz4qE21W3y4bAsCpvdeFO1GGr4Rbdcu2HW0', 'admin@admin.com', 'admin', 1, 1, 1, '2017-09-25 23:01:53', '2019-06-14 08:38:30', '2019-06-14 23:38:05.0', '::1', '', ''),
+(2, 'admin', 'acafabfb3b45089f905b5c8c0698f63c', 'GsV3TQXMytmADVjb817hblQmp6rg1ybqulyz4qE21W3y4bAsCpvdeFO1GGr4Rbdcu2HW0', 'admin@admin.com', 'admin', 1, 1, 1, '2017-09-25 23:01:53', '2019-06-14 08:38:30', '2023-10-21 08:41:40.0', '127.0.0.1', '', ''),
 (8, '000000', 'b7ba4f82e63748b31419f9ea47d7b72f', 'IFzV6%)ykZvjh$tb3I%33frQ)5C^*w#FxP%p1CVoH5Dh&xZEF)pQg*Qjt%@TsjZKU25cy', 'namit@admin.com', 'namit', 0, 1, 0, '2019-06-14 08:39:27', '0000-00-00 00:00:00', '2019-06-14 23:36:03.0', '::1', '', ''),
 (9, '000001', '8277e745d10dd789d80c250e9e86b69d', '8)7^!mfnVO^XeYntQn)NNwf*Wh(PfF1MC^kGN9yxAWJ7PFpLOFY!v2OrNDZJFQz04LAyg', 'quanly01@gmail.com', 'Lên Anh Tài', 1, 2, 0, '2019-06-14 08:40:00', '2019-06-14 08:45:14', '0000-00-00 00:00:00.0', '', '', ''),
 (10, '000002', '529553addffab250295d0595badcee11', 'wpcUvqEUrHctmNsohkup5ISxoi3K4&vbQ4Mt%fMh5i*3Y$BNU8lat6(UfJbfhdZKaOcUc', 'quanly02@gmail.com', 'Lương Tài Em', 1, 2, 0, '2019-06-14 08:40:12', '2019-06-14 08:45:36', '0000-00-00 00:00:00.0', '', '', ''),
@@ -901,19 +821,19 @@ INSERT INTO `cms_users` (`id`, `username`, `password`, `salt`, `email`, `display
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cms_users_group`
+-- Table structure for table `cms_users_group`
 --
 
 CREATE TABLE `cms_users_group` (
-  `id` int(10) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `group_name` varchar(255) NOT NULL,
   `group_permission` varchar(255) NOT NULL,
   `group_registered` datetime NOT NULL,
   `group_updated` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 --
--- Đang đổ dữ liệu cho bảng `cms_users_group`
+-- Dumping data for table `cms_users_group`
 --
 
 INSERT INTO `cms_users_group` (`id`, `group_name`, `group_permission`, `group_registered`, `group_updated`) VALUES
@@ -922,174 +842,198 @@ INSERT INTO `cms_users_group` (`id`, `group_name`, `group_permission`, `group_re
 (2, 'Quản lý', '[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"]', '2016-01-22 03:00:40', '2016-06-15 21:42:37');
 
 --
--- Chỉ mục cho các bảng đã đổ
+-- Indexes for dumped tables
 --
 
 --
--- Chỉ mục cho bảng `cms_customers`
+-- Indexes for table `cms_customers`
 --
 ALTER TABLE `cms_customers`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Chỉ mục cho bảng `cms_input`
+-- Indexes for table `cms_input`
 --
 ALTER TABLE `cms_input`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Chỉ mục cho bảng `cms_inventory`
+-- Indexes for table `cms_inventory`
 --
 ALTER TABLE `cms_inventory`
   ADD PRIMARY KEY (`store_id`,`product_id`);
 
 --
--- Chỉ mục cho bảng `cms_orders`
+-- Indexes for table `cms_orders`
 --
 ALTER TABLE `cms_orders`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Chỉ mục cho bảng `cms_permissions`
+-- Indexes for table `cms_permissions`
 --
 ALTER TABLE `cms_permissions`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `cms_products`
+-- Indexes for table `cms_products`
 --
 ALTER TABLE `cms_products`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Chỉ mục cho bảng `cms_products_group`
+-- Indexes for table `cms_products_group`
 --
 ALTER TABLE `cms_products_group`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Chỉ mục cho bảng `cms_products_manufacture`
+-- Indexes for table `cms_products_manufacture`
 --
 ALTER TABLE `cms_products_manufacture`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Chỉ mục cho bảng `cms_report`
+-- Indexes for table `cms_products_units`
+--
+ALTER TABLE `cms_products_units`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cms_report`
 --
 ALTER TABLE `cms_report`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Chỉ mục cho bảng `cms_stores`
+-- Indexes for table `cms_stores`
 --
 ALTER TABLE `cms_stores`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Chỉ mục cho bảng `cms_suppliers`
+-- Indexes for table `cms_suppliers`
 --
 ALTER TABLE `cms_suppliers`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Chỉ mục cho bảng `cms_templates`
+-- Indexes for table `cms_templates`
 --
 ALTER TABLE `cms_templates`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `cms_users`
+-- Indexes for table `cms_units`
+--
+ALTER TABLE `cms_units`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- Indexes for table `cms_users`
 --
 ALTER TABLE `cms_users`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `cms_users_group`
+-- Indexes for table `cms_users_group`
 --
 ALTER TABLE `cms_users_group`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT cho các bảng đã đổ
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT cho bảng `cms_customers`
+-- AUTO_INCREMENT for table `cms_customers`
 --
 ALTER TABLE `cms_customers`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
--- AUTO_INCREMENT cho bảng `cms_input`
+-- AUTO_INCREMENT for table `cms_input`
 --
 ALTER TABLE `cms_input`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
--- AUTO_INCREMENT cho bảng `cms_orders`
+-- AUTO_INCREMENT for table `cms_orders`
 --
 ALTER TABLE `cms_orders`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=248;
+  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=248;
 
 --
--- AUTO_INCREMENT cho bảng `cms_permissions`
+-- AUTO_INCREMENT for table `cms_permissions`
 --
 ALTER TABLE `cms_permissions`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT cho bảng `cms_products`
+-- AUTO_INCREMENT for table `cms_products`
 --
 ALTER TABLE `cms_products`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
+  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
--- AUTO_INCREMENT cho bảng `cms_products_group`
+-- AUTO_INCREMENT for table `cms_products_group`
 --
 ALTER TABLE `cms_products_group`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 
 --
--- AUTO_INCREMENT cho bảng `cms_products_manufacture`
+-- AUTO_INCREMENT for table `cms_products_manufacture`
 --
 ALTER TABLE `cms_products_manufacture`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
--- AUTO_INCREMENT cho bảng `cms_report`
+-- AUTO_INCREMENT for table `cms_products_units`
+--
+ALTER TABLE `cms_products_units`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cms_report`
 --
 ALTER TABLE `cms_report`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=382;
+  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=382;
 
 --
--- AUTO_INCREMENT cho bảng `cms_stores`
+-- AUTO_INCREMENT for table `cms_stores`
 --
 ALTER TABLE `cms_stores`
-  MODIFY `ID` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT cho bảng `cms_suppliers`
+-- AUTO_INCREMENT for table `cms_suppliers`
 --
 ALTER TABLE `cms_suppliers`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
--- AUTO_INCREMENT cho bảng `cms_templates`
+-- AUTO_INCREMENT for table `cms_templates`
 --
 ALTER TABLE `cms_templates`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT cho bảng `cms_users`
+-- AUTO_INCREMENT for table `cms_units`
+--
+ALTER TABLE `cms_units`
+  MODIFY `Id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `cms_users`
 --
 ALTER TABLE `cms_users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT cho bảng `cms_users_group`
+-- AUTO_INCREMENT for table `cms_users_group`
 --
 ALTER TABLE `cms_users_group`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
