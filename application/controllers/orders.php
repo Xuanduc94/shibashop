@@ -142,18 +142,23 @@ class Orders extends CI_Controller
     {
         $data_post = $this->input->post('data');
         $data_template = $this->db->select('content')->from('templates')->where('id', $data_post['id_template'])->limit(1)->get()->row_array();
-        $data_order = $this->db->from('orders')->where('ID', $data_post['id_order'])->get()->row_array();
-        $customer_name = '';
+        $data_order = null;
+        $sale = null;
+        if ($data_post['id_order'] != null) {
+            $data_order = $this->db->from('orders')->where('ID', $data_post['id_order'])->get()->row_array();
+            $sale = $this->db->select('display_name')->from('users')->where('id', $data_order['sale_id'])->limit(1)->get()->row_array();
+        }
+        $customer_name = 'Khách vãng lai';
         $customer_phone = '';
         $customer_address = '';
-        if ($data_order['customer_id'] != 0) {
+        if ($data_order != null) {
             $customer_name = cms_getNamecustomerbyID($data_order['customer_id']);
             $customer_phone = cms_getPhonecustomerbyID($data_order['customer_id']);
             $customer_address = cms_getAddresscustomerbyID($data_order['customer_id']);
         }
 
         $user_name = '';
-        if ($data_order['customer_id'] != 0)
+        if ($data_order != null)
             $user_name = cms_getNameAuthbyID($data_order['user_init']);
 
         $data_template['content'] = str_replace("{Ten_Cua_Hang}", "Phong Tran", $data_template['content']);
@@ -170,6 +175,7 @@ class Orders extends CI_Controller
         $data_template['content'] = str_replace("{Ma_Don_Hang}", $data_order['output_code'], $data_template['content']);
         $data_template['content'] = str_replace("{Ghi_Chu}", $data_order['notes'], $data_template['content']);
         $data_template['content'] = str_replace("{So_Tien_Bang_Chu}", $this->convert_number_to_words($data_order['lack']), $data_template['content']);
+        $data_template['content'] = str_replace("{Ten_Nhan_Vien}", $sale["display_name"], $data_template['content']);
 
         $detail = '';
         $number = 1;
@@ -660,6 +666,7 @@ class Orders extends CI_Controller
         if ($store_id == $this->auth['store_id']) {
             $order = $this->input->post('data');
             $detail_order_temp = $order['detail_order'];
+
             if (empty($order['sell_date'])) {
                 $order['sell_date'] = gmdate("Y:m:d H:i:s", time() + 7 * 3600);
             } else {
@@ -757,6 +764,7 @@ class Orders extends CI_Controller
                     $report['output'] = $item['quantity'];
                     $report['stock'] = $stock['quantity'];
                     $report['total_money'] = ($report['price'] * $report['output']) - $report['discount'];
+                    $report['input'] =  $report['price'];
                     $this->db->insert('report', $report);
                 }
             }

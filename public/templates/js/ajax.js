@@ -2183,7 +2183,7 @@ function cms_search_box_sup() {
 }
 
 function cms_select_product_sell($id) {
-    let $type_sell = $('input[name="type_sell"]').val();
+    let $type_sell = $('input[name="type_sell"]:checked').val();
     if ($('tbody#pro_search_append tr').length != 0) {
         $flag = 0;
         $('tbody#pro_search_append tr').each(function () {
@@ -2286,6 +2286,7 @@ function cms_save_orders(type) {
         $('.ajax-error-ct').html('Xin vui lòng chọn ít nhất 1 sản phẩm cần xuất trước khi lưu đơn hàng. Xin cảm ơn!').parent().fadeIn().delay(1000).fadeOut('slow');
     } else {
         $customer_id = $('#search-box-cys').attr('data-id');
+        let $type_sell = $('input[name="type_sell"]:checked').val();
         $store_id = $('#store-id').val();
         $date = $('#date-order').val();
         $note = $('#note-order').val();
@@ -2318,10 +2319,10 @@ function cms_save_orders(type) {
                 'coupon': $discount,
                 'customer_pay': $customer_pay,
                 'detail_order': $detail,
-                'order_status': $order_status
+                'order_status': $order_status,
+                type_sell: $type_sell
             }
         };
-        console.log($data);
 
         var $param = {
             'type': 'POST',
@@ -2344,6 +2345,7 @@ function cms_save_orders(type) {
                     } else if (type == 3) {
                         location.reload();
                     } else if (type == 4) {
+                        // Print order in pos 
                         cms_print_order_in_pos(1, data);
                     }
                 }
