@@ -211,8 +211,8 @@
                                                     <button type="button" class="btn btn-primary" onclick="cms_save_orders(4)"><i class="fa fa-print"></i> Lưu và
                                                         in (F10)
                                                     </button>
-                                                    <a href="/QLBanHangOnline/dashboard">
-                                                        <button type="button" class="btn btn-primary" onclick="cms_javascript_redirect( cms_javascrip_fullURL() )"><i class="fa fa-arrow-left"></i> Trở về
+                                                    <a href="/">
+                                                        <button type="button" class="btn btn-primary"><i class="fa fa-arrow-left"></i> Trở về
                                                         </button>
                                                     </a>
                                                 </div>
