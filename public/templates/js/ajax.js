@@ -16,7 +16,7 @@ $(document).ready(function () {
         cms_paging_product(1);
     }
 
-    if (window.location.pathname.indexOf('units') !== -1) {
+    if (window.location.pathname.indexOf('unit') !== -1) {
         cms_paging_unit(1);
     }
     if (window.location.pathname.indexOf('orders') !== -1) {
@@ -2183,6 +2183,7 @@ function cms_search_box_sup() {
 }
 
 function cms_select_product_sell($id) {
+    let $type_sell = $('input[name="type_sell"]').val();
     if ($('tbody#pro_search_append tr').length != 0) {
         $flag = 0;
         $('tbody#pro_search_append tr').each(function () {
@@ -2200,7 +2201,7 @@ function cms_select_product_sell($id) {
             var $param = {
                 'type': 'POST',
                 'url': 'orders/cms_select_product/',
-                'data': { 'id': $id, 'seq': $seq },
+                'data': { 'id': $id, 'seq': $seq, type_sell: $type_sell },
                 'callback': function (data) {
                     $('#pro_search_append').append(data);
                     cms_load_infor_order();
@@ -2212,7 +2213,7 @@ function cms_select_product_sell($id) {
         var $param = {
             'type': 'POST',
             'url': 'orders/cms_select_product/',
-            'data': { 'id': $id, 'seq': 1 },
+            'data': { 'id': $id, 'seq': 1, type_sell: $type_sell },
             'callback': function (data) {
                 $('#pro_search_append').append(data);
                 cms_load_infor_order();
@@ -2275,7 +2276,11 @@ function cms_selected_mas($id) {
     $(".del-mas").html('<i class="fa fa-minus-circle" aria-hidden="true"></i>');
     $('#mas-suggestion-box').hide();
 }
-
+function cms_select_unit_orders(value, id) {
+    $("#price-order-hide-" + id).text(value)
+    $("#price-order-" + id).text(cms_encode_currency_format(value))
+    cms_load_infor_order()
+}
 function cms_save_orders(type) {
     if ($('tbody#pro_search_append tr').length == 0) {
         $('.ajax-error-ct').html('Xin vui lòng chọn ít nhất 1 sản phẩm cần xuất trước khi lưu đơn hàng. Xin cảm ơn!').parent().fadeIn().delay(1000).fadeOut('slow');
@@ -2293,8 +2298,9 @@ function cms_save_orders(type) {
         $('tbody#pro_search_append  tr').each(function () {
             $id = $(this).attr('data-id');
             $value_input = $(this).find('input.quantity_product_order').val();
+            $price = $('#price-order-hide-' + $id).text();
             $detail.push(
-                { id: $id, quantity: $value_input, price: 0, discount: 0 }
+                { id: $id, quantity: $value_input, price: $price, discount: 0 }
             );
         });
         if (type == "0")
@@ -2315,6 +2321,7 @@ function cms_save_orders(type) {
                 'order_status': $order_status
             }
         };
+        console.log($data);
 
         var $param = {
             'type': 'POST',

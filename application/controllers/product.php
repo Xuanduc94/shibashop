@@ -321,7 +321,7 @@ class Product extends CI_Controller
             $units = $this->input->post('units');
             $data = $this->cms_common_string->allow_post($data, ['prd_code', 'prd_name', 'prd_sls', 'prd_inventory', 'prd_allownegative', 'prd_origin_price', 'prd_group_id', 'prd_manufacture_id', 'prd_vat', 'display_website', 'prd_new', 'prd_hot', 'prd_highlight']);
             $check_code = $this->db->select('ID')->from('products')->where('prd_code', $data['prd_code'])->get()->row_array();
-            $data['prd_name'] = strtoupper(vn_str_filter($data[['prd_name']]));
+            $data['prd_name'] = strtoupper(vn_str_filter($data['prd_name']));
             if (!empty($check_code) && count($check_code)) {
                 echo $this->messages = 'Mã sản phẩm ' . $data['prd_code'] . ' đã tồn tại trong hệ thống. Vui lòng chọn mã khác.';
             } else {
@@ -384,6 +384,7 @@ class Product extends CI_Controller
                 }
             }
         } catch (\Throwable $th) {
+            print $th->getTrace();
             $this->db->trans_rollback();
             echo $this->messages = "0";
         }

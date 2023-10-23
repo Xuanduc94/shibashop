@@ -27,7 +27,8 @@ class Orders extends CI_Controller
         $this->load->view('layout/index', isset($data) ? $data : null);
     }
 
-    public function convert_number_to_words($number) {
+    public function convert_number_to_words($number)
+    {
         $hyphen      = ' ';
         $conjunction = '  ';
         $separator   = ' ';
@@ -145,7 +146,7 @@ class Orders extends CI_Controller
         $customer_name = '';
         $customer_phone = '';
         $customer_address = '';
-        if ($data_order['customer_id'] != 0){
+        if ($data_order['customer_id'] != 0) {
             $customer_name = cms_getNamecustomerbyID($data_order['customer_id']);
             $customer_phone = cms_getPhonecustomerbyID($data_order['customer_id']);
             $customer_address = cms_getAddresscustomerbyID($data_order['customer_id']);
@@ -170,15 +171,15 @@ class Orders extends CI_Controller
         $data_template['content'] = str_replace("{Ghi_Chu}", $data_order['notes'], $data_template['content']);
         $data_template['content'] = str_replace("{So_Tien_Bang_Chu}", $this->convert_number_to_words($data_order['lack']), $data_template['content']);
 
-        $detail ='';
+        $detail = '';
         $number = 1;
         if (isset($data_order) && count($data_order)) {
             $list_products = json_decode($data_order['detail_order'], true);
             foreach ($list_products as $product) {
                 $prd = cms_finding_productbyID($product['id']);
                 $quantity = $product['quantity'];
-                $total = $quantity*$product['price'];
-                $detail = $detail.'<tr ><td  style="text-align:center;">'.$number++.'</td><td  style="text-align:center;">'.$prd['prd_name'].'</td><td  style="text-align:center;">'.$this->cms_common->cms_encode_currency_format($product['price']).'</td><td style = "text-align:center">'.$quantity.'</td ><td style="text-align:center;">'.$this->cms_common->cms_encode_currency_format($total).'</td ></tr>';
+                $total = $quantity * $product['price'];
+                $detail = $detail . '<tr ><td  style="text-align:center;">' . $number++ . '</td><td  style="text-align:center;">' . $prd['prd_name'] . '</td><td  style="text-align:center;">' . $this->cms_common->cms_encode_currency_format($product['price']) . '</td><td style = "text-align:center">' . $quantity . '</td ><td style="text-align:center;">' . $this->cms_common->cms_encode_currency_format($total) . '</td ></tr>';
             }
         }
 
@@ -190,7 +191,7 @@ class Orders extends CI_Controller
                             <td style="text-align:center;"><strong >Đơn giá</strong ></td >
                             <td style="text-align:center;"><strong >SL</strong ></td >
                             <td style="text-align:center;"><strong >Thành tiền</strong ></td >
-                        </tr >'.$detail.'
+                        </tr >' . $detail . '
                     </tbody >
                  </table >';
 
@@ -491,12 +492,12 @@ class Orders extends CI_Controller
                     $sls['prd_sls'] = $product['prd_sls'] + $item['quantity'];
                     $this->db->where('ID', $item['id'])->update('products', $sls);
 
-                    $this->db->where(['transaction_id'=> $id,'product_id'=>$item['id'],'store_id' => $store_id])->update('report', ['deleted' => 1,'user_upd' => $user_init]);
+                    $this->db->where(['transaction_id' => $id, 'product_id' => $item['id'], 'store_id' => $store_id])->update('report', ['deleted' => 1, 'user_upd' => $user_init]);
                 }
 
-                $this->db->where('ID', $id)->update('orders', ['deleted' => 1,'user_upd' => $user_init]);
+                $this->db->where('ID', $id)->update('orders', ['deleted' => 1, 'user_upd' => $user_init]);
             } else {
-                $this->db->where('ID', $id)->update('orders', ['deleted' => 1,'user_upd' => $user_init]);
+                $this->db->where('ID', $id)->update('orders', ['deleted' => 1, 'user_upd' => $user_init]);
             }
         }
 
@@ -515,8 +516,8 @@ class Orders extends CI_Controller
         $order = $this->db->from('orders')->where(['ID' => $id, 'deleted' => 1])->get()->row_array();
         $this->db->trans_begin();
         if (isset($order) && count($order)) {
-            $this->db->where('ID', $id)->update('orders', ['deleted' => 2,'user_upd' => $this->auth['id']]);
-        }else
+            $this->db->where('ID', $id)->update('orders', ['deleted' => 2, 'user_upd' => $this->auth['id']]);
+        } else
             echo $this->messages = "0";
 
         if ($this->db->trans_status() === FALSE) {
@@ -561,7 +562,7 @@ class Orders extends CI_Controller
     {
         if ($this->auth == null) $this->cms_common_string->cms_redirect(CMS_BASE_URL . 'backend');
         $id = $this->input->post('id');
-        $order = $this->db->from('orders')->where(['ID'=> $id,'order_status'=>0])->get()->row_array();
+        $order = $this->db->from('orders')->where(['ID' => $id, 'order_status' => 0])->get()->row_array();
         $data['_list_products'] = array();
 
         if (isset($order) && count($order)) {
@@ -584,7 +585,7 @@ class Orders extends CI_Controller
         $data = $this->input->get('term');
         $products = $this->db
             ->from('products')
-            ->where('(prd_code like "%'.$data.'%" or prd_name like "%'.$data.'%") and prd_status = 1 and deleted =0 ')
+            ->where('(prd_code like "%' . $data . '%" or prd_name like "%' . $data . '%") and prd_status = 1 and deleted =0 ')
             ->get()
             ->result_array();
         echo json_encode($products);
@@ -607,27 +608,47 @@ class Orders extends CI_Controller
         $this->load->view('ajax/orders/search_box_customer', isset($data) ? $data : null);
     }
 
+    # Get product price when scan qr code or input name
     public function cms_select_product()
     {
         $id = $this->input->post('id');
         $seq = $this->input->post('seq');
+        $type_sell = $this->input->post('type_sell');
         $product = $this->db->from('products')->where('ID', $id)->get()->row_array();
+        $units = $this->db->from("products_units")->where('prd_id', $id)->get()->result_array();
+
         if (isset($product) && count($product) != 0) {
+            $price = 0;
+            $unitOrder = "";
+
             ob_start(); ?>
             <tr data-id="<?php echo $product['ID']; ?>">
                 <td class="text-center seq"><?php echo $seq; ?></td>
                 <td><?php echo $product['prd_code']; ?></td>
                 <td><?php echo $product['prd_name']; ?></td>
-                <td class="text-center" style="max-width: 30px;"><input style="max-height: 22px;" type="text"
-                                                                        class="txtNumber form-control quantity_product_order text-center"
-                                                                        value="1"></td>
-                <td class="text-center price-order"><?php echo number_format($product['prd_sell_price']); ?></td>
-                <td style="display: none;"
-                    class="text-center price-order-hide"><?php echo $product['prd_sell_price']; ?></td>
-                <td class="text-center total-money"><?php echo $product['prd_sell_price']; ?></td>
+                <td>
+                    <select onchange="cms_select_unit_orders(this.value, <?php echo $product['ID']; ?>)" class="form-control">
+                        <?php foreach ($units as $unit) : ?>
+                            <?php if ($unit['active'] == 1) {
+                                $unitOrder = $unit['name'];
+                                if ($type_sell == '0') {
+                                    $price = $unit['prd_retail_price'];
+                                } else {
+                                    $price = $unit['prd_whole_price'];
+                                }
+                            } ?>
+                            <option <?php if ($unit['active'] == 1) echo "selected" ?> value="<?php echo $type_sell == '0' ? $unit['prd_retail_price'] : $unit['prd_whole_price'] ?>"><?php echo $unit['unit'] ?></option>
+                        <?php endforeach ?>
+                    </select>
+                </td>
+                <td class="text-center" style="max-width: 30px;"><input style="max-height: 22px;" type="text" class="txtNumber form-control quantity_product_order text-center" value="1"></td>
+                <td id="price-order-<?php echo $product['ID']; ?>" class="text-center price-order"><?php echo number_format($price); ?></td>
+                <td style="display: none;" id="price-order-hide-<?php echo $product['ID']; ?>" class="text-center price-order-hide"><?php echo $price; ?></td>
+                <td style="display: none;" class="text-center price-unit-hide"><?php echo $unitOrder; ?></td>
+                <td class="text-center total-money"><?php echo $price; ?></td>
                 <td class="text-center"><i class="fa fa-trash-o del-pro-order"></i></td>
             </tr>
-            <?php
+<?php
             $html = ob_get_contents();
             ob_end_clean();
             echo $html;
@@ -636,7 +657,7 @@ class Orders extends CI_Controller
 
     public function cms_save_orders($store_id)
     {
-        if($store_id==$this->auth['store_id']){
+        if ($store_id == $this->auth['store_id']) {
             $order = $this->input->post('data');
             $detail_order_temp = $order['detail_order'];
             if (empty($order['sell_date'])) {
@@ -649,7 +670,7 @@ class Orders extends CI_Controller
             $total_price = 0;
             $total_origin_price = 0;
             $total_quantity = 0;
-            $order['coupon'] = ($order['coupon']=='NaN') ? 0 : $order['coupon'];
+            $order['coupon'] = ($order['coupon'] == 'NaN') ? 0 : $order['coupon'];
             if ($order['order_status'] == 1)
                 foreach ($order['detail_order'] as $item) {
                     $inventory_quantity = $this->db->select('quantity')->from('inventory')->where(['store_id' => $store_id, 'product_id' => $item['id']])->get()->row_array();
@@ -662,10 +683,10 @@ class Orders extends CI_Controller
 
                     $product = $this->db->from('products')->where('ID', $item['id'])->get()->row_array();
                     $sls['prd_sls'] = $product['prd_sls'] - $item['quantity'];
-                    $item['price'] = $product['prd_sell_price'];
+                    $item['price'] = $item['price'];
                     $total_price += ($item['price'] - $item['discount']) * $item['quantity'];
-                    $total_origin_price += $product['prd_origin_price']*$item['quantity'];
-                    $total_quantity +=$item['quantity'];
+                    $total_origin_price += $product['prd_origin_price'] * $item['quantity'];
+                    $total_quantity += $item['quantity'];
                     $this->db->where('ID', $item['id'])->update('products', $sls);
                     $detail_order[] = $item;
                 }
@@ -674,13 +695,13 @@ class Orders extends CI_Controller
                     $product = $this->db->from('products')->where('ID', $item['id'])->get()->row_array();
                     $item['price'] = $product['prd_sell_price'];
                     $total_price += ($item['price'] - $item['discount']) * $item['quantity'];
-                    $total_quantity +=$item['quantity'];
+                    $total_quantity += $item['quantity'];
                     $detail_order[] = $item;
                 }
 
             $order['total_price'] = $total_price;
             $order['total_origin_price'] = $total_origin_price;
-            $order['total_money'] = $total_price-$order['coupon'];
+            $order['total_money'] = $total_price - $order['coupon'];
             $order['total_quantity'] = $total_quantity;
             $order['lack'] = $total_price - $order['customer_pay'] - $order['coupon'] > 0 ? $total_price - $order['customer_pay'] - $order['coupon'] : 0;
             $order['user_init'] = $this->auth['id'];
@@ -707,9 +728,14 @@ class Orders extends CI_Controller
 
             $this->db->insert('orders', $order);
             $id = $this->db->insert_id();
-            $percent_discount = $order['coupon']/$total_price;
-            if ($order['order_status'] == 1){
-                $temp= array();
+            if ($order['coupon'] != 0) {
+                $percent_discount = $order['coupon'] / $total_price;
+            } else {
+                $percent_discount = 0;
+            }
+
+            if ($order['order_status'] == 1) {
+                $temp = array();
                 $temp['transaction_code'] = $order['output_code'];
                 $temp['transaction_id'] = $id;
                 $temp['customer_id'] = isset($order['customer_id']) ? $order['customer_id'] : 0;
@@ -719,17 +745,18 @@ class Orders extends CI_Controller
                 $temp['user_init'] = $order['user_init'];
                 $temp['type'] = 3;
                 $temp['store_id'] = $order['store_id'];
+                # save report
                 foreach ($detail_order_temp as $item) {
                     $report = $temp;
                     $stock = $this->db->select('quantity')->from('inventory')->where(['store_id' => $temp['store_id'], 'product_id' => $item['id']])->get()->row_array();
                     $product = $this->db->from('products')->where('ID', $item['id'])->get()->row_array();
-                    $report['origin_price'] = $product['prd_origin_price']*$item['quantity'];
+                    $report['origin_price'] = $product['prd_origin_price'] * $item['quantity'];
                     $report['product_id'] = $item['id'];
-                    $report['discount'] = $percent_discount*$item['quantity']*$product['prd_sell_price'];
-                    $report['price'] = $product['prd_sell_price'];
+                    $report['discount'] = $percent_discount * $item['quantity'] * $item['price'];
+                    $report['price'] = $item['price'];
                     $report['output'] = $item['quantity'];
                     $report['stock'] = $stock['quantity'];
-                    $report['total_money'] = ($report['price']*$report['output'])-$report['discount'];
+                    $report['total_money'] = ($report['price'] * $report['output']) - $report['discount'];
                     $this->db->insert('report', $report);
                 }
             }
@@ -741,8 +768,7 @@ class Orders extends CI_Controller
                 $this->db->trans_commit();
                 echo $this->messages = $id;
             }
-        }else
+        } else
             echo $this->messages = "0";
     }
 }
-
