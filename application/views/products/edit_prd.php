@@ -1,3 +1,4 @@
+<input class="d-none" id="page_name" value="edit_prd">
 <div class="products">
     <div class="breadcrumbs-fixed panel-action">
         <div class="row">
@@ -60,12 +61,9 @@
                             <div class="form-group clearfix">
                                 <div class="col-md-6 padd-left-0">
                                     <label>Giá vốn</label>
-                                    <input type="text" id="prd_origin_price" value="<?php if (isset($data['_detail_product'])) echo $data['_detail_product']['prd_origin_price'] ?>" class="form-control text-right txtMoney" placeholder="Nhập giá vốn" />
+                                    <input type="text" id="prd_origin_price" value="<?php if (isset($data['_detail_product'])) echo number_format($data['_detail_product']['prd_origin_price']) ?>" class="form-control text-right txtMoney" placeholder="Nhập giá vốn" />
                                 </div>
-                                <div class="col-md-6 padd-right-0 d-none">
-                                    <label>Giá bán lẻ</label>
-                                    <input type="text" id="prd_sell_price" value="<?php if (isset($data['_detail_product'])) echo $data['_detail_product']['prd_sell_price'] ?>" class="form-control txtMoney text-right" placeholder="0" />
-                                </div>
+
                             </div>
                             <div class="form-group clearfix">
                                 <div class="col-md-6 padd-left-0">
@@ -135,72 +133,64 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="expand-info">
-            <div class="row">
                 <div class="col-md-12">
-                    <h4 style="border-bottom: 1px solid #0B87C9; padding-bottom: 10px;"><i class="fa fa-th-large blue"></i> <a style="color: #0B87C9; text-decoration: none;" data-toggle="collapse" href="#collapseproductinfo" aria-expanded="false" aria-controls="collapseExample">Thông
-                            tin mở rộng(
-                            <small> Nhấn để thêm các thông tin cho thuộc tính web</small>
-                            )</a></h4>
-                </div>
-                <div class="col-md-12">
-                    <div style="margin-top: 5px;"></div>
-                    <div class="collapse" id="collapseproductinfo">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-12 padd-20">
-                                    <div class="jumbotron text-center" id="img_upload" style="border-radius: 0; margin-bottom: 10px; padding: 15px 20px;">
-                                        <h3>Upload hình ảnh sản phẩm</h3>
-                                        <small style="font-size: 14px; margin-bottom: 5px; display: inline-block;">(Để
-                                            tải và hiện thị nhanh, mỗi ảnh lên có dung lượng 500KB. Tải tối đa 10MB.)
-                                        </small>
-                                        <p>
-                                            <button class="btn" style="background-color: #337ab7; " onclick="browseKCFinder('img_upload','image');return false;"><i class="fa fa-picture-o" style="font-size: 40px;color: #fff; "></i>
-                                            </button>
-                                        </p>
-                                    </div>
-                                </div>
+                    <div class="col-md-4">
+                        <h4>Thông tin giá bán</h4>
+                        <small>Nhập thông tin giá bán của sản phẩm</small>
+                    </div>
 
-                            </div>
-                        </div>
-                        <div class="col-md-12 padd-20">
-                            <h4 style="margin-top: 0;">Mô tả
-                                <small style="font-style: italic;">(Nhập thông tin mô tả chi tiết hơn để khách
-                                    hàng hiểu hàng hoá của bạn)
-                                </small>
-                            </h4>
-                            <!--                                    <textarea id="ck_editor" id="prd_description"></textarea>-->
-                            <div id="ckeditor"><?php echo $data['_detail_product']['prd_descriptions']; ?></div>
-                        </div>
-                        <div class="col-md-3 padd-20">
-                            <h4>Thông tin cho web</h4>
-                            <small ">Hiện thị trên trang web, tối ưu SEO.</small>
-                        </div>
-                        <div class=" col-md-9">
-                                <div class="row">
-                                    <div class="checkbox-group" style="margin-top: 20px;">
-                                        <label class="checkbox"><input type="checkbox" class="checkbox" id="display_website"><span></span> Hiện thị ra
-                                            website</label>
-                                        <br>
-                                        <label class="checkbox"><input type="checkbox" id="prd_highlight" class="checkbox"><span></span> Nổi bật</label>&nbsp;&nbsp;<label class="checkbox"><input type="checkbox" class="checkbox" id="prd_new"><span></span> Hàng mới</label>&nbsp;&nbsp;&nbsp;<label class="checkbox"><input type="checkbox" class="checkbox" id="prd_hot"><span></span> Đang bán chạy</label>
-                                    </div>
-                                </div>
-                                <div class="btn-groups pull-right" style="margin-top: 15px;">
-                                    <button type="button" class="btn btn-primary" onclick="cms_update_product(<?php if (isset($data['_detail_product'])) echo $data['_detail_product']['ID'] ?>);">
-                                        <i class="fa fa-check"></i> Lưu
-                                    </button>
-                                    <button type="button" class="btn btn-default btn-back" onclick="cms_javascript_redirect( cms_javascrip_fullURL() )"><i class="fa fa-arrow-left"></i> Hủy
-                                    </button>
-                                </div>
-                        </div>
+                    <div class="col-md-8 padd-0">
+                        <table class="table table-light">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Đơn vị</th>
+                                    <th>Giá bán lẻ</th>
+                                    <th>Giá bán sỉ</th>
+                                    <th>Sử dụng</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="body_unit">
+                                <?php $index = 0;
+                                $unit = $data['_units']; ?>
+                                <?php foreach ($data['_prices'] as $item) : $index++; ?>
+                                    <tr class="unit" data-active="<?php echo $item['active'] ?>" data-whole="<?php echo $item['whole'] ?>" data-retail="<?php echo $item['retail'] ?>" data-unit="<?php echo $item['unit'] ?>" data-id="<?php echo $item['id'] ?>" id="<?php echo "unit-" . $item['id'] ?>">
+                                        <td>
+                                            <?php echo $index ?>
+                                        </td>
+                                        <td>
+                                            <select onchange="cms_select_unit(<?php echo $item['id'] ?>, this.value)" class="form-control">
+                                                <?php foreach ($unit as $unitItem) : ?>
+                                                    <option <?php if ($unitItem['name'] === $item['unit']) echo "selected" ?> value="<?php echo $unitItem['name'] ?>"><?php echo $unitItem['name'] ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input value="<?php echo $item['retail'] ?>" onchange="cms_input_retail_price(<?php echo $item['id'] ?>, this.value)" type="number" class="form-control" />
+                                        </td>
+                                        <td><input value="<?php echo $item['whole'] ?>" onchange="cms_input_whole_price(<?php echo $item['id'] ?>, this.value)" type="number" class="form-control" /></td>
+                                        <td>
+                                            <label class="checkbox"><input <?php if ($item['active'] === "1") echo "checked" ?> id="chk_<?php echo $item['id'] ?>" onchange="active_product_unit(<?php echo $item['id'] ?>, this.checked)" type="checkbox" class="checkbox">
+                                                <span></span> sử dụng</label>
+                                        </td>
+                                        <td>
+                                            <i onclick="cms_delete_product_unit(<?php echo $item['id'] ?>)" class="fa fa-trash"></i>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                <tr>
+                                    <td onclick="cms_add_product_units()" colspan="5" class="text-center hover">Thêm đơn vị</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 <script>
-    initSample();
+    // initSample();
 </script>

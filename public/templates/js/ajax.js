@@ -1,3 +1,4 @@
+var arr_product_units = [];
 $(document).ready(function () {
     "use strict";
 
@@ -15,10 +16,9 @@ $(document).ready(function () {
         cms_paging_product(1);
     }
 
-    if (window.location.pathname.indexOf('units')) {
+    if (window.location.pathname.indexOf('units') !== -1) {
         cms_paging_unit(1);
     }
-
     if (window.location.pathname.indexOf('orders') !== -1) {
         $('.input-daterange').datepicker({
             format: "yyyy-mm-dd",
@@ -124,6 +124,20 @@ $(document).ready(function () {
 $(document).on('ready ajaxComplete', function () {
     cms_func_common();
 });
+
+function cms_init_arr_product_units() {
+    let tr = document.getElementsByClassName("unit")
+    for (const e of tr) {
+        arr_product_units.push({
+            id: e.dataset.id,
+            active: e.dataset.active,
+            whole: e.dataset.whole,
+            retail: e.dataset.retail,
+            unit: e.dataset.unit,
+        })
+    }
+    console.log(arr_product_units);
+}
 
 function cms_func_common() {
     "use strict";
@@ -1508,7 +1522,7 @@ function cms_delete_Group($id, $page) {
         cms_adapter_ajax($param);
     }
 }
-var arr_product_units = [];
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
@@ -1638,12 +1652,8 @@ function cms_update_product($id) {
     var $inventory = cms_get_valCheckbox('prd_inventory', 'id');
     var $allownegative = cms_get_valCheckbox('prd_allownegative', 'id');
     var $origin_price = cms_decode_currency_format($('#prd_origin_price').val());
-    var $sell_price = cms_decode_currency_format($('#prd_sell_price').val());
     var $group_id = $('#prd_group_id').val();
     var $manufacture_id = $('#prd_manufacture_id').val();
-    var $img_afurl = $('#prd_image_urls').attr('src');
-    var $img_url = (typeof $img_afurl == 'undefined') ? '' : $img_afurl;
-    var $description = CKEDITOR.instances['ckeditor'].getData();
     var $display_wb = cms_get_valCheckbox('display_website', 'id');
     var $new = cms_get_valCheckbox('prd_new', 'id');
     var $hot = cms_get_valCheckbox('prd_hot', 'id');
@@ -1658,16 +1668,14 @@ function cms_update_product($id) {
                 'prd_inventory': $inventory,
                 'prd_allownegative': $allownegative,
                 'prd_origin_price': $origin_price,
-                'prd_sell_price': $sell_price,
                 'prd_group_id': $group_id,
                 'prd_manufacture_id': $manufacture_id,
-                'prd_image_url': $img_url,
-                'prd_descriptions': $description,
                 'display_website': $display_wb,
                 'prd_new': $new,
                 'prd_hot': $hot,
                 'prd_highlight': $highlight
-            }
+            },
+            'units': arr_product_units
         };
         var $param = {
             'type': 'POST',
@@ -1677,7 +1685,7 @@ function cms_update_product($id) {
                 if (data == '1') {
                     $('.ajax-success-ct').html('Cập nhật sản phẩm ' + $name + ' thành công.').parent().fadeIn().delay(1000).fadeOut('slow');
                     setTimeout(function () {
-                        $('.btn-back').trigger('click');
+                        cms_javascript_redirect(cms_javascrip_fullURL())
                     }, 2000);
                 } else {
                     $('.ajax-error-ct').html(data).parent().fadeIn().delay(1000).fadeOut('slow');
@@ -1931,6 +1939,7 @@ function cms_edit_product($id) {
             $('.products').html(data);
             cms_product_group_show();
             cms_product_manufacture_show();
+            cms_init_arr_product_units();
         }
     };
     cms_adapter_ajax($param);
@@ -2945,7 +2954,8 @@ function cms_encode_currency_format(obs) {
 }
 
 function cms_decode_currency_format(obs) {
-    return parseInt(obs.replace(/,/g, ''));
+    let str = obs.replace(/,/g, '')
+    return parseInt(str);
 }
 
 function fix_height_sidebar() {

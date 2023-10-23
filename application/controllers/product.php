@@ -75,8 +75,12 @@ class Product extends CI_Controller
 
         $id = (int)$id;
         $product = $this->db->from('products')->where('ID', $id)->get()->row_array();
+        $price = $this->db->select('id, unit,prd_whole_price as whole, prd_retail_price as retail, active')->from("products_units")->where("prd_id", $id)->get()->result_array();
+        $units = $this->db->from("units")->get()->result_array();
         if (!empty($product) && count($product)) {
             $data['data']['_detail_product'] = $product;
+            $data['data']['_prices'] = $price;
+            $data['data']['_units'] = $units;
             $sls_group = $this->cms_nestedset->dropdown('products_group', NULL, 'manufacture');
             $sls_manufacture = $this->db->from('products_manufacture')->get()->result_array();
             $data['data']['_prd_group'] = $sls_group;
@@ -387,11 +391,32 @@ class Product extends CI_Controller
 
     public function cms_update_product($id)
     {
-        $data = $this->input->post('data');
-        $data = $this->cms_common_string->allow_post($data, ['prd_code', 'prd_name', 'prd_sls', 'prd_inventory', 'prd_allownegative', 'prd_origin_price', 'prd_sell_price', 'prd_group_id', 'prd_manufacture_id', 'prd_vat', 'prd_image_url', 'prd_descriptions', 'display_website', 'prd_new', 'prd_hot', 'prd_highlight']);
-        $data['user_upd'] = $this->auth['id'];
-        $this->db->where('ID', $id)->update('products', $data);
-        echo $this->messages = "1";
+
+        $this->db->trans_begin();
+        try {
+            $data = $this->input->post('data');
+            $data = $this->cms_common_string->allow_post($data, ['prd_code', 'prd_name', 'prd_sls', 'prd_inventory', 'prd_allownegative', 'prd_origin_price', 'prd_sell_price', 'prd_group_id', 'prd_manufacture_id', 'prd_vat', 'prd_image_url', 'prd_descriptions', 'prd_new', 'prd_hot', 'prd_highlight']);
+            $data['user_upd'] = $this->auth['id'];
+            $this->db->where('ID', $id)->update('products', $data);
+            $this->db->delete('products_units', array('prd_id' => $id));
+            # unit
+            $units = $this->input->post('units');
+            foreach ($units as $unit) {
+                $cms_products_units = array();
+                $cms_products_units['prd_id'] = $id;
+                $cms_products_units['active'] = $unit['active'];
+                $cms_products_units['unit'] = $unit['unit'];
+                $cms_products_units['prd_retail_price'] = $unit['retail'];
+                $cms_products_units['prd_whole_price'] = $unit['whole'];
+                $this->db->insert("products_units", $cms_products_units);
+            }
+            $this->db->trans_commit();
+            echo $this->messages = "1";
+        } catch (\Throwable $th) {
+            print $th->getMessage();
+            $this->db->trans_rollback();
+            echo $this->messages = "0";
+        }
     }
 
     public function cms_paging_product($page = 1)
