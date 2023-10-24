@@ -11,16 +11,14 @@
             khẩu!</p>
 
         <div class="col-md-10 col-md-offset-1">
-            <form class="form-horizontal login-form" method="post" action="authentication/fg_password">
+            <form class="form-horizontal login-form" method="post" action="<?php echo "http://" . $_SERVER['HTTP_HOST'] ?>/authentication/get_new_password">
                 <div class="form-group input-icon">
                     <label for="inputEmail3" class="sr-only control-label">Email</label>
-                    <input type="text" name="data[email]"
-                           value="<?php echo cms_common_input(isset($_post) ? $_post : [], 'email'); ?>"
-                           class="form-control" id="inputEmail3" placeholder="Nhập email của bạn">
+                    <input type="text" name="data[email]" value="<?php echo cms_common_input(isset($_post) ? $_post : [], 'email'); ?>" class="form-control" id="inputEmail3" placeholder="Nhập email của bạn">
                     <i class="fa fa-sitemap icon-right"></i>
                 </div>
                 <div class="form-group">
-                    <input type="submit" name="forgot" value="Lấy Lại Mật khẩu" class="btn btn-primary btn-sm"/>
+                    <input type="submit" name="forgot" value="Lấy Lại Mật khẩu" class="btn btn-primary btn-sm" />
                     <!-- <button type="submit" name="forgot" class="btn btn-primary btn-sm btn-smf"><i class="fa fa-key"></i>Lấy lại mật khẩu</button>
                     <div class="action-none" style="display: none;">
                         <input type="submit" name="forgot" value="Lấy Lại Mật khẩu" class="btn-sm-after"/>

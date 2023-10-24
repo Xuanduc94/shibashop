@@ -76,7 +76,6 @@ class Ajax extends CI_Controller
                 $html .= "</tr>";
             }
             echo $this->messages = $html;
-
         } else {
             echo $this->messages;
         }
@@ -107,7 +106,6 @@ class Ajax extends CI_Controller
                 }
             }
         }
-
     }
 
     private function _check_mail($mail)
@@ -127,7 +125,7 @@ class Ajax extends CI_Controller
         if (!isset($user) || count($user) == 0) {
             echo $this->messages;
         } else {
-            //$this->db->where(['id' => $id])->delete('users');
+            $this->db->where(['id' => $id])->delete('users');
             echo $this->messages = '1';
         }
     }
@@ -181,11 +179,9 @@ class Ajax extends CI_Controller
                 $html .= '</tr>';
             }
             echo $this->messages = $html;
-
         } else {
             echo $this->messages;
         }
-
     }
 
     /*
@@ -235,7 +231,6 @@ class Ajax extends CI_Controller
                 $html .= '</tr>';
             }
             echo $this->messages = $html;
-
         } else {
             echo $this->messages;
         }
@@ -256,7 +251,6 @@ class Ajax extends CI_Controller
                 $html .= '</tr>';
             }
             echo $this->messages = $html;
-
         } else {
             echo $this->messages;
         }
@@ -328,7 +322,6 @@ class Ajax extends CI_Controller
             $this->db->where(['id' => $gid])->delete('users_group');
             echo $this->messages = '1';
         }
-
     }
 
     public function cms_save_item_group()
@@ -348,7 +341,6 @@ class Ajax extends CI_Controller
                 echo $this->messages = "Nhóm người dùng $group_name đã tồn tại trong hệ thống.";
             }
         }
-
     }
 
     /*
@@ -375,7 +367,4 @@ class Ajax extends CI_Controller
     /*
      * CUSTOMER
     /***********************/
-
-
-
 }

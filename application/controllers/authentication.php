@@ -1,5 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-
+include APPPATH . "utils\string_helper.php";
 // controller control user authentication
 class Authentication extends CI_Controller
 {
@@ -25,9 +25,11 @@ class Authentication extends CI_Controller
             $this->form_validation->set_rules('data[username]', 'tên đăng nhập', 'trim|required|min_length[3]|max_length[100]|regex_match[/^([a-z0-9_@\.])+$/i]|callback__check_user');
             $this->form_validation->set_rules('data[password]', 'mật khẩu', 'trim|required|min_length[1]|callback__check_password[' . $_post['username'] . ']');
             if ($this->form_validation->run() == true) {
-                $user = $this->db->select('username,password,salt')->where('username', $_post['username'])->or_where('email', $_post['username'])->from('users')->get()->row_array();
+                $user = $this->db->select('id, username,password,salt, store_id')->where('username', $_post['username'])->or_where('email', $_post['username'])->from('users')->get()->row_array();
                 CMS_Cookie::put('user_logged' . CMS_PREFIX, CMS_Cookie::encode(json_encode($user)), COOKIE_EXPIRY);
                 CMS_Session::put('username', $user['username']);
+                CMS_Session::put("user_id", $user['id']);
+                CMS_Session::put("store_id", $user['store_id']);
                 $this->db->where('username', $user['username'])->update('users', ['logined' => gmdate("Y:m:d H:i:s", time() + 7 * 3600), 'ip_logged' => $_SERVER['SERVER_ADDR']]);
                 $this->cms_common_string->cms_redirect(CMS_BASE_URL . 'backend');
             }
@@ -134,7 +136,7 @@ class Authentication extends CI_Controller
 
     public function get_new_password()
     {
-        $data = $this->imput->post['data'];
+        $data = $this->input->post('data');
         $view = array();
         $count = $this->db->where('email', $data['email'])->from('users')->count_all_results();
         if ($count == 0) {
@@ -142,6 +144,11 @@ class Authentication extends CI_Controller
             $this->load->view('layout/auth', isset($view) ? $view : null);
         } else {
             $view['template'] = 'auth/n_link';
+            $view['password'] = generateRandomString();
+            $view['template'] = "auth/notice";
+            $user = $this->db->from('users')->where('email', $data['email'])->get()->row_array();
+            $salt = $this->cms_common_string->random(69, true);
+            $this->db->where('ID', $user['id'])->update('users', ['salt' => $salt, 'password' => $this->cms_common_string->password_encode($view['password'], $salt)]);
             $this->load->view('layout/auth', isset($view) ? $view : null);
         }
     }
@@ -188,7 +195,7 @@ class Authentication extends CI_Controller
                 if ($this->form_validation->run() == true) {
                     $_post = $this->cms_common_string->allow_post($_post, ['email', 'password']);
                     $_post['salt'] = $this->cms_common_string->random(69, true); //tạo ra một chuỗi ngẫu nhiên
-                    $_post['password'] = $this->cms_common_string->password_encode($_post['password'], $_post['salt']); //mã hóa mật khẩu bằng cách nối chuỗi theo thứ tự định sẵn.
+                    $_post['password'] = $this->cms_common_string->password_encode($_post['password'], $_post['salt']);
                     $_post['updated'] = gmdate("Y:m:d H:i:s", time() + 60);
                     $_post['recode'] = '';
                     $_post['code_time_out'] = '';
@@ -223,5 +230,39 @@ class Authentication extends CI_Controller
     {
         $data['template'] = 'auth/register';
         $this->load->view('layout/auth', isset($data) ? $data : null);
+    }
+
+    public function cms_register_store()
+    {
+        $post = $this->input->post("data");
+        $data = array();
+        $data['stock_name'] = $post['stock_name'];
+        $data['user_init'] = $post['user_init'];
+        $data['user_upd'] = 0;
+        $this->db->insert('stores', $data);
+        $this->db->where('id', $post['user_init'])->update('users', ['store_id' => $this->db->insert_id()]);
+        $this->cms_common_string->cms_redirect("/");
+    }
+
+    public function register_account()
+    {
+        $post = $this->input->post("data");
+        $data = array();
+        $data['username'] = $post["username"];
+        $salt = $this->cms_common_string->random(69);
+        $data['salt'] = $salt;
+        $data['password'] = $this->cms_common_string->password_encode(trim($post['password']), $salt);
+        $data['created'] = gmdate("Y:m:d H:i:s", time() + 7 * 3600);
+        $data['email'] = $post['email'];
+        $data['logined'] = gmdate("Y:m:d H:i:s", time() + 7 * 3600);
+        $data['ip_logged'] = $_SERVER['REMOTE_ADDR'];
+        $data['recode'] = "new";
+        $data['code_time_out'] = "0";
+        $data['display_name'] = $post['display_name'];
+        $data['user_status'] = 1;
+        $data['group_id'] = 1;
+        $this->db->insert('users', $data);
+        $view = ['template' => 'auth/store', 'user_id' => $this->db->insert_id()];
+        $this->load->view('layout/auth', isset($view) ? $view : null);
     }
 }
