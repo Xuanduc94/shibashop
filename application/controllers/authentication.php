@@ -54,7 +54,7 @@ class Authentication extends CI_Controller
 
         $count = $this->db->where('user_status', 1)->where('username', $username)->or_where('email', $username)->from('users')->count_all_results();
         if ($count == 0) {
-            $this->form_validation->set_message('_check_user', 'Tài khoản đăng nhập không hợp lệ.');//tự tạo câu lệnh xuất riêng vs hàm riêng
+            $this->form_validation->set_message('_check_user', 'Tài khoản đăng nhập không hợp lệ.'); //tự tạo câu lệnh xuất riêng vs hàm riêng
             return false;
         }
         return true;
@@ -124,10 +124,7 @@ class Authentication extends CI_Controller
                         $this->db->where('username', $user['username'])->update('users', $dataup);
                         $this->cms_common_string->cms_redirect(CMS_BASE_URL . 'authentication/alert/?email=' . base64_encode($_post['email']) . '');
                     }
-
                 }
-
-
             }
         }
 
@@ -135,11 +132,25 @@ class Authentication extends CI_Controller
         $this->load->view('layout/auth', isset($data) ? $data : null);
     }
 
+    public function get_new_password()
+    {
+        $data = $this->imput->post['data'];
+        $view = array();
+        $count = $this->db->where('email', $data['email'])->from('users')->count_all_results();
+        if ($count == 0) {
+            $view['template'] = 'auth/n_link';
+            $this->load->view('layout/auth', isset($view) ? $view : null);
+        } else {
+            $view['template'] = 'auth/n_link';
+            $this->load->view('layout/auth', isset($view) ? $view : null);
+        }
+    }
+
     public function _email($email)
     {
         $count = $this->db->where('email', $email)->from('users')->count_all_results();
         if ($count == 0) {
-            $this->form_validation->set_message('_email', 'Email Không tồn tại.');//tự tạo câu lệnh xuất riêng vs hàm riêng
+            $this->form_validation->set_message('_email', 'Email Không tồn tại.'); //tự tạo câu lệnh xuất riêng vs hàm riêng
             return false;
         }
 
@@ -176,8 +187,8 @@ class Authentication extends CI_Controller
                 $this->form_validation->set_rules('data[password]', 'mật khẩu', 'trim|required|min_length[6]');
                 if ($this->form_validation->run() == true) {
                     $_post = $this->cms_common_string->allow_post($_post, ['email', 'password']);
-                    $_post['salt'] = $this->cms_common_string->random(69, true);//tạo ra một chuỗi ngẫu nhiên
-                    $_post['password'] = $this->cms_common_string->password_encode($_post['password'], $_post['salt']);//mã hóa mật khẩu bằng cách nối chuỗi theo thứ tự định sẵn.
+                    $_post['salt'] = $this->cms_common_string->random(69, true); //tạo ra một chuỗi ngẫu nhiên
+                    $_post['password'] = $this->cms_common_string->password_encode($_post['password'], $_post['salt']); //mã hóa mật khẩu bằng cách nối chuỗi theo thứ tự định sẵn.
                     $_post['updated'] = gmdate("Y:m:d H:i:s", time() + 60);
                     $_post['recode'] = '';
                     $_post['code_time_out'] = '';
@@ -188,7 +199,6 @@ class Authentication extends CI_Controller
         }
         $data['template'] = "auth/reset";
         $this->load->view('layout/auth', isset($data) ? $data : null);
-
     }
 
     /*
@@ -206,6 +216,12 @@ class Authentication extends CI_Controller
     {
         if ($this->auth == null) $this->cms_common_string->cms_redirect(CMS_BASE_URL . 'backend');
         CMS_Cookie::delete('user_logged' . CMS_PREFIX);
-        $this->cms_common_string->cms_redirect(CMS_BASE_URL . 'backend');
+        $this->cms_common_string->cms_redirect("/");
+    }
+
+    public function register()
+    {
+        $data['template'] = 'auth/register';
+        $this->load->view('layout/auth', isset($data) ? $data : null);
     }
 }

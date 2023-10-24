@@ -359,11 +359,10 @@ class Inventory extends CI_Controller
     public function ExportInventory()
     {
         //Load thư viện PHP Exell
-
+        include_once "public/templates/libs/PHPExcel/Spreadsheet.php";
         $date_inventory = gmdate("dmY", time() + 7 * 3600);
         $today = gmdate("d/m/Y H:i", time() + 7 * 3600);
-        require_once "public/templates/libs/PHPExcel/PHPExcel.php";
-        $obPHPExcel = new PHPExcel();
+        $obPHPExcel = new Spreadsheet();
         $obPHPExcel->setActiveSheetIndex(0)->setCellValue('A1', 'Ngày lập')->setCellValue('A2', 'Kho')->setCellValue('A3', 'Tổng tồn kho')->setCellValue('A4', 'Tổng giá trị tồn kho')->setCellValue('A5', 'Tổng giá trị bán');
         $obPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
         $obPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(35);
