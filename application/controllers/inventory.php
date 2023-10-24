@@ -26,7 +26,7 @@ class Inventory extends CI_Controller
         $data['template'] = 'inventory/index';
         $store = $this->db->from('stores')->get()->result_array();
         $data['data']['store'] = $store;
-        $store_id = $this->db->select('store_id')->from('users')->where('id',$this->auth['id'])->limit(1)->get()->row_array();
+        $store_id = $this->db->select('store_id')->from('users')->where('id', $this->auth['id'])->limit(1)->get()->row_array();
         $data['data']['store_id'] = $store_id['store_id'];
         $this->load->view('layout/index', isset($data) ? $data : null);
     }
@@ -35,60 +35,70 @@ class Inventory extends CI_Controller
     {
         $option = $this->input->post('data');
         $config = $this->cms_common->cms_pagination_custom();
-        $total_prd=0;
-        $data=null;
+        $total_prd = 0;
+        $data = null;
         if ($option['option1'] == '-1') {
             if ($option['option2'] == '-1') {
                 if ($option['option3'] == '0') {
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
                         ->where('deleted', 0)
-                        ->where('store_id',$option['store_id'])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price, prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
                         ->where('deleted', 0)
-                        ->where('store_id',$option['store_id'])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
                         ->get()->result_array();
-                } else if ($option['option3'] == '1'){
+                } else if ($option['option3'] == '1') {
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity >' => 0])
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'quantity >' => 0])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price, prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity >' => 0])
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'quantity >' => 0])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
                         ->get()->result_array();
-                } else if ($option['option3'] == '2'){
+                } else if ($option['option3'] == '2') {
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity ' => 0])
-                        ->where('store_id',$option['store_id'])
+                        ->where(['deleted' => 0, 'quantity ' => 0])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price, prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity ' => 0])
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'quantity ' => 0])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
@@ -99,52 +109,58 @@ class Inventory extends CI_Controller
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where('store_id',$option['store_id'])
+                        ->where(['deleted' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price, prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
                         ->get()->result_array();
-                } else if ($option['option3'] == '1'){
+                } else if ($option['option3'] == '1') {
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity >' => 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where('store_id',$option['store_id'])
+                        ->where(['deleted' => 0, 'quantity >' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price, prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity >' => 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'quantity >' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
                         ->get()->result_array();
-                } else if ($option['option3'] == '2'){
+                } else if ($option['option3'] == '2') {
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity ' => 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where('store_id',$option['store_id'])
+                        ->where(['deleted' => 0, 'quantity ' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price, prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity ' => 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'quantity ' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
@@ -160,57 +176,65 @@ class Inventory extends CI_Controller
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
                         ->where('deleted', 0)
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price,prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
                         ->where('deleted', 0)
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
                         ->get()->result_array();
-                } else if ($option['option3'] == '1'){
+                } else if ($option['option3'] == '1') {
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity >' => 0])
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'quantity >' => 0])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price,  prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity >' => 0])
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'quantity >' => 0])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
                         ->get()->result_array();
-                } else if ($option['option3'] == '2'){
+                } else if ($option['option3'] == '2') {
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity ' => 0])
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->where(['deleted' => 0, 'quantity ' => 0])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price,  prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity ' => 0])
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'quantity ' => 0])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
@@ -221,58 +245,64 @@ class Inventory extends CI_Controller
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->where(['deleted' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price,  prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
                         ->get()->result_array();
-                } else if ($option['option3'] == '1'){
+                } else if ($option['option3'] == '1') {
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity >' => 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->where(['deleted' => 0, 'quantity >' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price, prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity >' => 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'quantity >' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
                         ->get()->result_array();
-                } else if ($option['option3'] == '2'){
+                } else if ($option['option3'] == '2') {
                     $total_prd = $this->db
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity ' => 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->where(['deleted' => 0, 'quantity ' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('products.ID,prd_code,prd_name,quantity,prd_sell_price,prd_origin_price')
+                        ->select('products.ID,prd_code,prd_name,quantity,prd_origin_price, prd_whole_price,prd_retail_price')
                         ->from('inventory')
                         ->join('products', 'products.ID=inventory.product_id', 'INNER')
-                        ->where(['deleted'=> 0,'quantity ' => 0,'prd_manufacture_id'=>$option['option2']])
-                        ->where_in('prd_group_id',$temp)
-                        ->where('store_id',$option['store_id'])
+                        ->join('products_units', 'products.ID=products_units.prd_id', 'INNER')
+                        ->where('active', 1)
+                        ->where(['deleted' => 0, 'quantity ' => 0, 'prd_manufacture_id' => $option['option2']])
+                        ->where_in('prd_group_id', $temp)
+                        ->where('store_id', $option['store_id'])
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('inventory.created', 'desc')
@@ -286,28 +316,32 @@ class Inventory extends CI_Controller
         $config['per_page'] = 10;
         $this->pagination->initialize($config);
         $_pagination_link = $this->pagination->create_links();
-        $totaloinvent = $totalsinvent = $sls = 0;
+        $totaloinvent = $totalsinventretail = $totalsinventwhole = $sls = 0;
         $tempdata = $data['data']['_list_product'];
         foreach ($tempdata as $item) {
             $sls += $item['quantity'];
+            $price = $this->db->select('prd_retail_price, prd_whole_price')->from('products_units')->where('prd_id', $item['ID'])->get()->row_array();
             $totaloinvent += ($item['quantity'] * $item['prd_origin_price']);
-            $totalsinvent += ($item['quantity'] * $item['prd_sell_price']);
+            $totalsinventretail += ($price["prd_retail_price"] * $item['quantity']);
+            $totalsinventwhole += ($price["prd_whole_price"] * $item['quantity']);
         }
         $data['total_sls'] = $sls;
         $data['totaloinvent'] = $totaloinvent;
-        $data['totalsinvent'] = $totalsinvent;
+        $data['totalsinventretail'] = $totalsinventretail;
+        $data['totalsinventwhole'] = $totalsinventwhole;
         $data['data']['_sl_product'] = $total_prd;
         $data['data']['_sl_manufacture'] = $this->db->from('products_manufacture')->count_all_results();
         $data['_pagination_link'] = $_pagination_link;
         $this->load->view('ajax/inventory/list_inven', isset($data) ? $data : null);
     }
 
-    function getCategoriesByParentId($category_id) {
+    function getCategoriesByParentId($category_id)
+    {
         $category_data = array();
 
         $category_query = $this->db
             ->from('products_group')
-            ->where('parentid',$category_id)
+            ->where('parentid', $category_id)
             ->get();
 
         foreach ($category_query->result() as $category) {
@@ -384,4 +418,3 @@ class Inventory extends CI_Controller
         }
     }
 }
-
