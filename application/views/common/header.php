@@ -20,7 +20,7 @@
                     <li style="border-right: 1px solid #E1E1E1; padding-right: 15px;">
                         <select id="store-id" class="form-control" style="margin: 8px auto">
                             <?php foreach ($data['store'] as $key => $item) : ?>
-                                <?php if ($item['user_init'] == CMS_Session::get('user_id')) : ?>
+                                <?php if ($item['user_init'] == CMS_Cookie::get('user_id')) : ?>
                                     <option <?php if ($item['ID'] == $data['store_id']) echo 'selected '; ?> value="<?php echo $item['ID']; ?>"><?php echo $item['stock_name']; ?></option>
                                 <?php endif ?>
 

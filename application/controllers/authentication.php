@@ -28,7 +28,8 @@ class Authentication extends CI_Controller
                 $user = $this->db->select('id, username,password,salt, store_id')->where('username', $_post['username'])->or_where('email', $_post['username'])->from('users')->get()->row_array();
                 CMS_Cookie::put('user_logged' . CMS_PREFIX, CMS_Cookie::encode(json_encode($user)), COOKIE_EXPIRY);
                 CMS_Session::put('username', $user['username']);
-                CMS_Session::put("user_id", $user['id']);
+                CMS_Cookie::put("user_id", $user['id'], COOKIE_EXPIRY);
+
                 CMS_Session::put("store_id", $user['store_id']);
                 $this->db->where('username', $user['username'])->update('users', ['logined' => gmdate("Y:m:d H:i:s", time() + 7 * 3600), 'ip_logged' => $_SERVER['SERVER_ADDR']]);
                 $this->cms_common_string->cms_redirect(CMS_BASE_URL . 'backend');

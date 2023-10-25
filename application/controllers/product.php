@@ -390,6 +390,63 @@ class Product extends CI_Controller
         }
     }
 
+    public function cms_importData()
+    {
+        $path = "data.json";
+        # import product
+        $listProduct = json_decode(file_get_contents($path));
+        $this->db->trans_begin();
+        try {
+            foreach ($listProduct as $itemProduct) {
+                $data['prd_name'] = strtoupper(vn_str_filter($itemProduct->Name));
+                $data['user_init'] = $this->auth['id'];
+                $data['prd_code'] = $itemProduct->code;
+                $data['prd_origin_price'] = ($itemProduct->origin_price != null && $itemProduct->origin_price <= 1000000) ? $itemProduct->origin_price : 0;
+                $quantity = 10000;
+                $this->db->insert('products', $data);
+                $product_id = $this->db->insert_id();
+                $user_init = $data['user_init'];
+                $inventory = ['store_id' => 1, 'product_id' => $product_id, 'quantity' => $quantity, 'user_init' => $user_init];
+                $this->db->insert('inventory', $inventory);
+
+                $report = array();
+                $report['transaction_code'] = "IMP" . random_int(100, 6000);
+                $report['notes'] = 'Khai báo hàng hóa';
+                $report['user_init'] = $data['user_init'];
+                $report['type'] = 1;
+                $report['store_id'] = 1;
+                $report['product_id'] = $product_id;
+                $report['input'] = $quantity;
+                $report['stock'] = $quantity;
+                $report['price'] = 0;
+                $this->db->insert('report', $report);
+
+                # unit
+                $units = $itemProduct->unit;
+                foreach ($units as $unit) {
+                    $cms_products_units = array();
+                    $cms_products_units['prd_id'] = $product_id;
+                    $cms_products_units['active'] = 1;
+                    $cms_products_units['unit'] = $unit->unit;
+                    $cms_products_units['prd_retail_price'] = $unit->retail;
+                    $cms_products_units['prd_whole_price'] = $unit->whole;
+                    $this->db->insert("products_units", $cms_products_units);
+                }
+            }
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                echo $this->messages = "0";
+            } else {
+                $this->db->trans_commit();
+                echo $this->messages = "1";
+            }
+        } catch (\Throwable $th) {
+            print $th->getTrace();
+            $this->db->trans_rollback();
+            echo $this->messages = "0";
+        }
+    }
+
     public function cms_update_product($id)
     {
 
