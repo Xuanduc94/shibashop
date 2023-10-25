@@ -34,12 +34,13 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
     $item->code = mb_convert_encoding($row['MaSanPham'], "UTF-8", "UTF-8");
     $item->origin_price = $row['GiaNhap'];
     $units = array();
-    $unitList = sqlsrv_query($conn, "select TenDonVi, GiaLe, GiaSi from DonViTinh_SanPham join DonViTinh on DonViTinh_SanPham.DonViTinh = DonViTinh.id where DonViTinh_SanPham.SanPham = " . $row['id']);
+    $unitList = sqlsrv_query($conn, "select TenDonVi, GiaLe, GiaSi, Selected from DonViTinh_SanPham join DonViTinh on DonViTinh_SanPham.DonViTinh = DonViTinh.id where DonViTinh_SanPham.SanPham = " . $row['id']);
     while ($rowUnit = sqlsrv_fetch_array($unitList, SQLSRV_FETCH_ASSOC)) {
         $itemUnit = new stdClass();
         $itemUnit->unit = mb_convert_encoding($rowUnit["TenDonVi"], "UTF-8", "UTF-8");
         $itemUnit->retail = $rowUnit['GiaLe'] != null ? $rowUnit['GiaLe'] : 0;
         $itemUnit->whole = $rowUnit['GiaSi'] != null ? $rowUnit['GiaSi'] : 0;
+        $itemUnit->active = $rowUnit['Selected'];
         array_push($units, $itemUnit);
     }
     $item->unit = $units;

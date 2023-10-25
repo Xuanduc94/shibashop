@@ -403,6 +403,7 @@ class Product extends CI_Controller
                 $data['prd_code'] = $itemProduct->code;
                 $data['prd_origin_price'] = ($itemProduct->origin_price != null && $itemProduct->origin_price <= 1000000) ? $itemProduct->origin_price : 0;
                 $quantity = 10000;
+
                 $this->db->insert('products', $data);
                 $product_id = $this->db->insert_id();
                 $user_init = $data['user_init'];
@@ -426,7 +427,7 @@ class Product extends CI_Controller
                 foreach ($units as $unit) {
                     $cms_products_units = array();
                     $cms_products_units['prd_id'] = $product_id;
-                    $cms_products_units['active'] = 1;
+                    $cms_products_units['active'] = $unit->active;
                     $cms_products_units['unit'] = $unit->unit;
                     $cms_products_units['prd_retail_price'] = $unit->retail;
                     $cms_products_units['prd_whole_price'] = $unit->whole;
