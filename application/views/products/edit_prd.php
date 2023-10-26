@@ -147,7 +147,7 @@
                                     <th>Đơn vị</th>
                                     <th>Giá bán lẻ</th>
                                     <th>Giá bán sỉ</th>
-                                    <th>Sử dụng</th>
+                                    <th>Mặc định</th>
                                     <th></th>
                                 </tr>
                             </thead>

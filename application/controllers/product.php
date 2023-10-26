@@ -60,8 +60,12 @@ class Product extends CI_Controller
             $data['data']['_detail_product'] = $product;
             $sls_group = $this->cms_nestedset->dropdown('products_group', NULL, 'manufacture');
             $sls_manufacture = $this->db->from('products_manufacture')->get()->result_array();
+            $price = $this->db->select('id, unit,prd_whole_price as whole, prd_retail_price as retail, active')->from("products_units")->where("prd_id", $id)->get()->result_array();
+            $units = $this->db->from("units")->get()->result_array();
             $data['data']['_prd_group'] = $sls_group;
             $data['data']['_prd_manufacture'] = $sls_manufacture;
+            $data['data']['_prices'] = $price;
+            $data['data']['_units'] = $units;
             $this->load->view('products/add_prd', isset($data) ? $data : null);
         }
     }
