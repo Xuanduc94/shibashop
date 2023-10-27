@@ -17,7 +17,7 @@
                         </button>
                         <button type="button" class="btn btn-primary"  onclick="cms_save_orders(2)"><i class="fa fa-print"></i> Lưu và in
                         </button>
-                        <a href="/QLBanHangOnline/orders">
+                        <a href="/">
                             <button type="button" class="btn-back btn btn-primary"><i class="fa fa-arrow-left"></i> Trở lại
                             </button>
                         </a>

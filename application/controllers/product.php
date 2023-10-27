@@ -705,12 +705,21 @@ class Product extends CI_Controller
         }
         $temp = $data['data']['_list_product'];
         $listProduct = array();
+        $listError = array();
         foreach ($temp as $value) {
             $price = $this->db->from('products_units')->where(['active' => 1, 'prd_id' => $value['ID']])->get()->row_array();
-            $value['price'] = number_format($price['prd_retail_price']) . "/" . number_format($price['prd_whole_price']);
+            if ($price != null) {
+                $value['retail'] = number_format($price['prd_retail_price']);
+                $value['whole'] = number_format($price['prd_whole_price']);
+            } else {
+                $value['whole'] = "Vui lòng chọn giá mặc định";
+                $value['retail'] = "Vui lòng chọn giá mặc định";
+                array_push($listError, $value);
+            }
             array_push($listProduct, $value);
         }
         $data['data']['_list_product'] = $listProduct;
+        $data['data']['_list_error'] = $listError;
         $config['base_url'] = 'cms_paging_product';
         $config['total_rows'] = $total_prd;
         $this->pagination->initialize($config);

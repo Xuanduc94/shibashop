@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 25, 2023 at 12:57 PM
--- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- Generation Time: Oct 26, 2023 at 03:31 PM
+-- Server version: 5.7.41-cll-lve
+-- PHP Version: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `qlbanhang`
+-- Database: `reckomik_qlbanhang`
 --
 
 -- --------------------------------------------------------
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `cms_customers` (
-  `ID` int UNSIGNED NOT NULL,
+  `ID` int(10) UNSIGNED NOT NULL,
   `customer_name` varchar(255) NOT NULL,
   `customer_code` varchar(10) NOT NULL,
   `customer_phone` varchar(20) NOT NULL,
@@ -37,21 +37,22 @@ CREATE TABLE `cms_customers` (
   `notes` text NOT NULL,
   `customer_birthday` date NOT NULL,
   `customer_gender` tinyint(1) NOT NULL,
-  `user_init` int DEFAULT NULL,
-  `user_upd` int DEFAULT NULL,
-  `created` datetime DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+  `user_init` int(11) DEFAULT NULL,
+  `user_upd` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_customers`
 --
 
-INSERT INTO `cms_customers` (`ID`, `customer_name`, `customer_code`, `customer_phone`, `customer_email`, `customer_addr`, `notes`, `customer_birthday`, `customer_gender`, `user_init`, `user_upd`, `created`) VALUES
-(34, 'Lê Thành Tâm', 'KH000001', '0987654321', 'KH000001@gmail.com', 'Thái Nguyên', 'Khách hàng lớn', '1990-01-18', 0, NULL, NULL, NULL),
-(35, 'Lê Thái Thành', 'KH000002', '0123456789', 'KH000002@gmail.com', 'Thanh Hóa', '', '1989-01-11', 0, NULL, NULL, NULL),
-(36, 'Nguyễn Thúy Quỳnh', 'KH000003', '0123456799', 'KH000003@gmail.com', 'Định Hóa', '', '1989-01-18', 0, NULL, NULL, NULL),
-(38, 'Lê Thuận Khánh', 'KH000004', '01234567888', 'KH000004@gmail.com', 'Hoàng Văn Thụ, TP Thái Nguyên, Thái Nguyên', '', '1988-01-20', 0, NULL, NULL, NULL),
-(39, 'Trần Thị Mỹ Hạnh', 'KH000987', '', '', '', '', '1989-01-18', 0, 2, NULL, '2023-10-23 14:53:04');
+INSERT INTO `cms_customers` (`ID`, `customer_name`, `customer_code`, `customer_phone`, `customer_email`, `customer_addr`, `notes`, `customer_birthday`, `customer_gender`, `user_init`, `user_upd`, `created`, `updated`) VALUES
+(34, 'Lê Thành Tâm', 'KH000001', '0987654321', 'KH000001@gmail.com', 'Thái Nguyên', 'Khách hàng lớn', '1990-01-18', 0, NULL, NULL, NULL, '2023-10-26 15:31:05'),
+(35, 'Lê Thái Thành', 'KH000002', '0123456789', 'KH000002@gmail.com', 'Thanh Hóa', '', '1989-01-11', 0, NULL, NULL, NULL, '2023-10-26 15:31:05'),
+(36, 'Nguyễn Thúy Quỳnh', 'KH000003', '0123456799', 'KH000003@gmail.com', 'Định Hóa', '', '1989-01-18', 0, NULL, NULL, NULL, '2023-10-26 15:31:05'),
+(38, 'Lê Thuận Khánh', 'KH000004', '01234567888', 'KH000004@gmail.com', 'Hoàng Văn Thụ, TP Thái Nguyên, Thái Nguyên', '', '1988-01-20', 0, NULL, NULL, NULL, '2023-10-26 15:31:05'),
+(39, 'Trần Thị Mỹ Hạnh', 'KH000987', '', '', 'Thôn Tân Thắng, Xã Eana, Huyện Krông Ana, Đắk Lắk', '', '1989-01-18', 0, 2, 2, '2023-10-23 14:53:04', '2023-10-26 15:31:11');
 
 -- --------------------------------------------------------
 
@@ -60,27 +61,27 @@ INSERT INTO `cms_customers` (`ID`, `customer_name`, `customer_code`, `customer_p
 --
 
 CREATE TABLE `cms_input` (
-  `ID` int UNSIGNED NOT NULL,
+  `ID` int(10) UNSIGNED NOT NULL,
   `input_code` varchar(9) NOT NULL,
-  `supplier_id` int NOT NULL,
-  `store_id` int NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `store_id` int(11) NOT NULL,
   `input_date` datetime NOT NULL,
   `notes` varchar(255) NOT NULL,
-  `payment_method` tinyint NOT NULL,
-  `total_price` int NOT NULL,
-  `total_quantity` int NOT NULL,
-  `discount` int NOT NULL,
-  `total_money` int NOT NULL,
-  `payed` int NOT NULL,
-  `lack` int NOT NULL,
+  `payment_method` tinyint(4) NOT NULL,
+  `total_price` int(11) NOT NULL,
+  `total_quantity` int(11) NOT NULL,
+  `discount` int(11) NOT NULL,
+  `total_money` int(11) NOT NULL,
+  `payed` int(11) NOT NULL,
+  `lack` int(11) NOT NULL,
   `detail_input` text NOT NULL,
   `input_status` tinyint(1) NOT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `user_init` int NOT NULL,
-  `user_upd` int NOT NULL,
+  `user_init` int(11) NOT NULL,
+  `user_upd` int(11) NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `cms_input`
@@ -119,14 +120,14 @@ INSERT INTO `cms_input` (`ID`, `input_code`, `supplier_id`, `store_id`, `input_d
 --
 
 CREATE TABLE `cms_inventory` (
-  `store_id` int NOT NULL,
-  `product_id` int NOT NULL,
-  `quantity` int NOT NULL,
-  `user_init` int NOT NULL,
-  `user_upd` int DEFAULT NULL,
+  `store_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `user_init` int(11) NOT NULL,
+  `user_upd` int(11) DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_inventory`
@@ -201,7 +202,7 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 (1, 66, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 67, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 68, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
-(1, 69, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
+(1, 69, 9999, 2, 2, '2023-10-25 19:56:34', '2023-10-25 20:09:02'),
 (1, 70, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 71, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 72, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
@@ -512,7 +513,7 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 (1, 377, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 378, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 379, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
-(1, 380, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
+(1, 380, 9999, 2, 2, '2023-10-25 19:56:34', '2023-10-25 20:09:02'),
 (1, 381, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 382, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 383, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
@@ -521,7 +522,7 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 (1, 386, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 387, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 388, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
-(1, 389, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
+(1, 389, 9999, 2, 2, '2023-10-25 19:56:34', '2023-10-26 13:57:51'),
 (1, 390, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 391, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
 (1, 392, 10000, 2, NULL, '2023-10-25 19:56:34', NULL),
@@ -719,7 +720,7 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 (1, 584, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 585, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 586, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
-(1, 587, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
+(1, 587, 9998, 2, 2, '2023-10-25 19:56:35', '2023-10-26 15:05:58'),
 (1, 588, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 589, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 590, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
@@ -798,7 +799,7 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 (1, 663, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 664, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 665, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
-(1, 666, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
+(1, 666, 9999, 2, 2, '2023-10-25 19:56:35', '2023-10-26 10:40:59'),
 (1, 667, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 668, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 669, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
@@ -1073,10 +1074,10 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 (1, 938, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 939, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 940, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
-(1, 941, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
-(1, 942, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
-(1, 943, 10000, 2, NULL, '2023-10-25 19:56:35', NULL);
+(1, 941, 10000, 2, NULL, '2023-10-25 19:56:35', NULL);
 INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, `user_upd`, `created`, `updated`) VALUES
+(1, 942, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
+(1, 943, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 944, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 945, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
 (1, 946, 10000, 2, NULL, '2023-10-25 19:56:35', NULL),
@@ -1411,7 +1412,7 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 (1, 1275, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1276, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1277, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
-(1, 1278, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
+(1, 1278, 9999, 2, 2, '2023-10-25 19:56:36', '2023-10-26 10:21:07'),
 (1, 1279, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1280, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1281, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
@@ -1618,7 +1619,7 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 (1, 1482, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1483, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1484, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
-(1, 1485, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
+(1, 1485, 9998, 2, 2, '2023-10-25 19:56:36', '2023-10-26 10:43:18'),
 (1, 1486, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1487, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1488, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
@@ -1632,7 +1633,7 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 (1, 1496, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1497, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1498, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
-(1, 1499, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
+(1, 1499, 9998, 2, 2, '2023-10-25 19:56:36', '2023-10-26 14:30:54'),
 (1, 1500, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1501, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1502, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
@@ -1666,7 +1667,34 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 (1, 1530, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1531, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
 (1, 1532, 10000, 2, NULL, '2023-10-25 19:56:36', NULL),
-(1, 1533, 10000, 2, NULL, '2023-10-25 19:56:36', NULL);
+(1, 1533, 9998, 2, 2, '2023-10-25 19:56:36', '2023-10-25 20:09:02'),
+(1, 1534, 10000, 2, NULL, '2023-10-26 10:36:45', NULL),
+(0, 1535, 10000, 2, NULL, '2023-10-26 13:08:26', NULL),
+(0, 1536, 10000, 2, NULL, '2023-10-26 13:09:52', NULL),
+(0, 1537, 10000, 2, NULL, '2023-10-26 13:12:53', NULL),
+(0, 1538, 10000, 2, NULL, '2023-10-26 13:18:00', NULL),
+(0, 1539, 10000, 2, NULL, '2023-10-26 13:22:28', NULL),
+(0, 1540, 10000, 2, NULL, '2023-10-26 13:24:02', NULL),
+(0, 1541, 10000, 2, NULL, '2023-10-26 13:25:41', NULL),
+(0, 1542, 10000, 2, NULL, '2023-10-26 13:28:36', NULL),
+(0, 1543, 10000, 2, NULL, '2023-10-26 13:29:43', NULL),
+(0, 1544, 10000, 2, NULL, '2023-10-26 13:31:06', NULL),
+(0, 1545, 10000, 2, NULL, '2023-10-26 13:32:31', NULL),
+(0, 1546, 10000, 2, NULL, '2023-10-26 13:33:56', NULL),
+(0, 1547, 10000, 2, NULL, '2023-10-26 13:34:52', NULL),
+(0, 1548, 10000, 2, NULL, '2023-10-26 13:36:45', NULL),
+(0, 1549, 10000, 2, NULL, '2023-10-26 13:38:00', NULL),
+(0, 1550, 10000, 2, NULL, '2023-10-26 13:39:24', NULL),
+(1, 1551, 10000, 2, NULL, '2023-10-26 13:41:53', NULL),
+(1, 1552, 10000, 2, NULL, '2023-10-26 13:43:13', NULL),
+(1, 1553, 10000, 2, NULL, '2023-10-26 13:44:57', NULL),
+(1, 1554, 10000, 2, NULL, '2023-10-26 13:46:52', NULL),
+(1, 1555, 10000, 2, NULL, '2023-10-26 13:48:27', NULL),
+(1, 1556, 10000, 2, NULL, '2023-10-26 13:52:59', NULL),
+(1, 1557, 10000, 2, NULL, '2023-10-26 13:54:21', NULL),
+(1, 1558, 10000, 2, NULL, '2023-10-26 13:55:46', NULL),
+(1, 1559, 10000, 2, NULL, '2023-10-26 13:59:06', NULL),
+(1, 1560, 10000, 2, NULL, '2023-10-26 14:00:20', NULL);
 
 -- --------------------------------------------------------
 
@@ -1675,30 +1703,30 @@ INSERT INTO `cms_inventory` (`store_id`, `product_id`, `quantity`, `user_init`, 
 --
 
 CREATE TABLE `cms_orders` (
-  `ID` int UNSIGNED NOT NULL,
+  `ID` int(10) UNSIGNED NOT NULL,
   `output_code` varchar(9) NOT NULL,
-  `customer_id` int DEFAULT NULL,
-  `store_id` int NOT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `store_id` int(11) NOT NULL,
   `sell_date` datetime NOT NULL,
   `notes` varchar(255) NOT NULL,
-  `payment_method` tinyint NOT NULL,
-  `total_price` int NOT NULL,
-  `total_origin_price` int NOT NULL,
-  `coupon` int DEFAULT NULL,
-  `customer_pay` int NOT NULL,
-  `total_money` int NOT NULL,
-  `total_quantity` int NOT NULL,
-  `lack` int NOT NULL,
+  `payment_method` tinyint(4) NOT NULL,
+  `total_price` int(11) NOT NULL,
+  `total_origin_price` int(11) NOT NULL,
+  `coupon` int(11) DEFAULT NULL,
+  `customer_pay` int(11) NOT NULL,
+  `total_money` int(11) NOT NULL,
+  `total_quantity` int(11) NOT NULL,
+  `lack` int(11) NOT NULL,
   `detail_order` text NOT NULL,
   `order_status` tinyint(1) NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_init` int DEFAULT NULL,
-  `user_upd` int DEFAULT NULL,
-  `sale_id` int NOT NULL,
-  `type_sell` tinyint NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+  `user_init` int(11) DEFAULT NULL,
+  `user_upd` int(11) DEFAULT NULL,
+  `sale_id` int(11) NOT NULL,
+  `type_sell` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_orders`
@@ -1720,7 +1748,15 @@ INSERT INTO `cms_orders` (`ID`, `output_code`, `customer_id`, `store_id`, `sell_
 (268, 'PX0000016', NULL, 1, '2023-10-23 20:51:20', '', 1, 100000, 50000, 0, 100000, 100000, 1, 0, '[{\"id\":\"129\",\"quantity\":\"1\",\"price\":\"100000\",\"discount\":\"0\"}]', 1, 0, '2023-10-23 20:51:20', '2023-10-23 20:51:20', 2, NULL, 2, 0),
 (269, 'PX0000017', NULL, 1, '2023-10-23 20:58:22', '', 1, 40000, 56000, 0, 40000, 40000, 1, 0, '[{\"id\":\"131\",\"quantity\":\"1\",\"price\":\"40000\",\"discount\":\"0\"}]', 1, 0, '2023-10-23 20:58:22', '2023-10-23 20:58:22', 2, NULL, 2, 0),
 (270, 'PX0000018', NULL, 1, '2023-10-23 20:59:34', '', 1, 34900, 30000, 0, 34900, 34900, 1, 0, '[{\"id\":\"130\",\"quantity\":\"1\",\"price\":\"34900\",\"discount\":\"0\"}]', 1, 0, '2023-10-23 20:59:34', '2023-10-23 20:59:34', 2, NULL, 2, 0),
-(271, 'PX0000019', NULL, 1, '2023-10-24 21:12:49', '', 1, 34900, 30000, 0, 34900, 34900, 1, 0, '[{\"id\":\"130\",\"quantity\":\"1\",\"price\":\"34900\",\"discount\":\"0\"}]', 1, 0, '2023-10-24 21:12:49', '2023-10-24 21:12:49', 2, NULL, 2, 0);
+(271, 'PX0000019', NULL, 1, '2023-10-24 21:12:49', '', 1, 34900, 30000, 0, 34900, 34900, 1, 0, '[{\"id\":\"130\",\"quantity\":\"1\",\"price\":\"34900\",\"discount\":\"0\"}]', 1, 0, '2023-10-24 21:12:49', '2023-10-24 21:12:49', 2, NULL, 2, 0),
+(272, 'PX0000020', NULL, 1, '2023-10-25 20:09:02', '', 1, 686000, 666900, 0, 686000, 686000, 4, 0, '[{\"id\":\"1533\",\"quantity\":\"2\",\"price\":\"335000\",\"discount\":\"0\"},{\"id\":\"69\",\"quantity\":\"1\",\"price\":\"7000\",\"discount\":\"0\"},{\"id\":\"380\",\"quantity\":\"1\",\"price\":\"9000\",\"discount\":\"0\"}]', 1, 0, '2023-10-25 20:09:02', '2023-10-25 20:09:02', 2, NULL, 2, 0),
+(273, 'PX0000021', NULL, 1, '2023-10-26 10:21:07', '', 1, 11000, 90000, 0, 11000, 11000, 1, 0, '[{\"id\":\"1278\",\"quantity\":\"1\",\"price\":\"11000\",\"discount\":\"0\"}]', 1, 0, '2023-10-26 10:21:07', '2023-10-26 10:21:07', 2, NULL, 2, 0),
+(274, 'PX0000022', NULL, 1, '2023-10-26 10:40:59', '', 1, 560000, 535300, 0, 560000, 560000, 1, 0, '[{\"id\":\"666\",\"quantity\":\"1\",\"price\":\"560000\",\"discount\":\"0\"}]', 1, 0, '2023-10-26 10:40:59', '2023-10-26 10:40:59', 2, NULL, 2, 0),
+(275, 'PX0000023', NULL, 1, '2023-10-26 10:43:18', '', 1, 30000, 0, 0, 30000, 30000, 2, 0, '[{\"id\":\"1485\",\"quantity\":\"2\",\"price\":\"15000\",\"discount\":\"0\"}]', 1, 0, '2023-10-26 10:43:18', '2023-10-26 10:43:18', 2, NULL, 2, 0),
+(276, 'PX0000024', NULL, 1, '2023-10-26 13:57:51', '', 1, 30000, 0, 0, 30000, 30000, 1, 0, '[{\"id\":\"389\",\"quantity\":\"1\",\"price\":\"30000\",\"discount\":\"0\"}]', 1, 0, '2023-10-26 13:57:51', '2023-10-26 13:57:51', 2, NULL, 2, 0),
+(277, 'PX0000025', NULL, 1, '2023-10-26 14:10:43', '', 1, 14000, 132000, 0, 14000, 14000, 1, 0, '[{\"id\":\"1499\",\"quantity\":\"1\",\"price\":\"14000\",\"discount\":\"0\"}]', 1, 0, '2023-10-26 14:10:43', '2023-10-26 14:10:43', 2, NULL, 0, 0),
+(278, 'PX0000026', NULL, 1, '2023-10-26 14:30:54', '', 1, 184000, 132000, 0, 184000, 184000, 2, 0, '[{\"id\":\"1499\",\"quantity\":\"1\",\"price\":\"134000\",\"discount\":\"0\"},{\"id\":\"587\",\"quantity\":\"1\",\"price\":\"50000\",\"discount\":\"0\"}]', 1, 0, '2023-10-26 14:30:54', '2023-10-26 14:30:54', 2, NULL, 0, 0),
+(279, 'PX0000027', NULL, 1, '2023-10-26 15:05:58', '', 1, 56000, 53458, 0, 56000, 56000, 1, 0, '[{\"id\":\"587\",\"quantity\":\"1\",\"price\":\"56000\",\"discount\":\"0\"}]', 1, 0, '2023-10-26 15:05:58', '2023-10-26 15:05:58', 2, NULL, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -1729,10 +1765,10 @@ INSERT INTO `cms_orders` (`ID`, `output_code`, `customer_id`, `store_id`, `sell_
 --
 
 CREATE TABLE `cms_permissions` (
-  `id` int UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `permission_url` varchar(255) NOT NULL,
   `permission_name` varchar(150) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_permissions`
@@ -1753,28 +1789,28 @@ INSERT INTO `cms_permissions` (`id`, `permission_url`, `permission_name`) VALUES
 --
 
 CREATE TABLE `cms_products` (
-  `ID` int UNSIGNED NOT NULL,
-  `prd_code` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `ID` int(10) UNSIGNED NOT NULL,
+  `prd_code` varchar(100) NOT NULL,
   `prd_name` varchar(255) NOT NULL,
-  `prd_sls` int NOT NULL DEFAULT '10000',
-  `prd_origin_price` int NOT NULL,
-  `prd_vat` tinyint NOT NULL DEFAULT '0',
+  `prd_sls` int(11) NOT NULL DEFAULT '10000',
+  `prd_origin_price` int(11) NOT NULL,
+  `prd_vat` tinyint(4) NOT NULL DEFAULT '0',
   `prd_status` tinyint(1) NOT NULL DEFAULT '1',
   `prd_inventory` tinyint(1) NOT NULL DEFAULT '0',
   `prd_allownegative` tinyint(1) NOT NULL DEFAULT '0',
-  `prd_manufacture_id` int DEFAULT NULL,
-  `prd_group_id` int DEFAULT NULL,
-  `prd_descriptions` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
-  `prd_manuf_id` int DEFAULT NULL,
+  `prd_manufacture_id` int(11) DEFAULT NULL,
+  `prd_group_id` int(11) DEFAULT NULL,
+  `prd_descriptions` text,
+  `prd_manuf_id` int(11) DEFAULT NULL,
   `prd_hot` tinyint(1) NOT NULL DEFAULT '0',
   `prd_new` tinyint(1) NOT NULL DEFAULT '0',
   `prd_highlight` tinyint(1) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_init` int DEFAULT NULL,
-  `user_upd` int DEFAULT NULL,
+  `user_init` int(11) DEFAULT NULL,
+  `user_upd` int(11) DEFAULT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_products`
@@ -1849,7 +1885,7 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (66, '8934595052279', 'BANH LONG PIE180G', 10000, 278000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (67, '8934603000193', 'THUOC LA SG BAC', 10000, 119000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (68, '8934603100190', 'THUOC LA SG TRANG', 10000, 119000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
-(69, '8934603302075', 'THUOC TAY DO 65000/C?Y', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
+(69, '8934603302075', 'THUOC TAY DO 65000/C?Y', 9999, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (70, '8934603320079', 'CAY THUOC TAY DO', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (71, '8934609102549', 'KEO GUNG BI CA G?I 400G ', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (72, '8934609106585', 'KEO MUT BI BI CA396G', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
@@ -2161,7 +2197,7 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (377, '8806159085088', 'BOT DANH RANG KIDS', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (378, '8934839123710', 'BOT DANH RANG P/S 2-6', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (379, '8934603000254', 'THUOC LA SAI GON XANH', 10000, 13300, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
-(380, '8934647006342', 'THUOC LA NGUA NAU', 10000, 6900, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
+(380, '8934647006342', 'THUOC LA NGUA NAU', 9999, 6900, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (381, '8938500661051', 'NUOC YEN NETSURE CAN XIPRO', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (382, '8936007081655', 'NUOC YEN SANEST', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (383, '8936009151400', 'DA HUONG 100ML', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
@@ -2170,7 +2206,7 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (386, '8934673300537', 'SUA SUSU HOP 110ML', 10000, 14500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (387, '8934673573320', 'SUA DAN BO NHO 110ML', 10000, 16840, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (388, '8934673581349', 'SUA DAN BO LON 180ML', 10000, 26500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
-(389, '8934841900293', 'YOMOS LON 180 M X 12 LOC/ THUNG', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
+(389, '8934841900293', 'YOMOS LON 180 M X 12 LOC/ THUNG', 9999, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (390, '8934841901672', 'SUA CAO KHOE NHO 110ML', 10000, 14300, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (391, '8934841901665', 'SUA CAO KHOE 180ML', 10000, 298000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
 (392, '8934841861112', 'SUA TRIS TI CHAI 80ML', 10000, 19400, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:34', '2023-10-25 19:56:34', 2, NULL, 0),
@@ -2368,7 +2404,7 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (584, '8938524361005', 'MAN TOM NGOC LAM 100GR', 10000, 130000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (585, '8934804027364', 'CA FE NET VIET 592G ', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (586, '8935024122310', 'CA FE G7 HOP 18 GOI', 10000, 40000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
-(587, '8934804028040', 'CA FE NET HOP 20 GOI X 24 HOP/T', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
+(587, '8934804028040', 'CA FE NET HOP 20 GOI X 24 HOP/T', 54, 53458, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, 2, 0),
 (588, '8935024126844', 'CA FE G7 BICH 100 GOI', 10000, 180000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (589, '8936019293053', 'BANH PHONG TOM 500G', 10000, 625000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (590, '8935117702047', 'THACH DUA ANH HONG', 10000, 271000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
@@ -2379,8 +2415,8 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (595, '8934684014416', 'BOT NGOT AONE MIN 1KG', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (596, '8934868157434', 'HAZELINE', 10000, 855000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (597, '8934868157458', 'HZELINE 900G', 10000, 852000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
-(598, '8934868162353', 'VIM XANH BIEN 880ML', 10000, 482000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
-(599, '8934868161455', 'VIM TRANG SANG 880ML', 10000, 497000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
+(598, '8934868162353', 'VIM XANH BIEN 880ML', 10000, 30000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, 2, 0),
+(599, '8934868161455', 'VIM TRANG SANG 880ML', 10000, 31000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, 2, 0),
 (600, '8934868152521', '', 10000, 771000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (601, '8934839124045', 'PS 123 TRANG RANG THAN HOAT TINH 180G', 10000, 28571, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (602, '8934839125967', 'CLO SEUP ', 10000, 290860, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
@@ -2448,25 +2484,25 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (663, '4902430876797', 'TA PAMPERS QUAN S 30 MIENG', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (664, '8935037901094', 'TUONG OT DAU BEP700G', 10000, 228000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (665, '4902430787369', 'DOWNY MATIC 2,15KG ', 10000, 105000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
-(666, '300875129111', 'ENFAMIL A ', 10000, 535300, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
+(666, '300875129111', 'ENFAMIL A 1', 9999, 535300, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, 2, 0),
 (667, '8934680042871', 'BANH KINH DO SOLITE KHAY 360G', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (668, '8934614024454', 'BANH KEM XOP QN WALYS ', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (669, '8934988030020', 'DAU AN CAI LAN 1L', 10000, 44400, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (670, '8934868159247', 'SURF NUOC GIAT 3,4KG', 10000, 103193, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (671, '8934868163206', 'COMFORT 1,8LIT DIET KHUAN ', 10000, 107419, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (672, '8934868151081', 'COMF0RT DAY ', 10000, 15550, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
-(673, '8934868136279', 'COMFORT DAY ', 10000, 15550, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
+(673, '8934868136279', 'COMFORT DAY', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, 2, 0),
 (674, '8934868138778', 'COMFORT DAY ', 10000, 15500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (675, '8934868151104', 'COMFORTDAY ', 10000, 15500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
-(676, '8934868150558', 'COMFORT', 10000, 15500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
+(676, '8934868150558', 'COMFORT', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, 2, 0),
 (677, '8934868151753', 'COMFORT DAY ', 10000, 15500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (678, '8934868135272', 'COMFORT DAY ', 10000, 15500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
-(679, '8934868150435', 'COMFORT DAY ', 10000, 15500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
+(679, '8934868150435', 'COMFORT DAY', 10000, 15500, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, 2, 0),
 (680, '8934868136255', 'COMFORT DAY', 10000, 15500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (681, '8934868156512', 'SUNLIGHT LAU SAN ', 10000, 24775, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (682, '8934868148340', 'SUNLIGHT LAU SAN THIEN NHIEN 997ML', 10000, 264860, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (683, '8934868156536', 'SUNLIGHT 997ML', 10000, 26480, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
-(684, '8934868142584', 'DAU GOI CLEAR THAO DUOC 630ML', 10000, 145732, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
+(684, '8934868142584', 'DAU GOI CLEAR THAO DUOC 630ML', 10000, 145732, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, 2, 0),
 (685, '8934868163503', 'S?NILK631ML', 10000, 100123, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (686, '8934868163527', 'SUNSILK DIEU KY 630ML', 10000, 100123, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (687, '8934868144182', 'DAU GOI TRESMME 621ML', 10000, 143407, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
@@ -2710,7 +2746,7 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (924, '8939410100340', 'BANH  DAU XANH TD 620G X 10 HOP/ THUNG', 10000, 58000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (925, '8934673230391', 'SUA DAC TAI LOC 1.284KG', 10000, 36200, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (926, '8934868159162', 'BOT GIAT SUTR 6.8 KG CO TANG ', 10000, 260000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
-(927, '8934868159179', 'BOT GIAT SUTR 2KG ', 10000, 48000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
+(927, '8934868159179', 'BOT GIAT SUTR 2KG', 10000, 43000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, 2, 0),
 (928, '8934964122374', 'GIAY BLESS YOU 180 TO X 3 HOP/LOC', 10000, 18200, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (929, '8936190138273', 'NU?C D?A XI?M', 10000, 163000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
 (930, '8938500796494', 'BUT AIHAO 12CAY/HOP', 10000, 18600, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:35', '2023-10-25 19:56:35', 2, NULL, 0),
@@ -2928,7 +2964,7 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (1142, '8934673503358', 'SUA BICH VINAMIK SOCOLA 220 ML', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1143, '8934647118762', 'THUOC LA WHITE HORSE', 10000, 108000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1144, '8934868162964', 'O MO MATIC CUA TREN 3.9 KG', 10000, 163000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
-(1145, '8934868134305', 'VIM ZERO HUONG CHANH 750 ML', 10000, 27391, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
+(1145, '8934868134305', 'VIM ZERO HUONG CHANH 750 ML', 10000, 30000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, 2, 0),
 (1146, '8934839123437', 'BAN CHAI P/S MUOI TRE', 10000, 22141, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1147, '8938510938204', 'BANH TONG HOP NA NI PHAT 150G', 10000, 6800, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1148, '8936073080286', 'BANH QUAY ZON ZON', 10000, 6800, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
@@ -3044,7 +3080,7 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (1257, '8934868161776', 'NUOC LAU SAN TINH DAU THOA MOC 900G ', 10000, 27000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1258, '8934868148982', 'OMO COM FORT VANG 720G', 10000, 33000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1259, '8934868152552', 'DAU GOI SACH GAU CLEAR 340G ', 10000, 913000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
-(1260, '8934868165897', 'C0MFORT PHOI TRONG NHA DAY ', 10000, 16016, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
+(1260, '8934868165897', 'C0MFORT PHOI TRONG NHA DAY', 10000, 16016, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, 2, 0),
 (1261, '8934868156987', 'DAU GOI SUNSILK 650G ', 10000, 104000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1262, '8934868159131', 'XA BONG S? 800G ', 10000, 201970, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1263, '8934868150572', 'COMFORTHUONG NUOC HOA THIEN NHIEN 1,8L', 10000, 109000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
@@ -3062,7 +3098,7 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (1275, '8934868155843', 'DAU GOI DOVE DUONG TOC 640G', 10000, 115000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1276, '8938513974032', 'YEN MACH 500G', 10000, 36000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1277, '8936036271485', 'BO KY THUAT DUC TRI LOP 4', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
-(1278, '8934647123360', 'THUOC YETT VIET', 10000, 90000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
+(1278, '8934647123360', 'THUOC YETT VIET', 9999, 90000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1279, '8934679477400', 'CHAO DAU XANH GAU DO LI ', 10000, 6500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1280, '8934868167303', 'DAU GOI DAU CLEAR 136ML ', 10000, 50000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1281, '8935217400157', 'SUA TH TRUEMILK 180 ML', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
@@ -3269,7 +3305,7 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (1482, '8934588133060', 'MIRINDA', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1483, '8934588023064', 'MIRINDA', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1484, '8934588883064', 'MIRINDA', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
-(1485, '8934588873102', 'TRA XANH', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
+(1485, '8934588873102', 'TRA XANH', 9998, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1486, '8936082650869', 'KHAN MAT', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1487, '8938544839034', 'BANH IN', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1488, '8938544839010', 'BANH IN', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
@@ -3283,7 +3319,7 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (1496, '8934696004993', 'XUC XICH TUYET TRUNG 115G 5CAY ', 10000, 7000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1497, '8936210411133', 'XUC XICH TUYET TRUNG 210G ', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1498, '8934572296498', 'XUC XICH BOOM 228G ', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
-(1499, '8934674015416', 'CRAVEN DEMI ', 10000, 132000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
+(1499, '8934674015416', 'CRAVEN DEMI ', 9998, 132000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1500, '8938506597293', 'KEO LAC MANH DINH  KLT 300G ', 10000, 17000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1501, '8936035100175', 'DAU AN TUONG AN VAN THO 1 L', 10000, 35300, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1502, '8936035100182', 'DAU AN T AN VAN THO 2L', 10000, 70500, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
@@ -3318,7 +3354,34 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 (1530, '8934734102100', 'BOT CHIEN GON VINH THUAN 150G ', 10000, 5800, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1531, '8936136161143', 'TUONG OT CHIN SU 500G ', 10000, 23600, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
 (1532, '8934868168614', 'CLEAR MEN DAU GOI SACH GAU 630G ', 10000, 0, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
-(1533, '8935004400018', 'THUOC 3 SO NGAN ', 10000, 330000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0);
+(1533, '8935004400018', 'THUOC 3 SO NGAN ', 9998, 330000, 0, 1, 0, 0, NULL, NULL, NULL, NULL, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, 0),
+(1534, '300875129197', 'SUA ENFAGROW 3', 10000, 500000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 10:36:45', '2023-10-26 10:36:45', 2, NULL, 0),
+(1535, '8934868171041', 'LIFE BUOY', 10000, 46000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:08:26', '2023-10-26 13:08:26', 2, 2, 0),
+(1536, '8934868170853', 'LIFE BUOY', 10000, 61000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:09:52', '2023-10-26 13:09:52', 2, 2, 0),
+(1537, '8934868163411', 'DAU GOI CLEAR', 10000, 128000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:12:53', '2023-10-26 13:12:53', 2, 2, 0),
+(1538, '8934868150497', 'COMFORT', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:18:00', '2023-10-26 13:18:00', 2, NULL, 0),
+(1539, '8934868173540', 'COMFORT - COPY', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:22:28', '2023-10-26 13:22:28', 2, NULL, 0),
+(1540, '8934868158592', 'COMFOR', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:24:02', '2023-10-26 13:24:02', 2, NULL, 0),
+(1541, '8934868148142', 'COMFORT', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:25:41', '2023-10-26 13:25:41', 2, NULL, 0),
+(1542, '8934868150848', 'COMFOR', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:28:36', '2023-10-26 13:28:36', 2, NULL, 0),
+(1543, '8934868174295', 'COMFORT', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:29:43', '2023-10-26 13:29:43', 2, NULL, 0),
+(1544, '8934868165958', 'COMFORT', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:31:06', '2023-10-26 13:31:06', 2, NULL, 0),
+(1545, '8934868172918', 'COMFORT', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:32:31', '2023-10-26 13:32:31', 2, NULL, 0),
+(1546, '8934868138709', 'COMFORT', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:33:56', '2023-10-26 13:33:56', 2, NULL, 0),
+(1547, '8934868172949', 'COMFORT', 10000, 15800, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:34:52', '2023-10-26 13:34:52', 2, 2, 0),
+(1548, '8934868169437', 'OMO', 10000, 33000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:36:45', '2023-10-26 13:36:45', 2, NULL, 0),
+(1549, '8934868169543', 'OMO', 10000, 33000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:38:00', '2023-10-26 13:38:00', 2, NULL, 0),
+(1550, '8934868145219', 'XA BONG LIFEBUOY', 10000, 10000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:39:24', '2023-10-26 13:39:24', 2, NULL, 0),
+(1551, '8934868145257', 'XA PHONG', 10000, 11000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:41:53', '2023-10-26 13:41:53', 2, NULL, 0),
+(1552, '8934868168218', 'OMO', 10000, 15500, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:43:13', '2023-10-26 13:43:13', 2, NULL, 0),
+(1553, '8934868177500', 'NUOC GIAT ACOMFORT', 10000, 8000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:44:57', '2023-10-26 13:44:57', 2, NULL, 0),
+(1554, '8934868145233', 'XA PHONG LIFE BUOY', 10000, 10000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:46:52', '2023-10-26 13:46:52', 2, NULL, 0),
+(1555, '8934868178323', 'NUOC GIAT SUFT', 10000, 89000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:48:27', '2023-10-26 13:48:27', 2, NULL, 0),
+(1556, '8934868169574', 'OMO', 10000, 19000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:52:59', '2023-10-26 13:52:59', 2, NULL, 0),
+(1557, '8934868167211', 'BOT GIAT SUFT', 10000, 134000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:54:21', '2023-10-26 13:54:21', 2, NULL, 0),
+(1558, '8934868167235', 'BOT GIAT SUFT', 10000, 134000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:55:46', '2023-10-26 13:55:46', 2, NULL, 0),
+(1559, '8934868169598', 'OMO', 10000, 111000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 13:59:06', '2023-10-26 13:59:06', 2, NULL, 0),
+(1560, '8934868169512', 'OMO', 10000, 111000, 0, 1, 0, 0, 48, 138, NULL, NULL, 0, 0, 0, '2023-10-26 14:00:20', '2023-10-26 14:00:20', 2, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -3327,17 +3390,17 @@ INSERT INTO `cms_products` (`ID`, `prd_code`, `prd_name`, `prd_sls`, `prd_origin
 --
 
 CREATE TABLE `cms_products_group` (
-  `ID` int UNSIGNED NOT NULL,
+  `ID` int(10) UNSIGNED NOT NULL,
   `prd_group_name` varchar(255) NOT NULL,
-  `parentid` int NOT NULL,
-  `level` tinyint NOT NULL,
-  `lft` int NOT NULL DEFAULT '-1',
-  `rgt` int NOT NULL DEFAULT '-1',
+  `parentid` int(11) NOT NULL,
+  `level` tinyint(4) NOT NULL,
+  `lft` int(11) NOT NULL DEFAULT '-1',
+  `rgt` int(11) NOT NULL DEFAULT '-1',
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_init` tinyint DEFAULT NULL,
-  `user_upd` tinyint DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+  `user_init` tinyint(4) DEFAULT NULL,
+  `user_upd` tinyint(4) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_products_group`
@@ -3362,13 +3425,13 @@ INSERT INTO `cms_products_group` (`ID`, `prd_group_name`, `parentid`, `level`, `
 --
 
 CREATE TABLE `cms_products_manufacture` (
-  `ID` int UNSIGNED NOT NULL,
+  `ID` int(10) UNSIGNED NOT NULL,
   `prd_manuf_name` varchar(255) NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_init` int DEFAULT NULL,
-  `user_upd` int DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+  `user_init` int(11) DEFAULT NULL,
+  `user_upd` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `cms_products_manufacture`
@@ -3386,12 +3449,12 @@ INSERT INTO `cms_products_manufacture` (`ID`, `prd_manuf_name`, `created`, `upda
 --
 
 CREATE TABLE `cms_products_units` (
-  `id` int UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `unit` longtext COLLATE utf8mb4_unicode_ci,
   `prd_retail_price` float DEFAULT '0',
   `prd_whole_price` float DEFAULT '0',
   `active` tinyint(1) NOT NULL DEFAULT '0',
-  `prd_id` int UNSIGNED NOT NULL
+  `prd_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -4128,7 +4191,6 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (727, 'CHUA XAC DINH', 100000, 100000, 0, 585),
 (728, 'BICH', 100000, 100000, 1, 585),
 (729, 'HOP', 42000, 41000, 1, 586),
-(730, 'HOP', 50000, 49000, 1, 587),
 (731, 'BICH', 190000, 185000, 1, 588),
 (732, 'THUNG', 640000, 640000, 0, 589),
 (733, 'GOI', 27000, 28000, 1, 589),
@@ -4144,8 +4206,6 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (743, 'GOI', 55000, 54000, 1, 595),
 (744, 'CHAI', 87000, 85000, 1, 596),
 (745, 'CHAI', 87000, 85000, 1, 597),
-(746, 'CHAI', 32000, 32000, 1, 598),
-(747, 'CHAI', 35000, 34000, 1, 599),
 (748, 'CAY', 14000, 13000, 1, 600),
 (749, 'TUYP', 31000, 30000, 1, 601),
 (750, 'TUYP', 32000, 31000, 1, 602),
@@ -4233,7 +4293,6 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (832, 'CHUA XAC DINH', 240000, 235000, 0, 664),
 (833, 'CHAI', 12000, 11000, 1, 664),
 (834, 'TUI', 115000, 112000, 1, 665),
-(835, 'LON', 545000, 545000, 1, 666),
 (836, 'HOP', 40000, 39000, 1, 667),
 (837, 'THUNG', 36000, 360000, 0, 668),
 (838, 'HOP', 35000, 30000, 1, 668),
@@ -4242,13 +4301,10 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (841, 'CAN', 112000, 110000, 1, 670),
 (842, 'BICH', 115000, 113000, 1, 671),
 (843, 'CAY', 16000, 16000, 1, 672),
-(844, 'CAY', 16000, 16000, 1, 673),
 (845, 'CAY', 16000, 16000, 1, 674),
 (846, 'CAY', 16000, 16000, 1, 675),
-(847, 'CAY', 16000, 16000, 1, 676),
 (848, 'CAY', 16000, 16000, 1, 677),
 (849, 'CAY', 16000, 16000, 1, 678),
-(850, 'CAY', 16000, 16000, 1, 679),
 (851, 'CAY', 16000, 16000, 1, 680),
 (852, 'THUNG', 306000, 306000, 0, 681),
 (853, 'CHAI', 26000, 26000, 1, 681),
@@ -4256,7 +4312,6 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (855, 'CHAI', 28000, 27000, 1, 682),
 (856, 'THUNG', 325000, 325000, 0, 683),
 (857, 'CHAI', 28000, 27000, 1, 683),
-(858, 'CHAI', 155000, 152000, 1, 684),
 (859, 'CHAI', 110000, 110000, 1, 685),
 (860, 'CHAI', 110000, 110000, 1, 686),
 (861, 'CHAI', 155000, 155000, 1, 687),
@@ -4593,7 +4648,6 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (1192, 'HOP', 65000, 60000, 1, 924),
 (1193, 'HOP', 38000, 38000, 1, 925),
 (1194, 'BICH', 270000, 270000, 1, 926),
-(1195, 'GOI', 50000, 50000, 1, 927),
 (1196, 'LOC', 60000, 57000, 0, 928),
 (1197, 'HOP', 20000, 19000, 1, 928),
 (1198, 'LON', 8000, 8000, 0, 929),
@@ -4794,8 +4848,7 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (1393, 'HOP', 45000, 35000, 1, 1091),
 (1394, 'THUNG', 550000, 500000, 0, 1092),
 (1395, 'HOP', 55000, 50000, 1, 1092),
-(1396, 'THUNG', 468000, 468000, 0, 1093);
-INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_price`, `active`, `prd_id`) VALUES
+(1396, 'THUNG', 468000, 468000, 0, 1093),
 (1397, 'GOI', 14000, 13000, 1, 1093),
 (1398, 'THUNG', 576000, 576000, 0, 1094),
 (1399, 'GOI', 25000, 24000, 1, 1094),
@@ -4804,7 +4857,8 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (1402, 'CHUA XAC DINH', 375000, 375000, 0, 1096),
 (1403, 'LOC', 32000, 32000, 1, 1096),
 (1404, 'GOI', 12000, 10000, 1, 1097),
-(1405, 'BICH', 15000, 13500, 1, 1098),
+(1405, 'BICH', 15000, 13500, 1, 1098);
+INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_price`, `active`, `prd_id`) VALUES
 (1406, 'THUNG', 960000, 960000, 0, 1099),
 (1407, 'GOI', 42000, 41000, 1, 1099),
 (1408, 'CHAI', 175000, 170000, 1, 1100),
@@ -4864,7 +4918,6 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (1462, 'CAY', 110000, 110000, 0, 1143),
 (1463, 'GOI', 12000, 11000, 1, 1143),
 (1464, 'BICH', 170000, 170000, 1, 1144),
-(1465, 'CHAI', 30000, 29000, 1, 1145),
 (1466, 'CAY', 30000, 25000, 1, 1146),
 (1467, 'GOI', 8000, 8000, 1, 1147),
 (1468, 'GOI', 8000, 8000, 1, 1148),
@@ -5010,7 +5063,6 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (1608, 'CHAI', 28000, 28000, 1, 1257),
 (1609, 'GOI', 35000, 34000, 1, 1258),
 (1610, 'CHAI', 96000, 95000, 1, 1259),
-(1611, 'CAY', 17000, 17000, 1, 1260),
 (1612, 'CHAI', 115000, 110000, 1, 1261),
 (1613, 'GOI', 23000, 22000, 1, 1262),
 (1614, 'BICH', 120000, 115000, 1, 1263),
@@ -5332,7 +5384,45 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 (1930, 'CHAI', 25000, 24000, 1, 1531),
 (1931, 'CHAI', 155000, 145000, 1, 1532),
 (1932, 'GOI', 35000, 34000, 0, 1533),
-(1933, 'CAY', 335000, 335000, 1, 1533);
+(1933, 'CAY', 335000, 335000, 1, 1533),
+(1934, 'LON', 510000, 510000, 1, 1534),
+(1935, 'LON', 560000, 560000, 1, 666),
+(1938, 'CHAI', 70000, 65000, 1, 1536),
+(1939, 'BICH', 55000, 48000, 1, 1535),
+(1942, 'CHAI', 145000, 140000, 1, 1537),
+(1943, 'CHAI', 145000, 140000, 1, 684),
+(1944, 'DAY', 17000, 16000, 1, 1538),
+(1945, 'DAY', 17000, 16000, 1, 673),
+(1946, 'DAY', 17000, 16000, 1, 1260),
+(1947, 'DAY', 17000, 16000, 1, 679),
+(1948, 'DAY', 17000, 16000, 1, 1539),
+(1949, 'DAY', 17000, 16000, 1, 1540),
+(1950, 'DAY', 17000, 16000, 1, 1541),
+(1951, 'CAY', 16000, 17000, 1, 676),
+(1952, 'DAY', 17000, 16000, 1, 1542),
+(1953, 'DAY', 17000, 16000, 1, 1543),
+(1954, 'DAY', 17000, 16000, 1, 1544),
+(1955, 'DAY', 17000, 16000, 1, 1545),
+(1956, 'DAY', 17000, 16000, 1, 1546),
+(1958, 'DAY', 17000, 16000, 1, 1547),
+(1959, 'BICH', 35000, 34000, 1, 1548),
+(1960, 'BICH', 35000, 34000, 1, 1549),
+(1961, '', 12000, 11000, 1, 1550),
+(1962, '', 13000, 12000, 1, 1551),
+(1963, 'BICH', 17000, 16000, 1, 1552),
+(1964, 'BICH', 10000, 9000, 1, 1553),
+(1965, '', 12000, 11000, 1, 1554),
+(1966, 'BICH', 96000, 95000, 1, 1555),
+(1967, 'CHAI', 33000, 32000, 1, 598),
+(1968, 'CHAI', 35000, 32000, 1, 1145),
+(1969, 'CHAI', 35000, 33000, 1, 599),
+(1970, 'BICH', 20000, 20000, 1, 1556),
+(1971, 'BICH', 145000, 140000, 1, 1557),
+(1972, 'BICH', 145000, 140000, 1, 1558),
+(1973, 'GOI', 50000, 46000, 1, 927),
+(1974, 'BICH', 115000, 114000, 1, 1559),
+(1975, 'BICH', 115000, 114000, 1, 1560),
+(1976, 'HOP', 56000, 55000, 1, 587);
 
 -- --------------------------------------------------------
 
@@ -5341,30 +5431,30 @@ INSERT INTO `cms_products_units` (`id`, `unit`, `prd_retail_price`, `prd_whole_p
 --
 
 CREATE TABLE `cms_report` (
-  `ID` int UNSIGNED NOT NULL,
-  `transaction_code` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `transaction_id` int NOT NULL DEFAULT '0',
-  `customer_id` int DEFAULT NULL,
-  `store_id` int NOT NULL,
+  `ID` int(10) UNSIGNED NOT NULL,
+  `transaction_code` varchar(100) NOT NULL,
+  `transaction_id` int(11) NOT NULL DEFAULT '0',
+  `customer_id` int(11) DEFAULT NULL,
+  `store_id` int(11) NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `notes` varchar(255) NOT NULL,
-  `product_id` int NOT NULL,
-  `discount` int NOT NULL DEFAULT '0',
-  `total_money` int NOT NULL DEFAULT '0',
-  `origin_price` int NOT NULL DEFAULT '0',
-  `input` int NOT NULL,
-  `output` int NOT NULL DEFAULT '0',
-  `price` int NOT NULL DEFAULT '0',
+  `product_id` int(11) NOT NULL,
+  `discount` int(11) NOT NULL DEFAULT '0',
+  `total_money` int(11) NOT NULL DEFAULT '0',
+  `origin_price` int(11) NOT NULL DEFAULT '0',
+  `input` int(11) NOT NULL,
+  `output` int(11) NOT NULL DEFAULT '0',
+  `price` int(11) NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_init` int DEFAULT NULL,
-  `user_upd` int DEFAULT NULL,
-  `sale_id` int DEFAULT NULL,
-  `supplier_id` int DEFAULT NULL,
-  `type` tinyint DEFAULT NULL,
-  `stock` int DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+  `user_init` int(11) DEFAULT NULL,
+  `user_upd` int(11) DEFAULT NULL,
+  `sale_id` int(11) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `type` tinyint(4) DEFAULT NULL,
+  `stock` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_report`
@@ -6908,7 +6998,45 @@ INSERT INTO `cms_report` (`ID`, `transaction_code`, `transaction_id`, `customer_
 (1530, 'IMP2412', 0, NULL, 1, '2023-10-25 19:56:36', 'Khai báo hàng hóa', 1530, 0, 0, 0, 10000, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, NULL, NULL, 1, 10000),
 (1531, 'IMP714', 0, NULL, 1, '2023-10-25 19:56:36', 'Khai báo hàng hóa', 1531, 0, 0, 0, 10000, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, NULL, NULL, 1, 10000),
 (1532, 'IMP3215', 0, NULL, 1, '2023-10-25 19:56:36', 'Khai báo hàng hóa', 1532, 0, 0, 0, 10000, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, NULL, NULL, 1, 10000),
-(1533, 'IMP5164', 0, NULL, 1, '2023-10-25 19:56:36', 'Khai báo hàng hóa', 1533, 0, 0, 0, 10000, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, NULL, NULL, 1, 10000);
+(1533, 'IMP5164', 0, NULL, 1, '2023-10-25 19:56:36', 'Khai báo hàng hóa', 1533, 0, 0, 0, 10000, 0, 0, 0, '2023-10-25 19:56:36', '2023-10-25 19:56:36', 2, NULL, NULL, NULL, 1, 10000),
+(1534, 'PX0000020', 272, 0, 1, '2023-10-25 20:09:02', '', 1533, 0, 670000, 660000, 335000, 2, 335000, 0, '2023-10-25 20:09:02', '2023-10-25 20:09:02', 2, NULL, 2, NULL, 3, 9998),
+(1535, 'PX0000020', 272, 0, 1, '2023-10-25 20:09:02', '', 69, 0, 7000, 0, 7000, 1, 7000, 0, '2023-10-25 20:09:02', '2023-10-25 20:09:02', 2, NULL, 2, NULL, 3, 9999),
+(1536, 'PX0000020', 272, 0, 1, '2023-10-25 20:09:02', '', 380, 0, 9000, 6900, 9000, 1, 9000, 0, '2023-10-25 20:09:02', '2023-10-25 20:09:02', 2, NULL, 2, NULL, 3, 9999),
+(1537, 'PX0000021', 273, 0, 1, '2023-10-26 10:21:07', '', 1278, 0, 11000, 90000, 11000, 1, 11000, 0, '2023-10-26 10:21:07', '2023-10-26 10:21:07', 2, NULL, 2, NULL, 3, 9999),
+(1538, '300875129197', 0, NULL, 1, '2023-10-26 10:36:45', 'Khai báo hàng hóa', 1534, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 10:36:45', '2023-10-26 10:36:45', 2, NULL, NULL, NULL, 1, 10000),
+(1539, 'PX0000022', 274, 0, 1, '2023-10-26 10:40:59', '', 666, 0, 560000, 535300, 560000, 1, 560000, 0, '2023-10-26 10:40:59', '2023-10-26 10:40:59', 2, NULL, 2, NULL, 3, 9999),
+(1540, 'PX0000023', 275, 0, 1, '2023-10-26 10:43:18', '', 1485, 0, 30000, 0, 15000, 2, 15000, 0, '2023-10-26 10:43:18', '2023-10-26 10:43:18', 2, NULL, 2, NULL, 3, 9998),
+(1541, '8934868171041', 0, NULL, 0, '2023-10-26 13:08:26', 'Khai báo hàng hóa', 1535, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:08:26', '2023-10-26 13:08:26', 2, NULL, NULL, NULL, 1, 10000),
+(1542, '8934868170853', 0, NULL, 0, '2023-10-26 13:09:52', 'Khai báo hàng hóa', 1536, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:09:52', '2023-10-26 13:09:52', 2, NULL, NULL, NULL, 1, 10000),
+(1543, '8934868163411', 0, NULL, 0, '2023-10-26 13:12:53', 'Khai báo hàng hóa', 1537, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:12:53', '2023-10-26 13:12:53', 2, NULL, NULL, NULL, 1, 10000),
+(1544, '8934868150497', 0, NULL, 0, '2023-10-26 13:18:00', 'Khai báo hàng hóa', 1538, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:18:00', '2023-10-26 13:18:00', 2, NULL, NULL, NULL, 1, 10000),
+(1545, '8934868173540', 0, NULL, 0, '2023-10-26 13:22:28', 'Khai báo hàng hóa', 1539, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:22:28', '2023-10-26 13:22:28', 2, NULL, NULL, NULL, 1, 10000),
+(1546, '8934868158592', 0, NULL, 0, '2023-10-26 13:24:02', 'Khai báo hàng hóa', 1540, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:24:02', '2023-10-26 13:24:02', 2, NULL, NULL, NULL, 1, 10000),
+(1547, '8934868148142', 0, NULL, 0, '2023-10-26 13:25:41', 'Khai báo hàng hóa', 1541, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:25:41', '2023-10-26 13:25:41', 2, NULL, NULL, NULL, 1, 10000),
+(1548, '8934868150848', 0, NULL, 0, '2023-10-26 13:28:36', 'Khai báo hàng hóa', 1542, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:28:36', '2023-10-26 13:28:36', 2, NULL, NULL, NULL, 1, 10000),
+(1549, '8934868174295', 0, NULL, 0, '2023-10-26 13:29:43', 'Khai báo hàng hóa', 1543, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:29:43', '2023-10-26 13:29:43', 2, NULL, NULL, NULL, 1, 10000),
+(1550, '8934868165958', 0, NULL, 0, '2023-10-26 13:31:06', 'Khai báo hàng hóa', 1544, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:31:06', '2023-10-26 13:31:06', 2, NULL, NULL, NULL, 1, 10000),
+(1551, '8934868172918', 0, NULL, 0, '2023-10-26 13:32:31', 'Khai báo hàng hóa', 1545, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:32:31', '2023-10-26 13:32:31', 2, NULL, NULL, NULL, 1, 10000),
+(1552, '8934868138709', 0, NULL, 0, '2023-10-26 13:33:56', 'Khai báo hàng hóa', 1546, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:33:56', '2023-10-26 13:33:56', 2, NULL, NULL, NULL, 1, 10000),
+(1553, '8934868172949', 0, NULL, 0, '2023-10-26 13:34:52', 'Khai báo hàng hóa', 1547, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:34:52', '2023-10-26 13:34:52', 2, NULL, NULL, NULL, 1, 10000),
+(1554, '8934868169437', 0, NULL, 0, '2023-10-26 13:36:45', 'Khai báo hàng hóa', 1548, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:36:45', '2023-10-26 13:36:45', 2, NULL, NULL, NULL, 1, 10000),
+(1555, '8934868169543', 0, NULL, 0, '2023-10-26 13:38:00', 'Khai báo hàng hóa', 1549, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:38:00', '2023-10-26 13:38:00', 2, NULL, NULL, NULL, 1, 10000),
+(1556, '8934868145219', 0, NULL, 0, '2023-10-26 13:39:24', 'Khai báo hàng hóa', 1550, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:39:24', '2023-10-26 13:39:24', 2, NULL, NULL, NULL, 1, 10000),
+(1557, '8934868145257', 0, NULL, 1, '2023-10-26 13:41:53', 'Khai báo hàng hóa', 1551, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:41:53', '2023-10-26 13:41:53', 2, NULL, NULL, NULL, 1, 10000),
+(1558, '8934868168218', 0, NULL, 1, '2023-10-26 13:43:13', 'Khai báo hàng hóa', 1552, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:43:13', '2023-10-26 13:43:13', 2, NULL, NULL, NULL, 1, 10000),
+(1559, '8934868177500', 0, NULL, 1, '2023-10-26 13:44:57', 'Khai báo hàng hóa', 1553, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:44:57', '2023-10-26 13:44:57', 2, NULL, NULL, NULL, 1, 10000),
+(1560, '8934868145233', 0, NULL, 1, '2023-10-26 13:46:52', 'Khai báo hàng hóa', 1554, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:46:52', '2023-10-26 13:46:52', 2, NULL, NULL, NULL, 1, 10000),
+(1561, '8934868178323', 0, NULL, 1, '2023-10-26 13:48:27', 'Khai báo hàng hóa', 1555, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:48:27', '2023-10-26 13:48:27', 2, NULL, NULL, NULL, 1, 10000),
+(1562, '8934868169574', 0, NULL, 1, '2023-10-26 13:52:59', 'Khai báo hàng hóa', 1556, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:52:59', '2023-10-26 13:52:59', 2, NULL, NULL, NULL, 1, 10000),
+(1563, '8934868167211', 0, NULL, 1, '2023-10-26 13:54:21', 'Khai báo hàng hóa', 1557, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:54:21', '2023-10-26 13:54:21', 2, NULL, NULL, NULL, 1, 10000),
+(1564, '8934868167235', 0, NULL, 1, '2023-10-26 13:55:46', 'Khai báo hàng hóa', 1558, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:55:46', '2023-10-26 13:55:46', 2, NULL, NULL, NULL, 1, 10000),
+(1565, 'PX0000024', 276, 0, 1, '2023-10-26 13:57:51', '', 389, 0, 30000, 0, 30000, 1, 30000, 0, '2023-10-26 13:57:51', '2023-10-26 13:57:51', 2, NULL, 2, NULL, 3, 9999),
+(1566, '8934868169598', 0, NULL, 1, '2023-10-26 13:59:06', 'Khai báo hàng hóa', 1559, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 13:59:06', '2023-10-26 13:59:06', 2, NULL, NULL, NULL, 1, 10000),
+(1567, '8934868169512', 0, NULL, 1, '2023-10-26 14:00:20', 'Khai báo hàng hóa', 1560, 0, 0, 0, 10000, 0, 0, 0, '2023-10-26 14:00:20', '2023-10-26 14:00:20', 2, NULL, NULL, NULL, 1, 10000),
+(1568, 'PX0000025', 277, 0, 1, '2023-10-26 14:10:43', '', 1499, 0, 14000, 132000, 14000, 1, 14000, 0, '2023-10-26 14:10:43', '2023-10-26 14:10:43', 2, NULL, 0, NULL, 3, 9999),
+(1569, 'PX0000026', 278, 0, 1, '2023-10-26 14:30:54', '', 1499, 0, 134000, 132000, 134000, 1, 134000, 0, '2023-10-26 14:30:54', '2023-10-26 14:30:54', 2, NULL, 0, NULL, 3, 9998),
+(1570, 'PX0000026', 278, 0, 1, '2023-10-26 14:30:54', '', 587, 0, 50000, 0, 50000, 1, 50000, 0, '2023-10-26 14:30:54', '2023-10-26 14:30:54', 2, NULL, 0, NULL, 3, 9999),
+(1571, 'PX0000027', 279, 0, 1, '2023-10-26 15:05:58', '', 587, 0, 56000, 53458, 56000, 1, 56000, 0, '2023-10-26 15:05:58', '2023-10-26 15:05:58', 2, NULL, 2, NULL, 3, 9998);
 
 -- --------------------------------------------------------
 
@@ -6917,13 +7045,13 @@ INSERT INTO `cms_report` (`ID`, `transaction_code`, `transaction_id`, `customer_
 --
 
 CREATE TABLE `cms_stores` (
-  `ID` int UNSIGNED NOT NULL,
+  `ID` int(10) UNSIGNED NOT NULL,
   `stock_name` varchar(255) NOT NULL,
-  `user_init` int NOT NULL,
-  `user_upd` int NOT NULL,
+  `user_init` int(11) NOT NULL,
+  `user_upd` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_stores`
@@ -6944,7 +7072,7 @@ INSERT INTO `cms_stores` (`ID`, `stock_name`, `user_init`, `user_upd`, `created`
 --
 
 CREATE TABLE `cms_suppliers` (
-  `ID` int UNSIGNED NOT NULL,
+  `ID` int(10) UNSIGNED NOT NULL,
   `supplier_code` varchar(10) NOT NULL,
   `supplier_name` varchar(255) NOT NULL,
   `supplier_phone` varchar(30) NOT NULL,
@@ -6954,9 +7082,9 @@ CREATE TABLE `cms_suppliers` (
   `notes` text NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  `user_init` int NOT NULL,
-  `user_upd` int NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+  `user_init` int(11) NOT NULL,
+  `user_upd` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_suppliers`
@@ -6977,13 +7105,13 @@ INSERT INTO `cms_suppliers` (`ID`, `supplier_code`, `supplier_name`, `supplier_p
 --
 
 CREATE TABLE `cms_templates` (
-  `id` int NOT NULL,
-  `type` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `content` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `content` text CHARACTER SET utf8 NOT NULL,
   `created` datetime DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
-  `user_upd` int DEFAULT NULL
+  `user_upd` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -7002,7 +7130,7 @@ INSERT INTO `cms_templates` (`id`, `type`, `name`, `content`, `created`, `update
 --
 
 CREATE TABLE `cms_units` (
-  `Id` bigint UNSIGNED NOT NULL,
+  `Id` bigint(20) UNSIGNED NOT NULL,
   `name` longtext COLLATE utf8mb4_unicode_ci,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -7047,29 +7175,29 @@ INSERT INTO `cms_units` (`Id`, `name`, `created`) VALUES
 --
 
 CREATE TABLE `cms_users` (
-  `id` int UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
   `salt` varchar(255) NOT NULL,
   `email` varchar(120) NOT NULL,
   `display_name` varchar(120) NOT NULL,
-  `user_status` tinyint NOT NULL DEFAULT '1',
-  `group_id` int NOT NULL,
-  `store_id` int DEFAULT NULL,
+  `user_status` tinyint(4) NOT NULL DEFAULT '1',
+  `group_id` int(11) NOT NULL,
+  `store_id` int(11) DEFAULT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `logined` datetime(1) NOT NULL,
   `ip_logged` varchar(255) NOT NULL,
   `recode` varchar(255) NOT NULL,
   `code_time_out` varchar(255) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_users`
 --
 
 INSERT INTO `cms_users` (`id`, `username`, `password`, `salt`, `email`, `display_name`, `user_status`, `group_id`, `store_id`, `created`, `updated`, `logined`, `ip_logged`, `recode`, `code_time_out`) VALUES
-(2, 'admin', 'acafabfb3b45089f905b5c8c0698f63c', 'GsV3TQXMytmADVjb817hblQmp6rg1ybqulyz4qE21W3y4bAsCpvdeFO1GGr4Rbdcu2HW0', 'admin@admin.com', 'admin', 1, 1, 1, '2017-09-25 23:01:53', '2019-06-14 08:38:30', '2023-10-25 09:25:59.0', '127.0.0.1', '', ''),
+(2, 'admin', 'acafabfb3b45089f905b5c8c0698f63c', 'GsV3TQXMytmADVjb817hblQmp6rg1ybqulyz4qE21W3y4bAsCpvdeFO1GGr4Rbdcu2HW0', 'admin@admin.com', 'admin', 1, 1, 1, '2017-09-25 23:01:53', '2019-06-14 08:38:30', '2023-10-26 15:21:32.0', '103.97.126.25', '', ''),
 (8, '000000', 'b7ba4f82e63748b31419f9ea47d7b72f', 'IFzV6%)ykZvjh$tb3I%33frQ)5C^*w#FxP%p1CVoH5Dh&xZEF)pQg*Qjt%@TsjZKU25cy', 'namit@admin.com', 'namit', 0, 1, 0, '2019-06-14 08:39:27', '0000-00-00 00:00:00', '2019-06-14 23:36:03.0', '::1', '', ''),
 (9, '000001', '8277e745d10dd789d80c250e9e86b69d', '8)7^!mfnVO^XeYntQn)NNwf*Wh(PfF1MC^kGN9yxAWJ7PFpLOFY!v2OrNDZJFQz04LAyg', 'quanly01@gmail.com', 'Lên Anh Tài', 1, 2, 0, '2019-06-14 08:40:00', '2019-06-14 08:45:14', '0000-00-00 00:00:00.0', '', '', ''),
 (10, '000002', '529553addffab250295d0595badcee11', 'wpcUvqEUrHctmNsohkup5ISxoi3K4&vbQ4Mt%fMh5i*3Y$BNU8lat6(UfJbfhdZKaOcUc', 'quanly02@gmail.com', 'Lương Tài Em', 1, 2, 0, '2019-06-14 08:40:12', '2019-06-14 08:45:36', '0000-00-00 00:00:00.0', '', '', ''),
@@ -7095,12 +7223,12 @@ INSERT INTO `cms_users` (`id`, `username`, `password`, `salt`, `email`, `display
 --
 
 CREATE TABLE `cms_users_group` (
-  `id` int UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `group_name` varchar(255) NOT NULL,
   `group_permission` varchar(255) NOT NULL,
   `group_registered` datetime NOT NULL,
   `group_updated` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `cms_users_group`
@@ -7219,91 +7347,91 @@ ALTER TABLE `cms_users_group`
 -- AUTO_INCREMENT for table `cms_customers`
 --
 ALTER TABLE `cms_customers`
-  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `cms_input`
 --
 ALTER TABLE `cms_input`
-  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `cms_orders`
 --
 ALTER TABLE `cms_orders`
-  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=272;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=280;
 
 --
 -- AUTO_INCREMENT for table `cms_permissions`
 --
 ALTER TABLE `cms_permissions`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `cms_products`
 --
 ALTER TABLE `cms_products`
-  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1534;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1561;
 
 --
 -- AUTO_INCREMENT for table `cms_products_group`
 --
 ALTER TABLE `cms_products_group`
-  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 
 --
 -- AUTO_INCREMENT for table `cms_products_manufacture`
 --
 ALTER TABLE `cms_products_manufacture`
-  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `cms_products_units`
 --
 ALTER TABLE `cms_products_units`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1934;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1977;
 
 --
 -- AUTO_INCREMENT for table `cms_report`
 --
 ALTER TABLE `cms_report`
-  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1534;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1572;
 
 --
 -- AUTO_INCREMENT for table `cms_stores`
 --
 ALTER TABLE `cms_stores`
-  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `cms_suppliers`
 --
 ALTER TABLE `cms_suppliers`
-  MODIFY `ID` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `cms_templates`
 --
 ALTER TABLE `cms_templates`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cms_units`
 --
 ALTER TABLE `cms_units`
-  MODIFY `Id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `Id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `cms_users`
 --
 ALTER TABLE `cms_users`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `cms_users_group`
 --
 ALTER TABLE `cms_users_group`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -112,7 +112,7 @@ class CI_Pagination
     function create_links()
     {
         // If our item count or per-page total is zero there is no need to continue.
-        if ($this->total_rows == 0 OR $this->per_page == 0) {
+        if ($this->total_rows == 0 or $this->per_page == 0) {
             return '';
         }
 
@@ -132,9 +132,9 @@ class CI_Pagination
         }
 
         // Determine the current page number.
-        $CI =& get_instance();
+        $CI = &get_instance();
 
-        if ($CI->config->item('enable_query_strings') === TRUE OR $this->page_query_string === TRUE) {
+        if ($CI->config->item('enable_query_strings') === TRUE or $this->page_query_string === TRUE) {
             if ($CI->input->get($this->query_string_segment) != $base_page) {
                 $this->cur_page = $CI->input->get($this->query_string_segment);
 
@@ -151,7 +151,7 @@ class CI_Pagination
         }
 
         // Set current page to 1 if using page numbers instead of offset
-        if ($this->use_page_numbers AND $this->cur_page == 0) {
+        if ($this->use_page_numbers and $this->cur_page == 0) {
             $this->cur_page = $base_page;
         }
 
@@ -190,7 +190,7 @@ class CI_Pagination
 
         // Is pagination being used over GET or POST?  If get, add a per_page query
         // string. If post, add a trailing slash to the base URL if needed
-        if ($CI->config->item('enable_query_strings') === TRUE OR $this->page_query_string === TRUE) {
+        if ($CI->config->item('enable_query_strings') === TRUE or $this->page_query_string === TRUE) {
             $this->base_url = rtrim($this->base_url) . '&amp;' . $this->query_string_segment . '=';
         } else {
             $this->base_url = rtrim($this->base_url, '(') . '(';
@@ -200,13 +200,13 @@ class CI_Pagination
         $output = '';
 
         // Render the "First" link
-        if ($this->first_link !== FALSE AND $this->cur_page > ($this->num_links + 1)) {
+        if ($this->first_link !== FALSE and $this->cur_page > ($this->num_links + 1)) {
             $first_url = ($this->first_url == '') ? $this->base_url : $this->first_url;
             $output .= $this->first_tag_open . '<a ' . $this->anchor_class . 'onclick="' . $first_url . ')">' . $this->first_link . '</a>' . $this->first_tag_close;
         }
 
         // Render the "previous" link
-        if ($this->prev_link !== FALSE AND $this->cur_page != 1) {
+        if ($this->prev_link !== FALSE and $this->cur_page != 1) {
             if ($this->use_page_numbers) {
                 $i = $uri_page_number - 1;
             } else {
@@ -219,7 +219,6 @@ class CI_Pagination
                 $i = ($i == 0) ? '' : $this->prefix . $i . $this->suffix;
                 $output .= $this->prev_tag_open . '<a ' . $this->anchor_class . 'onclick="' . $this->base_url . $i . ')">' . $this->prev_link . '</a>' . $this->prev_tag_close;
             }
-
         }
 
         // Render the pages
@@ -239,11 +238,11 @@ class CI_Pagination
                         $n = ($i == $base_page) ? '' : $i;
 
                         if ($n == '' && $this->first_url != '') {
-                            $output .= $this->num_tag_open . '<a ' . $this->anchor_class . 'onclick="' . $this->first_url . ')">' . $loop . '</a>' . $this->num_tag_close;
+                            $output .= $this->num_tag_open . '<a style="display: none" ' . $this->anchor_class . 'onclick="' . $this->first_url . ')">' . $loop . '</a>' . $this->num_tag_close;
                         } else {
                             $n = ($n == '') ? '' : $this->prefix . $n . $this->suffix;
 
-                            $output .= $this->num_tag_open . '<a ' . $this->anchor_class . 'onclick="' . $this->base_url . $n . ')">' . $loop . '</a>' . $this->num_tag_close;
+                            $output .= $this->num_tag_open . '<a style="display: none"' . $this->anchor_class . 'onclick="' . $this->base_url . $n . ')">' . $loop . '</a>' . $this->num_tag_close;
                         }
                     }
                 }
@@ -251,7 +250,7 @@ class CI_Pagination
         }
 
         // Render the "next" link
-        if ($this->next_link !== FALSE AND $this->cur_page < $num_pages) {
+        if ($this->next_link !== FALSE and $this->cur_page < $num_pages) {
             if ($this->use_page_numbers) {
                 $i = $this->cur_page + 1;
             } else {
@@ -262,7 +261,7 @@ class CI_Pagination
         }
 
         // Render the "Last" link
-        if ($this->last_link !== FALSE AND ($this->cur_page + $this->num_links) < $num_pages) {
+        if ($this->last_link !== FALSE and ($this->cur_page + $this->num_links) < $num_pages) {
             if ($this->use_page_numbers) {
                 $i = $num_pages;
             } else {

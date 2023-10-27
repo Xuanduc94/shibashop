@@ -1,3 +1,32 @@
+<?php if (count($data['_list_error']) > 0) : ?>
+    <h6 style="color: red;">Các sản phẩm chưa đặt giá mặc định</h6>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Mã sản phẩm</th>
+                <th>Tên sản phẩm</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($data['_list_error'] as $item) : ?>
+                <tr>
+                    <td><?php echo $item['prd_code']; ?></td>
+                    <td class="text-left prd_name" onclick="<?php if (isset($data['option'])) {
+                                                                if ($data['option'] == 1)
+                                                                    echo 'cms_detail_product_deactivated';
+                                                                elseif ($data['option'] == 2)
+                                                                    echo 'cms_detail_product_deleted';
+                                                                else
+                                                                    echo 'cms_detail_product';
+                                                            } else
+                                                                echo 'cms_detail_product'; ?>
+                        (<?php echo $item['ID']; ?>)" style="color: #2a6496; cursor: pointer;"><?php echo $item['prd_name']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -5,7 +34,8 @@
             <th class="text-center">Tên sản phẩm</th>
             <th class="text-center">Mã sản phẩm</th>
             <th class="text-center">SL</th>
-            <th class="text-center" style="background-color: #fff;">Giá bán</th>
+            <th class="text-center" style="background-color: #fff;">Giá lẻ</th>
+            <th class="text-center" style="background-color: #fff;">Giá sỉ</th>
             <th class="text-center">Danh mục</th>
             <th class="text-center">Nhà sản xuất</th>
             <!--        <th class="text-center">Hình</th>-->
@@ -30,7 +60,8 @@
                         (<?php echo $item['ID']; ?>)" style="color: #2a6496; cursor: pointer;"><?php echo $item['prd_name']; ?></td>
                     <td class="text-center"><?php echo $item['prd_code']; ?></td>
                     <td class="text-center"><?php echo $item['prd_sls']; ?></td>
-                    <td class="text-right" style="font-weight: bold;"><?php echo $item['price']; ?></td>
+                    <td class="text-right" style="font-weight: bold;"><?php echo $item['retail']; ?></td>
+                    <td class="text-right" style="font-weight: bold;"><?php echo $item['whole']; ?></td>
                     <td><?php echo cms_getNamegroupbyID($item['prd_group_id']); ?></td>
                     <td><?php echo cms_getNamemanufacturebyID($item['prd_manufacture_id']); ?></td>
                     <!--                <td class="text-center"-->

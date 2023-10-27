@@ -10,13 +10,12 @@
                 <div class="col-md-6">
                     <div class="right-action text-right">
                         <div class="btn-groups">
-                            <a href="/QLBanHangOnline/orders">
+                            <!-- <a href="/QLBanHangOnline/orders">
                                 <button type="button" class="btn btn-primary"">
 								<i class="fa fa-shopping-cart"></i> Đặt hàng
 								</button>
-							</a>
-                            <button type="button" class="btn btn-primary" onclick="cms_vsell_order();"><i
-                                    class="fa fa-desktop"></i> Bán hàng
+							</a> -->
+                            <button type="button" class="btn btn-primary" onclick="cms_vsell_order();"><i class="fa fa-desktop"></i> Bán hàng
                             </button>
                             <button type="button" class="btn btn-success"><i class="fa fa-download"></i> Xuất Excel
                             </button>
@@ -30,8 +29,7 @@
     <div class="orders-content">
         <div class="product-sear panel-sear">
             <div class="form-group col-md-3 padd-0">
-                <input type="text" class="form-control" id="order-search"
-                       placeholder="Nhập mã đơn hàng để tìm kiếm">
+                <input type="text" class="form-control" id="order-search" placeholder="Nhập mã đơn hàng để tìm kiếm">
             </div>
             <div class="form-group col-md-9 padd-0" style="padding-left: 5px;">
                 <div class="col-md-9 padd-0">
@@ -44,16 +42,13 @@
                     </div>
                     <div class="col-md-5 padd-0" style="padding-left: 5px;">
                         <div class="input-daterange input-group" id="datepicker">
-                            <input type="text" class="input-sm form-control" id="search-date-from" placeholder="Từ ngày"
-                                   name="start"/>
+                            <input type="text" class="input-sm form-control" id="search-date-from" placeholder="Từ ngày" name="start" />
                             <span class="input-group-addon">đến</span>
-                            <input type="text" class="input-sm form-control" id="search-date-to" placeholder="Đến ngày"
-                                   name="end"/>
+                            <input type="text" class="input-sm form-control" id="search-date-to" placeholder="Đến ngày" name="end" />
                         </div>
                     </div>
                     <div class="col-md-3 padd-0" style="padding-left: 5px;">
-                        <button style="box-shadow: none;" type="button" class="btn btn-primary btn-large"
-                                onclick="cms_paging_order(1)"><i class="fa fa-search"></i> Tìm kiếm
+                        <button style="box-shadow: none;" type="button" class="btn btn-primary btn-large" onclick="cms_paging_order(1)"><i class="fa fa-search"></i> Tìm kiếm
                         </button>
                     </div>
                 </div>

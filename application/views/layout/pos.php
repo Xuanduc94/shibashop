@@ -35,6 +35,9 @@
             type = "text/javascript";
             e.parentNode.insertBefore($, e)
         })(document, "script");
+        $(document).ready(function() {
+            document.getElementById("search-pro-box").focus()
+        })
     </script>
     <!--End of Zendesk Chat Script-->
 </head>
@@ -210,6 +213,8 @@
                                                     </button>
                                                     <button type="button" class="btn btn-primary" onclick="cms_save_orders(4)"><i class="fa fa-print"></i> Lưu và
                                                         in (F10)
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary" onclick="window.location.reload()"><i class="fa fa-file-text-o"></i> Tạo đơn mới
                                                     </button>
                                                     <a href="/">
                                                         <button type="button" class="btn btn-primary"><i class="fa fa-arrow-left"></i> Trở về

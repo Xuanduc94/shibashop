@@ -1637,9 +1637,14 @@ function cms_add_product(type) {
                                 $('.ajax-success-ct').html('Tạo sản phẩm ' + $name + ' thành công.').parent().fadeIn().delay(1000).fadeOut('slow');
                                 $('.products').find('input:text').val('');
                                 $('.products').find('input:checkbox').prop('checked', false);
+                                arr_product_units.forEach(item => {
+                                    $('#unit-' + item.id).remove();
+                                })
+                                arr_product_units.length = 0;
                             }
 
                         } else {
+
                             $('.ajax-error-ct').html(data).parent().fadeIn().delay(1000).fadeOut('slow');
                         }
                     }
