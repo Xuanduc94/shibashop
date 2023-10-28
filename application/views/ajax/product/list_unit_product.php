@@ -9,6 +9,7 @@ foreach ($data['arr_product_units'] as $key => $item) :
         </td>
         <td>
             <select onchange="cms_select_unit(<?php echo $item['id'] ?>, this.value)" class="form-control">
+            <option value="CHUA XAC DINH">Chưa xác định</option>
                 <?php foreach ($unit as $unitItem) : ?>
                     <option <?php if ($unitItem['name'] === $item['unit']) echo "selected" ?> value="<?php echo $unitItem['name'] ?>"><?php echo $unitItem['name'] ?></option>
                 <?php endforeach; ?>
