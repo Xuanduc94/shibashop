@@ -11,7 +11,8 @@ class Import extends CI_Controller
         $this->auth = $this->cms_authentication->check();
     }
 
-    public function convert_number_to_words($number) {
+    public function convert_number_to_words($number)
+    {
         $hyphen      = ' ';
         $conjunction = '  ';
         $separator   = ' ';
@@ -132,7 +133,7 @@ class Import extends CI_Controller
         $data['template'] = 'imports/index';
         $store = $this->db->from('stores')->get()->result_array();
         $data['data']['store'] = $store;
-        $store_id = $this->db->select('store_id')->from('users')->where('id',$this->auth['id'])->limit(1)->get()->row_array();
+        $store_id = $this->db->select('store_id')->from('users')->where('id', $this->auth['id'])->limit(1)->get()->row_array();
         $data['data']['store_id'] = $store_id['store_id'];
         $this->load->view('layout/index', isset($data) ? $data : null);
     }
@@ -144,7 +145,7 @@ class Import extends CI_Controller
         $this->load->view('ajax/imports/import_bill', isset($data) ? $data : null);
     }
 
-    public function cms_search_box_sup($keyword='')
+    public function cms_search_box_sup($keyword = '')
     {
         $sup = $this->db->like('supplier_name', $keyword)->or_like('supplier_phone', $keyword)->or_like('supplier_email', $keyword)->or_like('supplier_code', $keyword)->from('suppliers')->get()->result_array();
         $data['data']['suppliers'] = $sup;
@@ -156,21 +157,29 @@ class Import extends CI_Controller
         $id = $this->input->post('id');
         $seq = $this->input->post('seq');
         $product = $this->db->from('products')->where('ID', $id)->get()->row_array();
+        $units = $this->db->from('products_units')->where('prd_id', $id)->get()->result_array();
         if (isset($product) && count($product) != 0) {
             ob_start(); ?>
             <tr data-id="<?php echo $product['ID']; ?>">
                 <td class="text-center seq"><?php echo $seq; ?></td>
                 <td><?php echo $product['prd_code']; ?></td>
                 <td><?php echo $product['prd_name']; ?></td>
-                <td class="text-center" style="max-width: 30px;"><input style="max-height: 22px;" type="text"
-                                                                        class="txtNumber form-control quantity_product_import text-center"
-                                                                        value="1"></td>
-                <td class="text-center" style="max-width: 120px;"><input  style="max-height: 22px;" type="text"
-                                                                         class="txtMoney form-control text-center price-order" value="<?php echo number_format($product['prd_origin_price']); ?>"></td>
-                <td class="text-center total-money"><?php echo $product['prd_sell_price']; ?></td>
-                <td class="text-center"><i class="fa fa-trash-o del-pro-order"></i></td>
+                <td class="text-center" style="max-width: 30px;"><input style="max-height: 22px;" type="text" class="txtNumber form-control quantity_product_import text-center" value="1"></td>
+                <td class="text-center" style="max-width: 120px;"><input style="max-height: 22px;" type="text" class="txtMoney form-control text-center price-order" value="<?php echo number_format($product['prd_origin_price']); ?>"></td>
+                <td></td>
+                <td></td>
+                <td style="vertical-align: middle;" rowspan="<?php echo (count($units) + 1) ?>" class="text-center total-money"><?php echo 0; ?></td>
+                <td style="vertical-align: middle;" rowspan="<?php echo (count($units) + 1) ?>" class="text-center"><i class="fa fa-trash-o del-pro-order"></i></td>
             </tr>
-            <?php
+            <?php foreach ($units as $itemUnit) : ?>
+                <tr data-active="<?php echo $itemUnit['active'] ?>" data-id_unit="<?php echo str_replace(' ', '', $itemUnit['unit']) . "_" . $product['ID'] ?>" class="tr-unit-<?php echo $product['ID'] ?>">
+                    <td></td>
+                    <td id="unit_<?php echo str_replace(' ', '', $itemUnit['unit']) . "_" . $product['ID'] ?>" colspan="4"><?php echo $itemUnit['unit'] ?></td>
+                    <td><input id="prd_retail_price_<?php echo str_replace(' ', '', $itemUnit['unit']) . "_" . $product['ID'] ?>" value="<?php echo $itemUnit['prd_retail_price'] ?>" class="txtMoney form-control text-center" /></td>
+                    <td><input id="prd_whole_price_<?php echo str_replace(' ', '', $itemUnit['unit']) . "_" . $product['ID'] ?>" value="<?php echo $itemUnit['prd_whole_price'] ?>" class="txtMoney form-control text-center" /></td>
+                </tr>
+            <?php endforeach ?>
+<?php
             $html = ob_get_contents();
             ob_end_clean();
             echo $html;
@@ -179,109 +188,126 @@ class Import extends CI_Controller
 
     public function cms_save_import($store_id)
     {
-        if($this->auth['store_id'] == $store_id){
-            $input = $this->input->post('data');
-            $detail_input_temp = $input['detail_input'];
-            if (empty($input['input_date'])) {
-                $input['input_date'] = gmdate("Y:m:d H:i:s", time() + 7 * 3600);
-            } else {
-                $input['input_date'] = gmdate("Y-m-d H:i:s", strtotime(str_replace('/', '-', $input['input_date'])) + 7 * 3600);;
-            }
-            $total_price = 0;
-            $total_quantity = 0;
-            $this->db->trans_begin();
-            $user_init = $this->auth['id'];
-            if ($input['input_status'] == 1){
-                foreach ($input['detail_input'] as $item) {
-                    $inventory_quantity = $this->db->select('quantity')->from('inventory')->where(['store_id'=>$store_id,'product_id'=>$item['id']])->get()->row_array();
-                    if(!empty($inventory_quantity)){
-                        $this->db->where(['store_id'=>$store_id,'product_id'=>$item['id']])->update('inventory', ['quantity'=>$inventory_quantity['quantity']+$item['quantity'],'user_upd'=>$user_init]);
-                    }
-                    else{
-                        $inventory = ['store_id'=>$store_id,'product_id'=>$item['id'],'quantity'=>$item['quantity'],'user_init'=>$user_init];
-                        $this->db->insert('inventory', $inventory);
-                    }
-
-                    $product = $this->db->select('prd_sls,prd_origin_price')->from('products')->where('ID', $item['id'])->get()->row_array();
-                    $sls['prd_sls'] = $product['prd_sls'] + $item['quantity'];
-                    $total_price += ($item['price'] * $item['quantity']);
-                    $total_quantity += $item['quantity'];
-                    if($item['price']!=$product['prd_origin_price']){
-                        $sls['prd_origin_price'] = (($product['prd_origin_price']*$product['prd_sls'])+($item['quantity']*$item['price']))/$sls['prd_sls'];
-                    }
-
-                    $this->db->where('ID', $item['id'])->update('products', $sls);
+        $this->db->trans_begin();
+        try {
+            if ($this->auth['store_id'] == $store_id) {
+                $input = $this->input->post('data');
+                $detail_input_temp = $input['detail_input'];
+                if (empty($input['input_date'])) {
+                    $input['input_date'] = gmdate("Y:m:d H:i:s", time() + 7 * 3600);
+                } else {
+                    $input['input_date'] = gmdate("Y-m-d H:i:s", strtotime(str_replace('/', '-', $input['input_date'])) + 7 * 3600);;
                 }
-            }else
-                foreach ($input['detail_input'] as $item) {
-                    $total_price += ($item['price'] * $item['quantity']);
-                    $total_quantity += $item['quantity'];
+                $total_price = 0;
+                $total_quantity = 0;
+                $user_init = $this->auth['id'];
+                if ($input['input_status'] == 1) {
+                    foreach ($input['detail_input'] as $item) {
+                        $inventory_quantity = $this->db->select('quantity')->from('inventory')->where(['store_id' => $store_id, 'product_id' => $item['id']])->get()->row_array();
+                        if (!empty($inventory_quantity)) {
+                            $this->db->where(['store_id' => $store_id, 'product_id' => $item['id']])->update('inventory', ['quantity' => $inventory_quantity['quantity'] + $item['quantity'], 'user_upd' => $user_init]);
+                        } else {
+                            $inventory = ['store_id' => $store_id, 'product_id' => $item['id'], 'quantity' => $item['quantity'], 'user_init' => $user_init];
+                            $this->db->insert('inventory', $inventory);
+                        }
+                        # Update product infomation
+                        $product = $this->db->select('prd_sls,prd_origin_price')->from('products')->where('ID', $item['id'])->get()->row_array();
+                        $sls['prd_sls'] = $product['prd_sls'] + $item['quantity'];
+                        $total_price += ($item['price'] * $item['quantity']);
+                        $total_quantity += $item['quantity'];
+                        if ($item['price'] != $product['prd_origin_price']) {
+                            $sls['prd_origin_price'] = $item['price']; //(($product['prd_origin_price'] * $product['prd_sls']) + ($item['quantity'] * $item['price'])) / $sls['prd_sls'];
+                        }
+
+                        $this->db->where('ID', $item['id'])->update('products', $sls);
+
+                        # update unit list of product
+                        $this->db->delete('products_units', array('prd_id' => $item['id']));
+                        # unit
+                        $units = $item['units'];
+                        foreach ($units as $unit) {
+                            $cms_products_units = array();
+                            $cms_products_units['prd_id'] = $item['id'];
+                            $cms_products_units['active'] = $unit['active'];
+                            $cms_products_units['unit'] = $unit['unit'];
+                            $cms_products_units['prd_retail_price'] = $unit['retail'];
+                            $cms_products_units['prd_whole_price'] = $unit['whole'];
+                            $this->db->insert("products_units", $cms_products_units);
+                        }
+                    }
+                } else
+                    foreach ($input['detail_input'] as $item) {
+                        $total_price += ($item['price'] * $item['quantity']);
+                        $total_quantity += $item['quantity'];
+                    }
+
+                $input['total_quantity'] = $total_quantity;
+                $input['total_price'] = $total_price;
+                $lack = $total_price - $input['payed'] - $input['discount'];
+                $input['total_money'] = $total_price - $input['discount'];
+                $input['lack'] = $lack > 0 ? $lack : 0;
+                $input['store_id'] = $store_id;
+                $input['user_init'] = $this->auth['id'];
+                $input['user_upd'] = $this->auth['id'];
+                $input['detail_input'] = json_encode($input['detail_input']);
+
+                $this->db->select_max('input_code')->like('input_code', 'PN');
+                $max_input_code = $this->db->get('input')->row();
+                $max_code = (int)(str_replace('PN', '', $max_input_code->input_code)) + 1;
+                if ($max_code < 10)
+                    $input['input_code'] = 'PN000000' . ($max_code);
+                else if ($max_code < 100)
+                    $input['input_code'] = 'PN00000' . ($max_code);
+                else if ($max_code < 1000)
+                    $input['input_code'] = 'PN0000' . ($max_code);
+                else if ($max_code < 10000)
+                    $input['input_code'] = 'PN000' . ($max_code);
+                else if ($max_code < 100000)
+                    $input['input_code'] = 'PN00' . ($max_code);
+                else if ($max_code < 1000000)
+                    $input['input_code'] = 'PN0' . ($max_code);
+                else if ($max_code < 10000000)
+                    $input['input_code'] = 'PN' . ($max_code);
+
+                $this->db->insert('input', $input);
+                $id = $this->db->insert_id();
+
+                if ($input['input_status'] == 1) {
+                    $temp = array();
+                    $temp['transaction_code'] = $input['input_code'];
+                    $temp['transaction_id'] = $id;
+                    $temp['supplier_id'] = isset($input['supplier_id']) ? $input['supplier_id'] : 0;
+                    $temp['date'] = $input['input_date'];
+                    $temp['notes'] = $input['notes'];
+                    $temp['user_init'] = $input['user_init'];
+                    $temp['user_upd'] = $input['user_init'];
+                    $temp['type'] = 2;
+                    $temp['store_id'] = $store_id;
+                    foreach ($detail_input_temp as $item) {
+                        $report = $temp;
+                        $stock = $this->db->select('quantity')->from('inventory')->where(['store_id' => $store_id, 'product_id' => $item['id']])->get()->row_array();
+                        $report['product_id'] = $item['id'];
+                        $report['price'] = $item['price'];
+                        $report['input'] = $item['quantity'];
+                        $report['stock'] = $stock['quantity'];
+                        $report['total_money'] = $report['price'] * $report['input'];
+                        $this->db->insert('report', $report);
+                    }
                 }
 
-            $input['total_quantity'] = $total_quantity;
-            $input['total_price'] = $total_price;
-            $lack = $total_price - $input['payed'] - $input['discount'];
-            $input['total_money'] = $total_price - $input['discount'];
-            $input['lack'] = $lack > 0 ? $lack : 0;
-            $input['store_id'] = $store_id;
-            $input['user_init'] = $this->auth['id'];
-            $input['detail_input'] = json_encode($input['detail_input']);
-
-            $this->db->select_max('input_code')->like('input_code', 'PN');
-            $max_input_code = $this->db->get('input')->row();
-            $max_code = (int)(str_replace('PN', '', $max_input_code->input_code)) + 1;
-            if ($max_code < 10)
-                $input['input_code'] = 'PN000000' . ($max_code);
-            else if ($max_code < 100)
-                $input['input_code'] = 'PN00000' . ($max_code);
-            else if ($max_code < 1000)
-                $input['input_code'] = 'PN0000' . ($max_code);
-            else if ($max_code < 10000)
-                $input['input_code'] = 'PN000' . ($max_code);
-            else if ($max_code < 100000)
-                $input['input_code'] = 'PN00' . ($max_code);
-            else if ($max_code < 1000000)
-                $input['input_code'] = 'PN0' . ($max_code);
-            else if ($max_code < 10000000)
-                $input['input_code'] = 'PN' . ($max_code);
-
-            $this->db->insert('input', $input);
-            $id = $this->db->insert_id();
-
-            if ($input['input_status'] == 1){
-                $temp= array();
-                $temp['transaction_code'] = $input['input_code'];
-                $temp['transaction_id'] = $id;
-                $temp['supplier_id'] = isset($input['supplier_id']) ? $input['supplier_id'] : 0;
-                $temp['date'] = $input['input_date'];
-                $temp['notes'] = $input['notes'];
-                $temp['user_init'] = $input['user_init'];
-                $temp['type'] = 2;
-                $temp['store_id'] = $store_id;
-                foreach ($detail_input_temp as $item) {
-                    $report = $temp;
-                    $stock = $this->db->select('quantity')->from('inventory')->where(['store_id' => $store_id, 'product_id' => $item['id']])->get()->row_array();
-                    $report['product_id'] = $item['id'];
-                    $report['price'] = $item['price'];
-                    $report['input'] = $item['quantity'];
-                    $report['stock'] = $stock['quantity'];
-                    $report['total_money'] = $report['price']*$report['input'];
-                    $this->db->insert('report', $report);
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                    echo $this->messages = "0";
+                } else {
+                    $this->db->trans_commit();
+                    echo $this->messages = $id;
                 }
-            }
-
-            if ($this->db->trans_status() === FALSE)
-            {
-                $this->db->trans_rollback();
+            } else
                 echo $this->messages = "0";
-            }
-            else
-            {
-                $this->db->trans_commit();
-                echo $this->messages = $id;
-            }
-        }else
-            echo $this->messages = "0";
+        } catch (\Throwable $th) {
+            $this->db->trans_rollback();
+            print $th->getTraceAsString();
+        }
     }
 
     public function cms_autocomplete_products()
@@ -289,7 +315,7 @@ class Import extends CI_Controller
         $data = $this->input->get('term');
         $products = $this->db
             ->from('products')
-            ->where('(prd_code like "%'.$data.'%" or prd_name like "%'.$data.'%") and prd_status = 1 and deleted =0 ')
+            ->where('(prd_code like "%' . $data . '%" or prd_name like "%' . $data . '%") and prd_status = 1 and deleted =0 ')
             ->get()
             ->result_array();
         echo json_encode($products);
@@ -303,15 +329,14 @@ class Import extends CI_Controller
         $this->db->trans_begin();
         $user_init = $this->auth['id'];
         if (isset($input) && count($input)) {
-            if($input['input_status']==1){
+            if ($input['input_status'] == 1) {
                 $list_products = json_decode($input['detail_input'], true);
                 foreach ($list_products as $item) {
-                    $inventory_quantity = $this->db->select('quantity')->from('inventory')->where(['store_id'=>$store_id,'product_id'=>$item['id']])->get()->row_array();
-                    if(!empty($inventory_quantity)){
-                        $this->db->where(['store_id'=>$store_id,'product_id'=>$item['id']])->update('inventory', ['quantity'=>$inventory_quantity['quantity']-$item['quantity'],'user_upd'=>$user_init]);
-                    }
-                    else{
-                        $inventory = ['store_id'=>$store_id,'product_id'=>$item['id'],'quantity'=>-$item['quantity'],'user_init'=>$user_init];
+                    $inventory_quantity = $this->db->select('quantity')->from('inventory')->where(['store_id' => $store_id, 'product_id' => $item['id']])->get()->row_array();
+                    if (!empty($inventory_quantity)) {
+                        $this->db->where(['store_id' => $store_id, 'product_id' => $item['id']])->update('inventory', ['quantity' => $inventory_quantity['quantity'] - $item['quantity'], 'user_upd' => $user_init]);
+                    } else {
+                        $inventory = ['store_id' => $store_id, 'product_id' => $item['id'], 'quantity' => -$item['quantity'], 'user_init' => $user_init];
                         $this->db->insert('inventory', $inventory);
                     }
 
@@ -320,10 +345,9 @@ class Import extends CI_Controller
                     $this->db->where('ID', $item['id'])->update('products', $sls);
                 }
 
-                $this->db->where('ID', $id)->update('input', ['deleted' => 1,'user_upd' => $user_init]);
-            }else
-            {
-                $this->db->where('ID', $id)->update('input', ['deleted' => 1,'user_upd' => $user_init]);
+                $this->db->where('ID', $id)->update('input', ['deleted' => 1, 'user_upd' => $user_init]);
+            } else {
+                $this->db->where('ID', $id)->update('input', ['deleted' => 1, 'user_upd' => $user_init]);
             }
         }
 
@@ -342,8 +366,8 @@ class Import extends CI_Controller
         $input = $this->db->from('input')->where(['ID' => $id, 'deleted' => 1])->get()->row_array();
         $this->db->trans_begin();
         if (isset($input) && count($input)) {
-            $this->db->where('ID', $id)->update('input', ['deleted' => 2,'user_upd' => $this->auth['id']]);
-        }else
+            $this->db->where('ID', $id)->update('input', ['deleted' => 2, 'user_upd' => $this->auth['id']]);
+        } else
             echo $this->messages = "0";
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -361,13 +385,13 @@ class Import extends CI_Controller
         $config = $this->cms_common->cms_pagination_custom();
         $option['date_to'] = date('Y-m-d', strtotime($option['date_to'] . ' +1 day'));
         if ($option['option1'] == '0') {
-            if($option['date_from']!='' && $option['date_to']!=''){
+            if ($option['date_from'] != '' && $option['date_to'] != '') {
                 $total_imports = $this->db
                     ->select('count(ID) as quantity, sum(total_money) as total_money, sum(lack) as total_debt')
                     ->from('input')
                     ->where(['deleted' => 0])
-                    ->where('input_date >=',$option['date_from'])
-                    ->where('input_date <=',$option['date_to'])
+                    ->where('input_date >=', $option['date_from'])
+                    ->where('input_date <=', $option['date_to'])
                     ->where("(input_code LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                     ->get()
                     ->row_array();
@@ -376,12 +400,12 @@ class Import extends CI_Controller
                     ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                     ->order_by('created', 'desc')
                     ->where(['deleted' => 0])
-                    ->where('input_date >=',$option['date_from'])
-                    ->where('input_date <=',$option['date_to'])
+                    ->where('input_date >=', $option['date_from'])
+                    ->where('input_date <=', $option['date_to'])
                     ->where("(input_code LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                     ->get()
                     ->result_array();
-            }else{
+            } else {
                 $total_imports = $this->db
                     ->select('count(ID) as quantity, sum(total_money) as total_money, sum(lack) as total_debt')
                     ->from('input')
@@ -399,13 +423,13 @@ class Import extends CI_Controller
                     ->result_array();
             }
         } else if ($option['option1'] == '1') {
-            if($option['date_from']!='' && $option['date_to']!=''){
+            if ($option['date_from'] != '' && $option['date_to'] != '') {
                 $total_imports = $this->db
                     ->select('count(ID) as quantity, sum(total_money) as total_money, sum(lack) as total_debt')
                     ->from('input')
                     ->where(['deleted' => 1])
-                    ->where('input_date >=',$option['date_from'])
-                    ->where('input_date <=',$option['date_to'])
+                    ->where('input_date >=', $option['date_from'])
+                    ->where('input_date <=', $option['date_to'])
                     ->where("(input_code LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                     ->get()
                     ->row_array();
@@ -414,12 +438,12 @@ class Import extends CI_Controller
                     ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                     ->order_by('created', 'desc')
                     ->where(['deleted' => 1])
-                    ->where('input_date >=',$option['date_from'])
-                    ->where('input_date <=',$option['date_to'])
+                    ->where('input_date >=', $option['date_from'])
+                    ->where('input_date <=', $option['date_to'])
                     ->where("(input_code LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                     ->get()
                     ->result_array();
-            }else{
+            } else {
                 $total_imports = $this->db
                     ->select('count(ID) as quantity, sum(total_money) as total_money, sum(lack) as total_debt')
                     ->from('input')
@@ -437,13 +461,13 @@ class Import extends CI_Controller
                     ->result_array();
             }
         } else if ($option['option1'] == '2') {
-            if($option['date_from']!='' && $option['date_to']!=''){
+            if ($option['date_from'] != '' && $option['date_to'] != '') {
                 $total_imports = $this->db
                     ->select('count(ID) as quantity, sum(total_money) as total_money, sum(lack) as total_debt')
                     ->from('input')
-                    ->where(['deleted' => 0,'lack >' =>0])
-                    ->where('input_date >=',$option['date_from'])
-                    ->where('input_date <=',$option['date_to'])
+                    ->where(['deleted' => 0, 'lack >' => 0])
+                    ->where('input_date >=', $option['date_from'])
+                    ->where('input_date <=', $option['date_to'])
                     ->where("(input_code LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                     ->get()
                     ->row_array();
@@ -451,16 +475,16 @@ class Import extends CI_Controller
                     ->from('input')
                     ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                     ->order_by('created', 'desc')
-                    ->where(['deleted' => 0,'lack >' =>0])
-                    ->where('input_date >=',$option['date_from'])
-                    ->where('input_date <=',$option['date_to'])
+                    ->where(['deleted' => 0, 'lack >' => 0])
+                    ->where('input_date >=', $option['date_from'])
+                    ->where('input_date <=', $option['date_to'])
                     ->where("(input_code LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                     ->get()
                     ->result_array();
-            }else{
+            } else {
                 $total_imports = $this->db
                     ->from('input')
-                    ->where(['deleted' => 0,'lack >' =>0])
+                    ->where(['deleted' => 0, 'lack >' => 0])
                     ->where("(input_code LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                     ->get()
                     ->row_array();
@@ -468,7 +492,7 @@ class Import extends CI_Controller
                     ->from('input')
                     ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                     ->order_by('created', 'desc')
-                    ->where(['deleted' => 0,'lack >' =>0])
+                    ->where(['deleted' => 0, 'lack >' => 0])
                     ->where("(input_code LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                     ->get()
                     ->result_array();
@@ -520,15 +544,15 @@ class Import extends CI_Controller
         $data_template['content'] = str_replace("{Ghi_Chu}", $data_input['notes'], $data_template['content']);
         $data_template['content'] = str_replace("{So_Tien_Bang_Chu}", $this->convert_number_to_words($data_input['lack']), $data_template['content']);
 
-        $detail ='';
+        $detail = '';
         $number = 1;
         if (isset($data_input) && count($data_input)) {
             $list_products = json_decode($data_input['detail_input'], true);
             foreach ($list_products as $product) {
                 $prd = cms_finding_productbyID($product['id']);
                 $quantity = $product['quantity'];
-                $total = $quantity*$product['price'];
-                $detail = $detail.'<tr ><td  style="text-align:center;">'.$number++.'</td><td  style="text-align:center;">'.$prd['prd_name'].'</td><td  style="text-align:center;">'.$this->cms_common->cms_encode_currency_format($product['price']).'</td><td style = "text-align:center">'.$quantity.'</td ><td style="text-align:center;">'.$this->cms_common->cms_encode_currency_format($total).'</td ></tr>';
+                $total = $quantity * $product['price'];
+                $detail = $detail . '<tr ><td  style="text-align:center;">' . $number++ . '</td><td  style="text-align:center;">' . $prd['prd_name'] . '</td><td  style="text-align:center;">' . $this->cms_common->cms_encode_currency_format($product['price']) . '</td><td style = "text-align:center">' . $quantity . '</td ><td style="text-align:center;">' . $this->cms_common->cms_encode_currency_format($total) . '</td ></tr>';
             }
         }
 
@@ -540,7 +564,7 @@ class Import extends CI_Controller
                             <td style="text-align:center;"><strong >Đơn giá</strong ></td >
                             <td style="text-align:center;"><strong > SL</strong ></td >
                             <td style="text-align:center;"><strong > Thành tiền</strong ></td >
-                        </tr >'.$detail.'
+                        </tr >' . $detail . '
                     </tbody >
                  </table >';
 
@@ -571,4 +595,3 @@ class Import extends CI_Controller
         $this->load->view('ajax/imports/edit_import', isset($data) ? $data : null);
     }
 }
-

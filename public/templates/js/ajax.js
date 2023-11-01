@@ -2523,6 +2523,10 @@ function cms_save_import(type) {
     } else {
         $store_id = $('#store-id').val();
         $supplier_id = $('#search-box-mas').attr('data-id');
+        if ($supplier_id == undefined || $supplier_id == null) {
+            $('.ajax-error-ct').html('Vui lòng chọn nhà cung cấp.').parent().fadeIn().delay(1000).fadeOut('slow');
+            return;
+        }
         $date = $('#date-order').val();
         $note = $('#note-order').val();
         $payment_method = $("input:radio[name ='method-pay']:checked").val();
@@ -2532,10 +2536,20 @@ function cms_save_import(type) {
         $('tbody#pro_search_append tr').each(function () {
             $price = cms_decode_currency_format($(this).find('input.price-order').val());
             $id = $(this).attr('data-id');
-            $value_input = $(this).find('input.quantity_product_import').val();
-            $detail.push(
-                { id: $id, quantity: $value_input, price: $price }
-            );
+            if ($id != undefined) {
+                $value_input = $(this).find('input.quantity_product_import').val();
+                let $units = [];
+                $trUnit = document.getElementsByClassName("tr-unit-" + $id);
+                for (const tr of $trUnit) {
+                    $unitCode = tr.dataset.id_unit;
+                    $active = tr.dataset.active;
+                    $units.push({ unit: $(`#unit_${$unitCode}`).text(), retail: cms_decode_currency_format($(`#prd_retail_price_${$unitCode}`).val()), whole: cms_decode_currency_format($(`#prd_whole_price_${$unitCode}`).val()), active: $active })
+                }
+                $detail.push(
+                    { id: $id, quantity: $value_input, price: $price, units: $units }
+                );
+            }
+
         });
         if (type == "0")
             $input_status = 0;
@@ -2951,10 +2965,13 @@ function cms_load_infor_import() {
     $total_money = 0;
     $('tbody#pro_search_append tr').each(function () {
         $quantity_product = $(this).find('input.quantity_product_import').val();
-        $price = cms_decode_currency_format($(this).find('input.price-order').val());
-        $total = $price * $quantity_product;
-        $total_money += $total;
-        $(this).find('td.total-money').text(cms_encode_currency_format($total));
+        if ($quantity_product != undefined) {
+            $price = cms_decode_currency_format($(this).find('input.price-order').val());
+            $total = $price * $quantity_product;
+            $total_money += $total;
+            $(this).find('td.total-money').text(cms_encode_currency_format($total));
+        }
+
     });
     $('div.total-money').text(cms_encode_currency_format($total_money));
 
@@ -2979,8 +2996,11 @@ function cms_encode_currency_format(obs) {
 }
 
 function cms_decode_currency_format(obs) {
-    let str = obs.replace(/,/g, '')
-    return parseInt(str);
+    if (obs != undefined) {
+        let str = obs.replace(/,/g, '')
+        return parseInt(str);
+    }
+    return 0;
 }
 
 function fix_height_sidebar() {
@@ -3003,11 +3023,9 @@ function is_match(pass1, pass2) {
 }
 
 function cms_set_current_week() {
-    var curr = new Date;
-    var first = curr.getDate() - curr.getDay();
-    var last = first + 6;
-    var firstday = new Date(curr.setDate(first)).toISOString().split('T')[0];
-    var lastday = new Date(curr.setDate(last)).toISOString().split('T')[0];
+    const current = new Date();
+    var firstday = new Date(current.getFullYear(), current.getMonth(), 1).toISOString().split("T")[0];
+    var lastday = new Date(current.getFullYear(), current.getMonth() + 1, 0).toISOString().split("T")[0];
     $('#search-date-from').val(firstday);
     $('#search-date-to').val(lastday);
 }
