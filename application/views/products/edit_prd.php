@@ -167,9 +167,9 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input value="<?php echo $item['retail'] ?>" onchange="cms_input_retail_price(<?php echo $item['id'] ?>, this.value)" type="number" class="form-control" />
+                                            <input value="<?php echo number_format($item['retail']) ?>" onchange="cms_input_retail_price(<?php echo $item['id'] ?>, this.value)" type="text" class="form-control txtMoney" />
                                         </td>
-                                        <td><input value="<?php echo $item['whole'] ?>" onchange="cms_input_whole_price(<?php echo $item['id'] ?>, this.value)" type="number" class="form-control" /></td>
+                                        <td><input value="<?php echo number_format($item['whole']) ?>" onchange="cms_input_whole_price(<?php echo $item['id'] ?>, this.value)" type="text" class="form-control txtMoney" /></td>
                                         <td>
                                             <label class="checkbox"><input <?php if ($item['active'] === "1") echo "checked" ?> id="chk_<?php echo $item['id'] ?>" onchange="active_product_unit(<?php echo $item['id'] ?>, this.checked)" type="checkbox" class="checkbox">
                                                 <span></span> sử dụng</label>

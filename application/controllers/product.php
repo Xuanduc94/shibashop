@@ -375,8 +375,8 @@ class Product extends CI_Controller
                     $cms_products_units['prd_id'] = $product_id;
                     $cms_products_units['active'] = $unit['active'];
                     $cms_products_units['unit'] = $unit['unit'];
-                    $cms_products_units['prd_retail_price'] = $unit['retail'];
-                    $cms_products_units['prd_whole_price'] = $unit['whole'];
+                    $cms_products_units['prd_retail_price'] = str_replace(",", "", $unit['retail']);
+                    $cms_products_units['prd_whole_price'] = str_replace(",", "", $unit['whole']);
                     $this->db->insert("products_units", $cms_products_units);
                 }
 
@@ -470,8 +470,8 @@ class Product extends CI_Controller
                 $cms_products_units['prd_id'] = $id;
                 $cms_products_units['active'] = $unit['active'];
                 $cms_products_units['unit'] = $unit['unit'];
-                $cms_products_units['prd_retail_price'] = $unit['retail'];
-                $cms_products_units['prd_whole_price'] = $unit['whole'];
+                $cms_products_units['prd_retail_price'] = str_replace(",", "", $unit['retail']);
+                $cms_products_units['prd_whole_price'] = str_replace(",", "", $unit['whole']);
                 $this->db->insert("products_units", $cms_products_units);
             }
             $this->db->trans_commit();
@@ -640,7 +640,7 @@ class Product extends CI_Controller
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('ID,prd_code,prd_name,prd_sls,prd_sell_price,prd_group_id,prd_manufacture_id,prd_image_url,prd_status')
+                        ->select('ID,prd_code,prd_name,prd_sls,prd_group_id,prd_manufacture_id,prd_status')
                         ->from('products')
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('created', 'desc')
@@ -655,7 +655,7 @@ class Product extends CI_Controller
                         ->where("(prd_code LIKE '%" . $option['keyword'] . "%' OR prd_name LIKE '%" . $option['keyword'] . "%')", NULL, FALSE)
                         ->count_all_results();
                     $data['data']['_list_product'] = $this->db
-                        ->select('ID,prd_code,prd_name,prd_sls,prd_sell_price,prd_group_id,prd_manufacture_id,prd_image_url,prd_status')
+                        ->select('ID,prd_code,prd_name,prd_sls,prd_group_id,prd_manufacture_id,prd_status')
                         ->from('products')
                         ->limit($config['per_page'], ($page - 1) * $config['per_page'])
                         ->order_by('created', 'desc')
@@ -830,8 +830,10 @@ class Product extends CI_Controller
     {
         $id = (int)$id;
         $product = $this->db->from('products')->where(['ID' => $id, 'deleted' => 1])->get()->row_array();
+        $price = $this->db->from("products_units")->where("prd_id", $id)->get()->result_array();
         if (!empty($product) && count($product)) {
             $data['_detail_product'] = $product;
+            $data['_units'] = $price;
             $this->load->view('ajax/product/detail_product_deleted', isset($data) ? $data : null);
         }
     }

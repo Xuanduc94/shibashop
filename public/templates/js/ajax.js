@@ -1601,6 +1601,7 @@ function cms_add_product(type) {
     if ($name.length == 0) {
         $('.ajax-error-ct').html('Vui lòng nhập tên sản phẩm.').parent().fadeIn().delay(1000).fadeOut('slow');
     } else {
+
         var $data = {
             'data': {
                 'prd_name': $name,
