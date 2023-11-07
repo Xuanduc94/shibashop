@@ -1791,6 +1791,25 @@ function cms_restore_product_deleted_bydetail($id) {
     }
 }
 
+function cms_deleted_product_forever($id, $page) {
+    var conf = confirm('Bạn chắc chắn muốn xoá vĩnh viễn sản phẩm này?');
+    if (conf) {
+        var $param = {
+            'type': 'POST',
+            'url': 'product/cms_delete_product_forever/' + $id,
+            'data': null,
+            'callback': function (data) {
+                if (data == '1') {
+                    $('.ajax-success-ct').html('Xoá sản phẩm thành công.').parent().fadeIn().delay(1000).fadeOut('slow');
+                    cms_paging_product($page);
+                } else if (data == '0') {
+                    $('.ajax-error-ct').html('Oops! This system is errors! please try again.').parent().fadeIn().delay(1000).fadeOut('slow');
+                }
+            }
+        };
+        cms_adapter_ajax($param);
+    }
+}
 function cms_restore_product_deleted($id, $page) {
     var conf = confirm('Bạn chắc chắn muốn khôi phục sản phẩm này?');
     if (conf) {
