@@ -597,6 +597,8 @@ class Orders extends CI_Controller
         echo json_encode($products);
     }
 
+   
+
     public function cms_check_barcode($keyword)
     {
         $products = $this->db->from('products')->where(array('prd_status' => '1', 'deleted' => '0', 'prd_code' => $keyword))->get()->result_array();

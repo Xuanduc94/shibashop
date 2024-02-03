@@ -10,10 +10,10 @@
                 <div class="col-md-6">
                     <div class="right-action text-right">
                         <div class="btn-groups">
-                            <button type="button" class="btn btn-primary" onclick="cms_vcrproduct('1')"><i
-                                    class="fa fa-plus"></i> Tạo sản phẩm
+                            <button type="button" class="btn btn-primary" onclick="cms_vcrproduct('1')"><i class="fa fa-plus"></i> Tạo sản phẩm
                             </button>
                             <button type="button" class="btn btn-success"><i class="fa fa-download"></i> Xuất Excel</button>
+                            <button onclick="window.location ='product/cms_remove_product_duplicated'" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Loại bỏ trùng lặp</button>
                         </div>
                     </div>
                 </div>
@@ -27,8 +27,7 @@
         <div class="product-sear panel-sear">
             <div action="" class="">
                 <div class="form-group col-md-5 padd-0">
-                    <input type="text" class="form-control" placeholder="Nhập mã sản phẩm hoặc tên sản phẩm"
-                           id="product-search">
+                    <input type="text" class="form-control" placeholder="Nhập mã sản phẩm hoặc tên sản phẩm" id="product-search">
                 </div>
                 <div class="form-group col-md-7 ">
                     <div class="col-md-3 padd-0" style="margin-right: 10px;">
@@ -47,12 +46,11 @@
                         <select class="form-control search-option-3" id="prd_manufacture_id">
                             <option value="-1" selected="selected">Nhà sản xuất</option>
                             <optgroup label="Chọn nhà sản xuất">
-                                <?php if (isset($data['_prd_manufacture']) && count($data['_prd_manufacture'])):
+                                <?php if (isset($data['_prd_manufacture']) && count($data['_prd_manufacture'])) :
                                     foreach ($data['_prd_manufacture'] as $key => $val) :
-                                        ?>
-                                        <option
-                                            value="<?php echo $val['ID']; ?>"><?php echo $val['prd_manuf_name']; ?></option>
-                                    <?php
+                                ?>
+                                        <option value="<?php echo $val['ID']; ?>"><?php echo $val['prd_manuf_name']; ?></option>
+                                <?php
                                     endforeach;
                                 endif;
                                 ?>
@@ -63,8 +61,7 @@
                             </optgroup>
                         </select>
                     </div>
-                    <button type="button" class="btn btn-primary btn-large btn-ssup"  onclick="cms_paging_product(1)"><i
-                            class="fa fa-search"></i> Tìm kiếm
+                    <button type="button" class="btn btn-primary btn-large btn-ssup" onclick="cms_paging_product(1)"><i class="fa fa-search"></i> Tìm kiếm
                     </button>
                 </div>
             </div>

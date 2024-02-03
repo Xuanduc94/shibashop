@@ -336,7 +336,7 @@ function cms_del_pro_order() {
     $('body').on('click', '.del-pro-order', function () {
         $(this).parents('tr').remove();
         cms_load_infor_order();
-        cms_load_infor_import();
+        // cms_load_infor_import();
         $seq = 0;
         $('tbody#pro_search_append tr').each(function () {
             $seq += 1;
