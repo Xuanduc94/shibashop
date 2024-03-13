@@ -170,6 +170,7 @@ function cms_func_common() {
         $("input.quantity_product_order").keyup(function () {
             cms_load_infor_order();
         });
+
     }
 
     if (window.location.pathname.indexOf('pos') !== -1) {
@@ -180,6 +181,9 @@ function cms_func_common() {
         $("input.quantity_product_order").keyup(function () {
             cms_load_infor_order();
         });
+        $("input.quantity_product_order").on('change', function () {
+            cms_load_infor_order();
+        })
     }
     $('.new-password').on('keyup', function () {
         var renewpass = $.trim($('#renewpass').val());
@@ -336,7 +340,7 @@ function cms_del_pro_order() {
     $('body').on('click', '.del-pro-order', function () {
         $(this).parents('tr').remove();
         cms_load_infor_order();
-        // cms_load_infor_import();
+        //cms_load_infor_import();
         $seq = 0;
         $('tbody#pro_search_append tr').each(function () {
             $seq += 1;

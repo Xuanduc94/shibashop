@@ -1178,3 +1178,7 @@ textarea {
   color: rgb(26, 26, 238);
   cursor: pointer;
 }
+
+input[type="number"]::-webkit-inner-spin-button {
+  opacity: 1;
+}

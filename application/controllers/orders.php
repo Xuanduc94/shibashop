@@ -597,8 +597,6 @@ class Orders extends CI_Controller
         echo json_encode($products);
     }
 
-   
-
     public function cms_check_barcode($keyword)
     {
         $products = $this->db->from('products')->where(array('prd_status' => '1', 'deleted' => '0', 'prd_code' => $keyword))->get()->result_array();
@@ -649,7 +647,7 @@ class Orders extends CI_Controller
                         <?php endforeach ?>
                     </select>
                 </td>
-                <td class="text-center" style="max-width: 30px;"><input style="max-height: 22px;" type="text" class="txtNumber form-control quantity_product_order text-center" value="1"></td>
+                <td class="text-center" style="max-width: 30px;"><input style="max-height: 22px;" type="number" class="txtNumber form-control quantity_product_order text-center" value="1"></td>
                 <td id="price-order-<?php echo $product['ID']; ?>" class="text-center price-order"><?php echo number_format($price); ?></td>
                 <td style="display: none;" id="price-order-hide-<?php echo $product['ID']; ?>" class="text-center price-order-hide"><?php echo $price; ?></td>
                 <td style="display: none;" class="text-center price-unit-hide"><?php echo $unitOrder; ?></td>

@@ -28,6 +28,30 @@ class Product extends CI_Controller
         $this->load->view('layout/index', isset($data) ? $data : null);
     }
 
+     public function cms_remove_product_duplicated()
+    {
+        $list_duplicated = $this->db->query("SELECT cms_products.prd_code, COUNT(*) FROM cms_products GROUP BY cms_products.prd_code HAVING COUNT(*) > 1")->result_array();
+        // Delete record
+
+        foreach ($list_duplicated as $item_uplicated) {
+            $products = $this->db->from('products')->where('prd_code', $item_uplicated['prd_code'])->get()->result_array();
+            if (count($products) == 2) {
+                $p = $products[1];
+                $id = $p['ID'];
+                $this->db->delete("cms_products_units", array('prd_id' => $id));
+                $this->db->delete("cms_products", array('ID' => $id));
+            } elseif (count($products) > 2) {
+                $limit = count($products);
+                for ($i = 1; $i < $limit; $i++) {
+                    $p = $products[$i];
+                    $this->db->delete("cms_products_units", array('prd_id' => $p['ID']));
+                    $this->db->delete("cms_products", array('ID' => $p['ID']));
+                }
+            }
+        }
+        $this->index();
+    }
+
     public function cms_vcrproduct()
     {
         if ($this->auth == null) $this->cms_common_string->cms_redirect(CMS_BASE_URL . 'backend');
@@ -109,30 +133,6 @@ class Product extends CI_Controller
             $this->db->insert('products_manufacture', $data);
             echo $this->messages = '1';
         }
-    }
-
-    public function cms_remove_product_duplicated()
-    {
-        $list_duplicated = $this->db->query("SELECT cms_products.prd_code, COUNT(*) FROM cms_products GROUP BY cms_products.prd_code HAVING COUNT(*) > 1")->result_array();
-        // Delete record
-
-        foreach ($list_duplicated as $item_uplicated) {
-            $products = $this->db->from('products')->where('prd_code', $item_uplicated['prd_code'])->get()->result_array();
-            if (count($products) == 2) {
-                $p = $products[1];
-                $id = $p['ID'];
-                $this->db->delete("cms_products_units", array('prd_id' => $id));
-                $this->db->delete("cms_products", array('ID' => $id));
-            } elseif (count($products) > 2) {
-                $limit = count($products);
-                for ($i = 1; $i < $limit; $i++) {
-                    $p = $products[$i];
-                    $this->db->delete("cms_products_units", array('prd_id' => $p['ID']));
-                    $this->db->delete("cms_products", array('ID' => $p['ID']));
-                }
-            }
-        }
-        $this->index();
     }
 
     public function cms_paging_manufacture($page = 1)
