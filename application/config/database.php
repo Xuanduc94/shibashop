@@ -49,9 +49,9 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = '';
-$db['default']['database'] = 'qlbanhang';
+$db['default']['username'] = 'reckomik_qlbanhang';
+$db['default']['password'] = '123456';
+$db['default']['database'] = 'reckomik_qlbanhang';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = CMS_DB_PREFIX;
 $db['default']['pconnect'] = TRUE;

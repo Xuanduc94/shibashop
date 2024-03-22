@@ -180,6 +180,9 @@ function cms_func_common() {
         $("input.quantity_product_order").keyup(function () {
             cms_load_infor_order();
         });
+  	$("input.quantity_product_order").on('change', function () {
+            cms_load_infor_order();
+        });
     }
     $('.new-password').on('keyup', function () {
         var renewpass = $.trim($('#renewpass').val());
@@ -336,7 +339,7 @@ function cms_del_pro_order() {
     $('body').on('click', '.del-pro-order', function () {
         $(this).parents('tr').remove();
         cms_load_infor_order();
-        cms_load_infor_import();
+        //cms_load_infor_import();
         $seq = 0;
         $('tbody#pro_search_append tr').each(function () {
             $seq += 1;
@@ -1663,6 +1666,7 @@ function cms_add_product(type) {
 
 function cms_update_product($id) {
     'use strict';
+var $barcode = $.trim($('#prd_code').val());
     var $name = $.trim($('#prd_name').val());
     var $sls = $.trim($('#prd_sls').val());
     var $inventory = cms_get_valCheckbox('prd_inventory', 'id');
@@ -1679,6 +1683,7 @@ function cms_update_product($id) {
     } else {
         var $data = {
             'data': {
+'prd_code':$barcode,
                 'prd_name': $name,
                 'prd_sls': $sls,
                 'prd_inventory': $inventory,
@@ -1791,6 +1796,25 @@ function cms_restore_product_deleted_bydetail($id) {
     }
 }
 
+function cms_deleted_product_forever($id, $page) {
+    var conf = confirm('Bạn chắc chắn muốn xoá vĩnh viễn sản phẩm này?');
+    if (conf) {
+        var $param = {
+            'type': 'POST',
+            'url': 'product/cms_delete_product_forever/' + $id,
+            'data': null,
+            'callback': function (data) {
+                if (data == '1') {
+                    $('.ajax-success-ct').html('Xoá sản phẩm thành công.').parent().fadeIn().delay(1000).fadeOut('slow');
+                    cms_paging_product($page);
+                } else if (data == '0') {
+                    $('.ajax-error-ct').html('Oops! This system is errors! please try again.').parent().fadeIn().delay(1000).fadeOut('slow');
+                }
+            }
+        };
+        cms_adapter_ajax($param);
+    }
+}
 function cms_restore_product_deleted($id, $page) {
     var conf = confirm('Bạn chắc chắn muốn khôi phục sản phẩm này?');
     if (conf) {

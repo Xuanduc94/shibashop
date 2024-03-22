@@ -79,6 +79,7 @@
                             } elseif ($data['option'] == 2) {
                             ?>
                                 <i title="Khôi phục" class="fa fa-repeat" onclick="cms_restore_product_deleted(<?php echo $item['ID'] . ',' . $data['page']; ?>);" style="margin-right: 5px; color: #C6699F; cursor: pointer;"></i>
+                                <i title="Xoá vĩnh viễn" class="fa fa-trash-o" onclick="cms_deleted_product_forever(<?php echo $item['ID'] . ',' . $data['page']; ?>);" style="margin-right: 5px; color: #C6699F; cursor: pointer;"></i>
                             <?php
                             } else {
                             ?>

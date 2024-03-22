@@ -1,10 +1,9 @@
 <?php
-
 /************ Database ************/
 
 define('CMS_DB_HOST', 'localhost');
-define('CMS_DB_USER', 'root');
-define('CMS_DB_PASSWORD', '');
+define('CMS_DB_USER', 'reckomik_qlbanhang');
+define('CMS_DB_PASSWORD', '123456');
 define('CMS_DB_NAME', 'pos_new_7');
 define('CMS_DB_PREFIX', 'cms_');
 

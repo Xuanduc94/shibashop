@@ -35,9 +35,6 @@
             type = "text/javascript";
             e.parentNode.insertBefore($, e)
         })(document, "script");
-        $(document).ready(function() {
-            document.getElementById("search-pro-box").focus()
-        })
     </script>
     <!--End of Zendesk Chat Script-->
 </head>
@@ -59,7 +56,7 @@
                                 <div class="orders-act">
                                     <div class="col-md-8">
                                         <div class="order-search" style="margin: 10px 0px; position: relative;">
-                                            <input type="text" class="form-control" placeholder="Nhập mã sản phẩm hoặc tên sản phẩm (F2)" id="search-pro-box">
+                                            <input type="text" class="form-control" placeholder="Nhập mã sản phẩm hoặc tên sản phẩm (F2)" autofocus id="search-pro-box">
                                         </div>
                                         <div class="product-results">
                                             <table class="table table-bordered table-striped">
@@ -209,6 +206,7 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="btn-groups pull-right" style="margin-bottom: 50px;">
+
                                                     <button type="button" class="btn btn-primary" onclick="cms_save_orders(3)"><i class="fa fa-check"></i> Lưu (F9)
                                                     </button>
                                                     <button type="button" class="btn btn-primary" onclick="cms_save_orders(4)"><i class="fa fa-print"></i> Lưu và

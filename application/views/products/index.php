@@ -14,6 +14,7 @@
                                     class="fa fa-plus"></i> Tạo sản phẩm
                             </button>
                             <button type="button" class="btn btn-success"><i class="fa fa-download"></i> Xuất Excel</button>
+                             <button onclick="window.location ='product/cms_remove_product_duplicated'" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Loại bỏ trùng lặp</button>
                         </div>
                     </div>
                 </div>
