@@ -170,7 +170,6 @@ function cms_func_common() {
         $("input.quantity_product_order").keyup(function () {
             cms_load_infor_order();
         });
-
     }
 
     if (window.location.pathname.indexOf('pos') !== -1) {
@@ -181,9 +180,9 @@ function cms_func_common() {
         $("input.quantity_product_order").keyup(function () {
             cms_load_infor_order();
         });
-        $("input.quantity_product_order").on('change', function () {
+  	$("input.quantity_product_order").on('change', function () {
             cms_load_infor_order();
-        })
+        });
     }
     $('.new-password').on('keyup', function () {
         var renewpass = $.trim($('#renewpass').val());
@@ -1667,6 +1666,7 @@ function cms_add_product(type) {
 
 function cms_update_product($id) {
     'use strict';
+var $barcode = $.trim($('#prd_code').val());
     var $name = $.trim($('#prd_name').val());
     var $sls = $.trim($('#prd_sls').val());
     var $inventory = cms_get_valCheckbox('prd_inventory', 'id');
@@ -1683,6 +1683,7 @@ function cms_update_product($id) {
     } else {
         var $data = {
             'data': {
+'prd_code':$barcode,
                 'prd_name': $name,
                 'prd_sls': $sls,
                 'prd_inventory': $inventory,

@@ -321,9 +321,9 @@ class Inventory extends CI_Controller
         foreach ($tempdata as $item) {
             $sls += $item['quantity'];
             $price = $this->db->select('prd_retail_price, prd_whole_price')->from('products_units')->where('prd_id', $item['ID'])->get()->row_array();
-            $totaloinvent += ($item['quantity'] * $item['prd_origin_price']);
-            $totalsinventretail += ($price["prd_retail_price"] * $item['quantity']);
-            $totalsinventwhole += ($price["prd_whole_price"] * $item['quantity']);
+            $totaloinvent += ((float)$item['quantity'] * (float) $item['prd_origin_price']);
+            $totalsinventretail += ((float)$price["prd_retail_price"] * (float)$item['quantity']);
+            $totalsinventwhole += ((float)$price["prd_whole_price"] * (float)$item['quantity']);
         }
         $data['total_sls'] = $sls;
         $data['totaloinvent'] = $totaloinvent;
